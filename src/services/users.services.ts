@@ -6,8 +6,6 @@ import { setFileToFirebaseStorage } from './storage.services.ts';
 /**
  * Transforms the users document snapshot into an array of user objects.
  *
- * @param {DataSnapshot} snapshot - The snapshot of the users document.
- * @returns {Array} - An array of user objects.
  */
 export const fromUsersDocument = (snapshot: DataSnapshot) => {
     const usersDocument = snapshot.val();
@@ -29,7 +27,7 @@ export const fromUsersDocument = (snapshot: DataSnapshot) => {
  * @param {string} username - The username of the user to retrieve.
  * @returns {Promise<Object>} - A promise that resolves with the retrieved user object.
  */
-export const getUserByUsername = (username: string): Promise<object> => {
+export const getUserByUsername = (username: string): Promise<DataSnapshot> => {
     return get(ref(db, `users/${username}`));
 };
 
@@ -40,7 +38,7 @@ export const getUserByUsername = (username: string): Promise<object> => {
  * @returns {Promise<Object>} A promise that resolves to the User object if found,
  * or undefined if no user exists with that email.
  */
-export const getUserByEmail = (email: string): Promise<object> => {
+export const getUserByEmail = (email: string): Promise<DataSnapshot> => {
     return get(query(ref(db, 'users'), orderByChild('email'), equalTo(email)));
 };
 
@@ -53,7 +51,6 @@ export const getUserByEmail = (email: string): Promise<object> => {
  * @param {string} uid - The user's UID.
  * @param {string} email - The user's email.
  * @param {string} username - The username of the user.
- * @param {string} profilePictureURL - The URL of the user's profile picture.
  * @returns {Promise<void>} - A promise that resolves after creating the user.
  */
 export const createUserByUsername = (
@@ -62,21 +59,18 @@ export const createUserByUsername = (
     uid: string,
     email: string,
     username: string,
-    profilePictureURL: string,
-    phoneNumber: string
 ): Promise<void> => {
     return set(ref(db, `users/${username}`), {
         firstName,
         lastName,
         uid,
         username,
-        profilePictureURL,
         email,
-        phoneNumber,
         role: "user",
         createdOn: Date.now(),
     });
 };
+
 
 /**
  * Retrieves user data by UID.
@@ -93,7 +87,7 @@ export const getUserData = (uid: string): Promise<DataSnapshot> => {
  *
  * @returns {Promise<Array>} - A promise that resolves with an array of user objects.
  */
-export const getAllUsers = (): Promise<Array<object>> => {
+export const getAllUsers = (): Promise<Array<DataSnapshot>> => {
     return get(ref(db, "users")).then((snapshot) => {
         if (!snapshot.exists()) {
             return [];
@@ -141,6 +135,7 @@ export const updateProfilePhone = async (
 };
 
 
+
 /**
  * Updates the email address for a user.
  *
@@ -157,6 +152,7 @@ export const updateProfileEmail = async (
 
     return update(ref(db), updateEmail);
 };
+
 
 /**
  * Blocks a user.
