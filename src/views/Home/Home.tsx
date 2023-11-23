@@ -59,7 +59,7 @@ const Blur = (props: IconProps) => {
   );
 };
 
-export default function JoinOurTeam() {
+export default function Home() {
   return (
     <Box position={'relative'} zIndex={'1'} height={'calc( 100vh - 60px )'}>
       <Container

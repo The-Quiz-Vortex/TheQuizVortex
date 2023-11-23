@@ -22,7 +22,8 @@ import {
     Text,
     useColorModeValue,
     Link,
-    FormErrorMessage
+    FormErrorMessage,
+    useToast
 } from '@chakra-ui/react';
 import { defaultValues } from './signup.validation.ts'
 
@@ -30,6 +31,7 @@ export default function Signup() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useContext(AuthContext);
+    const toast = useToast();
     const [showPassword, setShowPassword] = useState(false);
 
     const {
@@ -53,9 +55,23 @@ export default function Signup() {
                 values.username
             );
             setUser({ user: response });
+            toast({
+                title: "Success",
+                description: "You have been registered successfully",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: 'top',
+            });
             navigate('/');
         } catch (error) {
-            console.error(error);
+            toast({
+                title: "Something went wrong",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                description: error.message,
+            });
         } finally {
             setLoading(false);
         }
