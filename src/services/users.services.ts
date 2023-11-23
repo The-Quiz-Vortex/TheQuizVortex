@@ -27,7 +27,7 @@ export const fromUsersDocument = (snapshot: DataSnapshot) => {
  * @param {string} username - The username of the user to retrieve.
  * @returns {Promise<Object>} - A promise that resolves with the retrieved user object.
  */
-export const getUserByUsername = (username: string): Promise<DataSnapshot> => {
+export const getUserByUsername = async (username: string): Promise<DataSnapshot> => {
     return get(ref(db, `users/${username}`));
 };
 
@@ -157,13 +157,13 @@ export const updateProfileEmail = async (
 /**
  * Blocks a user.
  *
- * @param {string} handle - The username of the user to block.
+ * @param {string} username - The username of the user to block.
  * @returns {Promise<void>} - A promise that resolves after blocking the user.
  */
-export const blockUser = (handle: string): Promise<void> => {
+export const blockUser = (username: string): Promise<void> => {
     const updateBlockedStatus: { [key: string]: boolean } = {};
 
-    updateBlockedStatus[`/users/${handle}/blockedStatus`] = true;
+    updateBlockedStatus[`/users/${username}/blockedStatus`] = true;
 
     return update(ref(db), updateBlockedStatus);
 };
@@ -172,13 +172,13 @@ export const blockUser = (handle: string): Promise<void> => {
 /**
  * Unblocks a user.
  *
- * @param {string} handle - The username of the user to unblock.
+ * @param {string} username - The username of the user to unblock.
  * @returns {Promise<void>} - A promise that resolves after unblocking the user.
  */
-export const unblockUser = (handle: string): Promise<void> => {
+export const unblockUser = (username: string): Promise<void> => {
     const updateBlockedStatus: { [key: string]: boolean } = {};
 
-    updateBlockedStatus[`/users/${handle}/blockedStatus`] = false;
+    updateBlockedStatus[`/users/${username}/blockedStatus`] = false;
 
     return update(ref(db), updateBlockedStatus);
 };
