@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Box,
   Flex,
@@ -7,14 +5,13 @@ import {
   Heading,
   Text,
   Container,
-  Input,
-  Button,
   SimpleGrid,
   Avatar,
   AvatarGroup,
   useBreakpointValue,
   IconProps,
   Icon,
+  Button,
 } from '@chakra-ui/react';
 
 const avatars = [
@@ -71,7 +68,6 @@ export default function JoinOurTeam() {
         columns={{ base: 1 }}
         spacing={{ base: 10, lg: 32 }}
         py={{ base: 10, sm: 20, lg: 32 }}
-        height={'calc( 100vh - 60px )'}
       >
         <Stack spacing={{ base: 10, md: 20 }} zIndex={'1'}>
           <Heading lineHeight={1.1} fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}>
@@ -137,6 +133,26 @@ export default function JoinOurTeam() {
               YOU
             </Flex>
           </Stack>
+        </Stack>
+
+        <Stack justify={'center'} alignItems={'center'} direction={'row'} spacing={6}>
+          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
+            Sign In
+          </Button>
+          <Button
+            as={'a'}
+            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
+            fontWeight={600}
+            color={'white'}
+            bg={'pink.400'}
+            href={'/sign-up'}
+            _hover={{
+              bg: 'pink.300',
+            }}
+          >
+            Sign Up
+          </Button>
         </Stack>
       </Container>
       <Blur position={'absolute'} top={-10} left={-10} style={{ filter: 'blur(70px)' }} />
