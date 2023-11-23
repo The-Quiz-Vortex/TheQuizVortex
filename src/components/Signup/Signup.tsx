@@ -45,7 +45,6 @@ export default function Signup() {
         try {
             setLoading(true);
             const response = await registerUser(values.email, values.password);
-            console.log('User registration response:', response);
             await createUserByUsername(
                 values.firstName,
                 values.lastName,
@@ -53,7 +52,6 @@ export default function Signup() {
                 values.email,
                 values.username
             );
-            console.log('User created successfully');
             setUser({ user: response });
             navigate('/');
         } catch (error) {

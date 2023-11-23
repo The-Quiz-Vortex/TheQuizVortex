@@ -6,12 +6,12 @@ import { AppState } from '../helpers/useUserContext.ts';
 export interface AuthContextType {
   user: User | UserCredential | null | undefined;
   isLoggedIn?: boolean;
-  userData: AppUser | null;
+  userData?: AppUser | null;
   setUser: Dispatch<SetStateAction<AppState>>;
 }
 
-export const AuthContext = createContext({
-  setUser:(() => {}) as Dispatch<SetStateAction<AppState>>,
+export const AuthContext = createContext<AuthContextType>({
+  setUser:(() => {}),
   userData: {} as AppUser,
   user: {} as User,
 });

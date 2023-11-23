@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { getUserByEmail } from "../services/users.services.ts";
 import { onValue, ref } from "firebase/database";
 import { AppUser } from "../common/interfaces.ts";
-import { User } from 'firebase/auth';
+import { User, UserCredential } from 'firebase/auth';
 
 export interface AppState {
-    user: User | null | undefined;
-    userData: AppUser | null;
+    user: User | UserCredential | null | undefined;
+    userData?: AppUser | null;
     isLoggedIn?: boolean;
   }
 

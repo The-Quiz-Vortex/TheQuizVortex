@@ -7,7 +7,6 @@ export const SignupValidation = z.object({
     username: z.string().min(3, { message: 'Min length should be 3 symbols' })
         .refine(async (value) => !(await getUserByUsername(value)).val(), { message: 'This username already exists' }),
     email: z.string().email().refine(async (email) => {
-        console.log(email);
         return !((await getUserByEmail(email)).val())
     }, { message: 'Email already exists' },),
     password: z
