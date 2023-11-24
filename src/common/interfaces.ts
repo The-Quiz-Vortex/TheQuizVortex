@@ -8,3 +8,7 @@ export interface AppUser {
     role: string;
     createdOn: Date;
   }
+
+  export interface Quiz {
+    
+  }

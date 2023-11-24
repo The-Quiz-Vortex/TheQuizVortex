@@ -134,6 +134,20 @@ const DesktopNav = () => {
           </Popover>
         </Box>
       ))}
+      <Button
+            as={'a'}
+            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
+            fontWeight={600}
+            color={'white'}
+            bg={'gray.400'}
+            href={'/create-quiz'}
+            _hover={{
+              bg: 'pink.300',
+            }}
+          >
+           Create quiz
+          </Button>
     </Stack>
   );
 };
