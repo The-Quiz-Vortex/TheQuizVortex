@@ -182,9 +182,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             >
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem>My Quizes</MenuItem>
+              <MenuItem>My Quizes</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
