@@ -3,11 +3,20 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Input, InputGroup, InputRightElement, Select, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { SelectType, CreateQuizValidation, Visibility, categoryOptions, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
+import { SelectType, CreateQuizValidation, categoryOptions, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { defaultValuesQuiz } from './createQuiz.validation.ts'
 import ControlledSelect from '../ControlledSelect/ControlledSelect.tsx';
 import _ from 'lodash';
+import { QuizQuestion } from '../../common/interfaces.ts';
+
+export interface QuizFormData {
+    title: string;
+    category: string[];
+    visibility: string;
+    questions: QuizQuestion[];
+}
+
 export const CreateQuiz = () => {
     const [loading, setLoading] = useState(false);
     const { userData } = useContext(AuthContext);
@@ -28,8 +37,8 @@ export const CreateQuiz = () => {
     });
 
     const onSubmit: SubmitHandler<createQuizFormValues> = (values) => {
-            console.log('hete');
-            
+        console.log(values);
+
     }
 
     return (
