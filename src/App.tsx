@@ -9,7 +9,7 @@ import { AuthContext } from './context/AuthContext.tsx';
 import { useUserContext } from './helpers/useUserContext.ts';
 import { ChakraProvider } from '@chakra-ui/react';
 import _ from 'lodash';
-import { CreateQuiz } from './views/CreateQuiz/CreateQuiz.tsx';
+import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
 import MyProfile from './views/MyProfile/MyProfile.tsx';
 
 function App() {
