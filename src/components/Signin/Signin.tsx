@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SignInValidation, signInFormValues } from './signin.validation.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { defaultValues } from './signin.validation.ts'
+import { defaultValues } from './signin.validation.ts';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { loginUser } from '../../services/auth.services.ts';
@@ -46,36 +46,35 @@ export default function Singin() {
       setLoading(true);
       const result = await loginUser(user.email, user.password);
 
-      setUser(prevState => ({
+      setUser((prevState) => ({
         ...prevState,
-        user: result
+        user: result,
       }));
 
       toast({
-        title: "Successful log in",
+        title: 'Successful log in',
         status: 'success',
         isClosable: true,
         position: 'top',
       });
 
       setTimeout(() => {
-        navigate('/home');
+        navigate('/dashboard');
       }, 500);
-
     } catch (error) {
       toast({
-        title: "Error log in",
+        title: 'Error log in',
         status: 'error',
         duration: 5000,
         isClosable: true,
         position: 'top',
         description: error.message,
-      })
+      });
     } finally {
       setLoading(false);
       reset(defaultValues);
     }
-  }
+  };
 
   return (
     <Flex
@@ -83,10 +82,10 @@ export default function Singin() {
       align={'center'}
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}
-      as="form" onSubmit={handleSubmit(onSubmit)}
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Sign in to your account</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
@@ -96,17 +95,20 @@ export default function Singin() {
 
         <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
           <Stack spacing={4}>
-
             <FormControl id="email" isRequired isInvalid={!!errors.email}>
               <FormLabel>Email</FormLabel>
-              <Input type="text" placeholder="Email" {...register("email")} />
+              <Input type="text" placeholder="Email" {...register('email')} />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
 
             <FormControl id="password" isRequired isInvalid={!!errors.password}>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input type={showPassword ? 'text' : 'password'} placeholder="Password" {...register('password')} />
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  {...register('password')}
+                />
                 <InputRightElement h={'full'}>
                   <Button
                     variant={'ghost'}
