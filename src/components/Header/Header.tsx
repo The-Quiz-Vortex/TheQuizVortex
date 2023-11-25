@@ -105,7 +105,7 @@ const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-  const { user } = useUserContext();
+  const { user, loading } = useUserContext();
 
   return (
     <Stack direction={'row'} spacing={4}>
@@ -151,20 +151,23 @@ const DesktopNav = () => {
             </Box>
           )
       )}
-      <Button
-        as={'a'}
-        display={{ base: 'none', md: 'inline-flex' }}
-        fontSize={'sm'}
-        fontWeight={600}
-        color={'white'}
-        bg={'gray.400'}
-        href={'/create-quiz'}
-        _hover={{
-          bg: 'pink.300',
-        }}
-      >
-        Create quiz
-      </Button>
+
+      {!loading && user && (
+        <Button
+          as={'a'}
+          display={{ base: 'none', md: 'inline-flex' }}
+          fontSize={'sm'}
+          fontWeight={600}
+          color={'white'}
+          bg={'gray.400'}
+          href={'/create-quiz'}
+          _hover={{
+            bg: 'pink.300',
+          }}
+        >
+          Create quiz
+        </Button>
+      )}
     </Stack>
   );
 };

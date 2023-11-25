@@ -1,7 +1,7 @@
 import { get, set, ref, remove, query, equalTo, orderByChild, update, push } from 'firebase/database';
 import { db } from "../config/firebase-config.ts";
 import { DataSnapshot } from "firebase/database";
-import { QuizFormData } from '../components/CreateQuiz/CreateQuiz.tsx';
+import { QuizFormData } from '../views/CreateQuiz/CreateQuiz.tsx';
 
 const fromQuizDocument = async (snapshot: DataSnapshot) => {
     try {
