@@ -180,10 +180,15 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>My Quizes</MenuItem>
-              <MenuItem>My Quizes</MenuItem>
+              <MenuItem as="a" href="/my-profile">
+                My Profile
+              </MenuItem>
+              <MenuItem as="a" href="/settings">
+                Settings
+              </MenuItem>
+              <MenuItem as="a" href="/my-quizes">
+                My Quizes
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
@@ -196,7 +201,7 @@ const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         isOpen={isOpen}
@@ -212,9 +217,6 @@ const SidebarWithHeader = () => {
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
-      </Box>
     </Box>
   );
 };
