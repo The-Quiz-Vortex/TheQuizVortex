@@ -8,8 +8,19 @@ export const defaultValuesQuiz: createQuizFormValues = {
     categories: [],
     visibility: [{ label: "Public", value: "public" }],
     timeLimit: 0,
-    question: "",
-    answer: "",
+    question: [
+        {
+            questionTitle: "",
+            optionA: "",
+            optionB: "",
+            optionC: "",
+            optionD: "",
+            correctAnswer: [{
+                label: 'Option A',
+                value: 'optionA',
+            }],
+        }
+    ],
 };
 
 const selectSchema = z.object({
@@ -17,11 +28,12 @@ const selectSchema = z.object({
     value: z.string(),
 });
 
-export type Categories = z.infer<typeof selectSchema>;
+export type SelectType = z.infer<typeof selectSchema>;
 
 export type Visibility = z.infer<typeof selectSchema>;
 
-export const categoryOptions: Categories[] = [
+
+export const categoryOptions: SelectType[] = [
     { label: "Increasing Retention", value: "retention" },
     { label: "Increasing User Conversion", value: "conversion" },
     { label: "Improving Feature Adoption", value: "adoption" },
@@ -29,9 +41,28 @@ export const categoryOptions: Categories[] = [
     { label: "A/B Testing", value: "ab" },
 ];
 
-export const visibilityOptions: Categories[] = [
+export const visibilityOptions: SelectType[] = [
     { label: "Private", value: "private" },
     { label: "Public", value: "public" },
+];
+
+export const correctAnswerOption = [
+    {
+        label: 'Option A',
+        value: 'optionA',
+    },
+    {
+        label: 'Option B',
+        value: 'optionB',
+    },
+    {
+        label: 'Option C',
+        value: 'optionC',
+    },
+    {
+        label: 'Option D',
+        value: 'optionD',
+    },
 ];
 
 export const CreateQuizValidation = z.object({
@@ -45,10 +76,25 @@ export const CreateQuizValidation = z.object({
     categories: selectSchema
         .array()
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
-    question: z
-        .string()
-        .min(10, { message: "Question must be at least 6 characters" }),
-    answer: z
-        .string()
-        .min(1, { message: "Answer must be at least 6 characters" }),
+    question: z.array(
+        z.object({
+            questionTitle: z.string().min(10, { message: 'Min length should be 10 symbols' }),
+            optionA: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            optionB: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            optionC: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            optionD: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            correctAnswer: selectSchema
+                .array()
+                .min(1, { message: "Please pick at least 1 correct answer" }),
+        })
+    )
+    .min(1, { message: "Please add at least 1 question for your quiz" }),
+
+    // .refine((questions) => questions.length > 0, {
+    //     message: "Please add at least 1 question for your quiz",
+    //   })
+    //   .refine((questions) =>
+    //     questions.every((question) => question.correctAnswer.length > 0),
+    //     { message: "Please pick at least 1 correct answer for each question" }
+    //   )
 })
