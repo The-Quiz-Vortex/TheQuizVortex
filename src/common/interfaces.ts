@@ -10,15 +10,25 @@ export interface AppUser {
 }
 
 export interface Quiz {
-
+  title: string;
+  timeLimit: number;
+  visibility: string;
+  categories: string[];
+  questions: QuizQuestion[];
+  author: string;
+  createdOn: Date;
+  totalPoints: number;
 }
 
+//Single quiz question
 export interface QuizQuestion {
   questionTitle: string;
   options: QuizOption[];
   correctAnswer: number;
+  points: number;
 }
 
+// Quiz options - A/B/C/D
 export interface QuizOption {
   optionText: string;
   isCorrect: boolean;

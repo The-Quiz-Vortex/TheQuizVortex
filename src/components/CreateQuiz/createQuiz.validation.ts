@@ -15,6 +15,7 @@ export const defaultValuesQuiz: createQuizFormValues = {
             optionB: "",
             optionC: "",
             optionD: "",
+            points: 1,
             correctAnswer: [{
                 label: 'Option A',
                 value: 'optionA',
@@ -83,12 +84,13 @@ export const CreateQuizValidation = z.object({
             optionB: z.string().min(5, { message: 'Min length should be 5 symbols' }),
             optionC: z.string().min(5, { message: 'Min length should be 5 symbols' }),
             optionD: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            points: z.number().min(1, { message: "Question points should be at least 1" }),
             correctAnswer: selectSchema
                 .array()
                 .min(1, { message: "Please pick at least 1 correct answer" }),
         })
     )
-    .min(1, { message: "Please add at least 1 question for your quiz" }),
+        .min(1, { message: "Please add at least 1 question for your quiz" }),
 
     // .refine((questions) => questions.length > 0, {
     //     message: "Please add at least 1 question for your quiz",

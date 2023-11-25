@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Input, InputGroup, InputRightElement, Select, Stack, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, InputGroup, InputRightElement, Select, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { SelectType, CreateQuizValidation, categoryOptions, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
@@ -9,10 +9,12 @@ import { defaultValuesQuiz } from './createQuiz.validation.ts'
 import ControlledSelect from '../ControlledSelect/ControlledSelect.tsx';
 import _ from 'lodash';
 import { QuizQuestion } from '../../common/interfaces.ts';
+import { modelQuizRawData } from './createQuiz.helper.ts';
+import { addQuiz } from '../../services/quiz.services.ts';
 
 export interface QuizFormData {
     title: string;
-    category: string[];
+    categories: string[];
     visibility: string;
     questions: QuizQuestion[];
 }
@@ -20,6 +22,7 @@ export interface QuizFormData {
 export const CreateQuiz = () => {
     const [loading, setLoading] = useState(false);
     const { userData } = useContext(AuthContext);
+    const toast = useToast();
 
     const {
         handleSubmit,
@@ -36,9 +39,32 @@ export const CreateQuiz = () => {
         name: 'question',
     });
 
-    const onSubmit: SubmitHandler<createQuizFormValues> = (values) => {
+    const onSubmit: SubmitHandler<createQuizFormValues> = async (values) => {
         console.log(values);
-
+        try {
+            setLoading(true);
+            if (userData) {
+                const formattedData = modelQuizRawData(values);
+                await addQuiz(formattedData, userData?.username);
+                toast({
+                    title: 'Quiz created successfully',
+                    description: 'You can now share your quiz with your friends',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                })
+            }
+        } catch (error) {
+            toast({
+                title: 'Error creating your quiz',
+                description: error.message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            })
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -129,6 +155,12 @@ export const CreateQuiz = () => {
                                     <FormErrorMessage>{errors.question && errors.question[index]?.optionD?.message}</FormErrorMessage>
                                 </FormControl>
 
+                                <FormControl id="points" isRequired isInvalid={errors.question && !!errors.question[index]?.optionD}>
+                                    <FormLabel>Question points</FormLabel>
+                                    <Input type="number" placeholder="Question points" {...register(`question.${index}.points`, { valueAsNumber: true })} />
+                                    <FormHelperText>Points for correct answer. You can assign more points to hard questions if you prefer.</FormHelperText>
+                                    <FormErrorMessage>{errors.question && errors.question[index]?.points?.message}</FormErrorMessage>
+                                </FormControl>
 
                                 <ControlledSelect<createQuizFormValues, SelectType, true>
                                     name={`question.${index}.correctAnswer`}
