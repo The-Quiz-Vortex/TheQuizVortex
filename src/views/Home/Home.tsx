@@ -14,6 +14,9 @@ import {
   Button,
 } from '@chakra-ui/react';
 
+import { useUserContext } from '../../helpers/useUserContext.ts';
+import Signout from '../../components/Signout/signout.tsx';
+
 const avatars = [
   {
     name: 'Ryan Florence',
@@ -60,6 +63,8 @@ const Blur = (props: IconProps) => {
 };
 
 export default function Home() {
+  const { loading, user } = useUserContext();
+
   return (
     <Box position={'relative'} zIndex={'1'} height={'calc( 100vh - 60px )'}>
       <Container
@@ -135,25 +140,33 @@ export default function Home() {
           </Stack>
         </Stack>
 
-        <Stack justify={'center'} alignItems={'center'} direction={'row'} spacing={6}>
-          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
-            Sign In
-          </Button>
-          <Button
-            as={'a'}
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            color={'white'}
-            bg={'pink.400'}
-            href={'/sign-up'}
-            _hover={{
-              bg: 'pink.300',
-            }}
-          >
-            Sign Up
-          </Button>
-        </Stack>
+        {!loading && user && (
+          <Stack flex={{ base: 1, md: 0 }} justify={'center'} direction={'row'} spacing={6}>
+            <Signout />
+          </Stack>
+        )}
+
+        {!loading && !user ? (
+          <Stack flex={{ base: 1, md: 0 }} justify={'center'} direction={'row'} spacing={6}>
+            <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
+              Sign In
+            </Button>
+            <Button
+              as={'a'}
+              display={{ base: 'inline-flex' }}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'pink.400'}
+              href={'/sign-up'}
+              _hover={{
+                bg: 'pink.300',
+              }}
+            >
+              Sign Up
+            </Button>
+          </Stack>
+        ) : null}
       </Container>
       <Blur position={'absolute'} top={-10} left={-10} style={{ filter: 'blur(70px)' }} />
     </Box>

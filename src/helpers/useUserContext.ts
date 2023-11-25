@@ -13,7 +13,7 @@ export interface AppState {
   }
 
 export const useUserContext = () => {
-    const [user, loading] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [appState, setAppState] = useState<AppState>({
     userData: {} as AppUser,
     isLoggedIn: undefined,
