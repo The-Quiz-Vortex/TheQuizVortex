@@ -9,13 +9,13 @@ export const SignupValidation = z.object({
     email: z.string().email().refine(async (email) => {
         return !((await getUserByEmail(email)).val())
     }, { message: 'Email already exists' },),
-    phoneNumber: z.string().min(1, { message: 'Min length should be 1 symbols' }).max(15, { message: 'Max length should be 30 symbols' }),
+    phoneNumber: z.string().length(10, { message: 'The phone number should be 10 digits' }),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters" }),
     passwordConfirmation: z
         .string()
-        .min(1, { message: "You must confirm your password" }),
+        .min(6, { message: "You must confirm your password" }),
 })
     .refine(
         ({ password, passwordConfirmation }) => password === passwordConfirmation,
