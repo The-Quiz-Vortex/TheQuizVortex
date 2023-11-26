@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { SelectType, CreateQuizValidation, categoryOptions, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
+import { SelectType, CreateQuizValidation, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { defaultValuesQuiz } from './createQuiz.validation.ts'
 import ControlledSelect from '../ControlledSelect/ControlledSelect.tsx';
@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { QuizQuestion } from '../../common/interfaces.ts';
 import { modelQuizRawData } from './createQuiz.helper.ts';
 import { addQuiz } from '../../services/quiz.services.ts';
+import { fetchCategories } from '../../services/openTrivia.services.ts';
 
 export interface QuizFormData {
     title: string;
@@ -23,6 +24,14 @@ export const CreateQuiz = () => {
     const [loading, setLoading] = useState(false);
     const { userData } = useContext(AuthContext);
     const toast = useToast();
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    
+    useEffect(() => {
+        (async () => {
+            const result = await fetchCategories()
+            setCategoryOptions(result);
+        })()
+    }, []);
 
     const {
         handleSubmit,
@@ -67,6 +76,7 @@ export const CreateQuiz = () => {
         }
     }
 
+    console.log(errors);
     return (
         <Flex
             minH={'100vh'}
@@ -89,7 +99,7 @@ export const CreateQuiz = () => {
                         <Box>
                             <FormControl id="title" isRequired isInvalid={!!errors.title}>
                                 <FormLabel>Title</FormLabel>
-                                <Input type="text" placeholder="Title" {...register("title")} />
+                                <Input type="text" placeholder="Add quiz name" {...register("title")} />
                                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
                             </FormControl>
                         </Box>
@@ -98,7 +108,7 @@ export const CreateQuiz = () => {
                                 name="visibility"
                                 control={control}
                                 label="Choose visibility"
-                                placeholder="Select some categories"
+                                placeholder="Select visibility"
                                 options={visibilityOptions}
                                 useBasicStyles
                             />
@@ -106,7 +116,7 @@ export const CreateQuiz = () => {
                             <Box>
                                 <FormControl id="timeLimit" isInvalid={!!errors.timeLimit}>
                                     <FormLabel>Time limit</FormLabel>
-                                    <Input type="number" placeholder="Time limit" {...register("timeLimit", { valueAsNumber: true })} />
+                                    <Input type="number" min={0} placeholder="Add in minutes" {...register("timeLimit", { valueAsNumber: true })} />
                                     <FormErrorMessage>{errors.timeLimit?.message}</FormErrorMessage>
                                 </FormControl>
                             </Box>
@@ -117,14 +127,14 @@ export const CreateQuiz = () => {
                             name="categories"
                             control={control}
                             label="Quiz categories"
-                            placeholder="Select some categories"
+                            placeholder="Select categories"
                             options={categoryOptions}
                             useBasicStyles
                         />
                         <Accordion defaultIndex={[0]} allowMultiple>
                             {fields.map((field, index) => {
                                 return (<div key={field.id}>
-                                    <AccordionItem>
+                                    <AccordionItem zIndex={10}>
                                         <h2>
                                             <AccordionButton>
                                                 <Box as="span" flex='1' textAlign='left'>
@@ -181,7 +191,7 @@ export const CreateQuiz = () => {
                                                 useBasicStyles
                                             />
 
-                                            <Button onClick={() => remove(index)}>{`Remove question ${index + 1}`}</Button>
+                                            <Button marginBlockStart={10} marginBlockEnd={5} onClick={() => remove(index)}>{`Remove question ${index + 1}`}</Button>
                                         </AccordionPanel>
                                     </AccordionItem>
                                 </div>)

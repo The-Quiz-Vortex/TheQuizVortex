@@ -48,7 +48,7 @@ function ControlledSelect<
   });
 
   const handleChange = (newValue: OnChangeValue<Option, IsMulti>, actionMeta: ActionMeta<Option>) => {
-    // Ensure the newValue is an array
+
     const value = Array.isArray(newValue) ? newValue : [newValue];
     onChange(value);
   };
@@ -60,7 +60,8 @@ function ControlledSelect<
         options={options}
         {...selectProps}
         {...field}
-        onChange={handleChange} // Use the wrapper function here
+        onChange={handleChange}
+        menuPosition="fixed"
       />
       <FormErrorMessage>{error?.message}</FormErrorMessage>
     </FormControl>

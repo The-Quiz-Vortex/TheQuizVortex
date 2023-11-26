@@ -13,7 +13,7 @@ export interface Quiz {
   title: string;
   timeLimit: number;
   visibility: string;
-  categories: string[];
+  categories: number[];
   questions: QuizQuestion[];
   author: string;
   createdOn: Date;

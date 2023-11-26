@@ -28,18 +28,12 @@ const selectSchema = z.object({
     value: z.string(),
 });
 
+const categoriesSelectSchema = z.object({
+    label: z.string(),
+    value: z.number(),
+});
+
 export type SelectType = z.infer<typeof selectSchema>;
-
-export type Visibility = z.infer<typeof selectSchema>;
-
-
-export const categoryOptions: SelectType[] = [
-    { label: "Increasing Retention", value: "retention" },
-    { label: "Increasing User Conversion", value: "conversion" },
-    { label: "Improving Feature Adoption", value: "adoption" },
-    { label: "Identifying User Behavior", value: "behavior" },
-    { label: "A/B Testing", value: "ab" },
-];
 
 export const visibilityOptions: SelectType[] = [
     { label: "Private", value: "private" },
@@ -73,7 +67,7 @@ export const CreateQuizValidation = z.object({
         .array()
         .min(1, { message: "You need to choose visibility" }),
     timeLimit: z.number().min(0).optional(),
-    categories: selectSchema
+    categories: categoriesSelectSchema
         .array()
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
     question: z.array(
