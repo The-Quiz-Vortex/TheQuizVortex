@@ -9,6 +9,7 @@ export const SignupValidation = z.object({
     email: z.string().email().refine(async (email) => {
         return !((await getUserByEmail(email)).val())
     }, { message: 'Email already exists' },),
+    phoneNumber: z.string().min(1, { message: 'Min length should be 1 symbols' }).max(15, { message: 'Max length should be 30 symbols' }),
     password: z
         .string()
         .min(6, { message: "Password must be at least 6 characters" }),
@@ -31,6 +32,7 @@ export const defaultValues: signUpFormValues = {
     lastName: "",
     username: "",
     email: "",
+    phoneNumber: "",
     password: "",
     passwordConfirmation: "",
 };

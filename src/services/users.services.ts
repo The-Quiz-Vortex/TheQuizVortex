@@ -1,4 +1,4 @@
-import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild, update, remove  } from 'firebase/database';
 import { db } from "../config/firebase-config.ts";
 import { DataSnapshot } from "firebase/database";
 import { setFileToFirebaseStorage } from './storage.services.ts';
@@ -50,6 +50,7 @@ export const getUserByEmail = (email: string): Promise<DataSnapshot> => {
  * @param {string} lastName - The last name of the user.
  * @param {string} uid - The user's UID.
  * @param {string} email - The user's email.
+ * @param {string} phoneNumber - The user's phone number.
  * @param {string} username - The username of the user.
  * @returns {Promise<void>} - A promise that resolves after creating the user.
  */
@@ -58,6 +59,7 @@ export const createUserByUsername = (
     lastName: string,
     uid: string,
     email: string,
+    phoneNumber: string,
     username: string,
 ): Promise<void> => {
     return set(ref(db, `users/${username}`), {
@@ -66,6 +68,7 @@ export const createUserByUsername = (
         uid,
         username,
         email,
+        phoneNumber,
         role: "user",
         createdOn: Date.now(),
     });
@@ -98,6 +101,26 @@ export const getAllUsers = (): Promise<Array<DataSnapshot>> => {
 };
 
 /**
+ * Creates a new profile picture URL for a user.
+ *
+ * @param {File} file - The new profile picture file.
+ * @param {string} currentUser - The username of the current user.
+ * @returns {Promise<string>} - A promise that resolves with the created profile picture URL.
+ */
+export const createProfilePic = async (
+    file: File,
+    currentUser: string
+  ): Promise<string> => {
+    const url = await setFileToFirebaseStorage(file);
+  
+    // Use set to create a new profile picture URL
+    await set(ref(db, `/users/${currentUser}/profilePictureURL`), url);
+  
+    return url;
+  };
+  
+
+/**
  * Updates the profile picture URL for a user.
  *
  * @param {File} file - The new profile picture file.
@@ -117,19 +140,75 @@ export const updateProfilePic = async (
     return url;
 };
 
+
+/**
+ * Deletes the profile picture URL for a user.
+ *
+ * @param {string} currentUser - The username of the current user.
+ * @returns {Promise<void>} - A promise that resolves when the profile picture URL is deleted.
+ */
+export const deleteProfilePic = async (currentUser: string): Promise<void> => {
+    const path = `/users/${currentUser}/profilePictureURL`;
+  
+    try {
+      await remove(ref(db, path));
+    } catch (error) {
+      console.error('Error deleting profile picture URL:', error);
+      throw new Error('Failed to delete profile picture URL');
+    }
+  };
+
+
+/**
+ * Updates the first name for a user.
+ *
+ * @param {string} firstName - The new phone number.
+ * @param {string} currentUser - The username of the current user.
+ * @returns {Promise<void>} - A promise that resolves after updating the phone number.
+ */
+export const updateProfileFirstName = async (
+    firstName: string,
+    currentUser: string
+): Promise<void> => {
+    const updateFirstName: { [key: string]: string } = {};
+    updateFirstName[`/users/${currentUser}/firstName`] = firstName;
+
+    return update(ref(db), updateFirstName);
+};
+
+
+/**
+ * Updates the last name for a user.
+ *
+ * @param {string} lastName - The new phone number.
+ * @param {string} currentUser - The username of the current user.
+ * @returns {Promise<void>} - A promise that resolves after updating the phone number.
+ */
+export const updateProfileLastName = async (
+    lastName: string,
+    currentUser: string
+): Promise<void> => {
+    const updateLastName: { [key: string]: string } = {};
+    updateLastName[`/users/${currentUser}/lastName`] = lastName;
+
+    return update(ref(db), updateLastName);
+};
+
+
+
 /**
  * Updates the phone number for a user.
  *
- * @param {string} phone - The new phone number.
+ * @param {string} phoneNumber - The new phone number.
  * @param {string} currentUser - The username of the current user.
  * @returns {Promise<void>} - A promise that resolves after updating the phone number.
  */
 export const updateProfilePhone = async (
-    phone: string,
+    phoneNumber: string,
     currentUser: string
 ): Promise<void> => {
     const updatePhone: { [key: string]: string } = {};
-    updatePhone[`/users/${currentUser}/phone`] = phone;
+    updatePhone[`/users/${currentUser}/phoneNumber`] = phoneNumber;
 
     return update(ref(db), updatePhone);
 };
