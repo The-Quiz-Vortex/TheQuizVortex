@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, InputGroup, InputRightElement, Select, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { SelectType, CreateQuizValidation, categoryOptions, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
@@ -121,59 +121,72 @@ export const CreateQuiz = () => {
                             options={categoryOptions}
                             useBasicStyles
                         />
+                        <Accordion defaultIndex={[0]} allowMultiple>
+                            {fields.map((field, index) => {
+                                return (<div key={field.id}>
+                                    <AccordionItem>
+                                        <h2>
+                                            <AccordionButton>
+                                                <Box as="span" flex='1' textAlign='left'>
+                                                    {`Question ${index + 1}`}
+                                                </Box>
+                                                <AccordionIcon />
+                                            </AccordionButton>
+                                        </h2>
+                                        <AccordionPanel pb={4}>
+                                            <Box>
+                                                <FormControl id="questionTitle" isRequired isInvalid={errors.question && !!errors.question[index]?.questionTitle}>
+                                                    <FormLabel>{`Question ${index + 1} title`}</FormLabel>
+                                                    <Input type="text" placeholder="Question title" {...register(`question.${index}.questionTitle`)} />
+                                                    <FormErrorMessage>{errors.question && errors.question[index]?.questionTitle?.message}</FormErrorMessage>
+                                                </FormControl>
+                                            </Box>
+                                            <FormControl id="optionA" isRequired isInvalid={errors.question && !!errors.question[index]?.optionA}>
+                                                <FormLabel>Option A</FormLabel>
+                                                <Input type="text" placeholder="Option A" {...register(`question.${index}.optionA`)} />
+                                                <FormErrorMessage>{errors.question && errors.question[index]?.optionA?.message}</FormErrorMessage>
+                                            </FormControl>
 
-                        {fields.map((field, index) => {
-                            return (<div key={field.id}>
-                                <Box>
-                                    <FormControl id="questionTitle" isRequired isInvalid={errors.question && !!errors.question[index]?.questionTitle}>
-                                        <FormLabel>{`Question ${index + 1} title`}</FormLabel>
-                                        <Input type="text" placeholder="Question title" {...register(`question.${index}.questionTitle`)} />
-                                        <FormErrorMessage>{errors.question && errors.question[index]?.questionTitle?.message}</FormErrorMessage>
-                                    </FormControl>
-                                </Box>
-                                <FormControl id="optionA" isRequired isInvalid={errors.question && !!errors.question[index]?.optionA}>
-                                    <FormLabel>Option A</FormLabel>
-                                    <Input type="text" placeholder="Option A" {...register(`question.${index}.optionA`)} />
-                                    <FormErrorMessage>{errors.question && errors.question[index]?.optionA?.message}</FormErrorMessage>
-                                </FormControl>
+                                            <FormControl id="optionB" isRequired isInvalid={errors.question && !!errors.question[index]?.optionB}>
+                                                <FormLabel>Option B</FormLabel>
+                                                <Input type="text" placeholder="Option B" {...register(`question.${index}.optionB`)} />
+                                                <FormErrorMessage>{errors.question && errors.question[index]?.optionB?.message}</FormErrorMessage>
+                                            </FormControl>
 
-                                <FormControl id="optionB" isRequired isInvalid={errors.question && !!errors.question[index]?.optionB}>
-                                    <FormLabel>Option B</FormLabel>
-                                    <Input type="text" placeholder="Option B" {...register(`question.${index}.optionB`)} />
-                                    <FormErrorMessage>{errors.question && errors.question[index]?.optionB?.message}</FormErrorMessage>
-                                </FormControl>
+                                            <FormControl id="optionC" isRequired isInvalid={errors.question && !!errors.question[index]?.optionC}>
+                                                <FormLabel>Option C</FormLabel>
+                                                <Input type="text" placeholder="Option C" {...register(`question.${index}.optionC`)} />
+                                                <FormErrorMessage>{errors.question && errors.question[index]?.optionC?.message}</FormErrorMessage>
+                                            </FormControl>
 
-                                <FormControl id="optionC" isRequired isInvalid={errors.question && !!errors.question[index]?.optionC}>
-                                    <FormLabel>Option C</FormLabel>
-                                    <Input type="text" placeholder="Option C" {...register(`question.${index}.optionC`)} />
-                                    <FormErrorMessage>{errors.question && errors.question[index]?.optionC?.message}</FormErrorMessage>
-                                </FormControl>
+                                            <FormControl id="optionD" isRequired isInvalid={errors.question && !!errors.question[index]?.optionD}>
+                                                <FormLabel>Option D</FormLabel>
+                                                <Input type="text" placeholder="Option D" {...register(`question.${index}.optionD`)} />
+                                                <FormErrorMessage>{errors.question && errors.question[index]?.optionD?.message}</FormErrorMessage>
+                                            </FormControl>
 
-                                <FormControl id="optionD" isRequired isInvalid={errors.question && !!errors.question[index]?.optionD}>
-                                    <FormLabel>Option D</FormLabel>
-                                    <Input type="text" placeholder="Option D" {...register(`question.${index}.optionD`)} />
-                                    <FormErrorMessage>{errors.question && errors.question[index]?.optionD?.message}</FormErrorMessage>
-                                </FormControl>
+                                            <FormControl id="points" isRequired isInvalid={errors.question && !!errors.question[index]?.optionD}>
+                                                <FormLabel>Question points</FormLabel>
+                                                <Input type="number" placeholder="Question points" {...register(`question.${index}.points`, { valueAsNumber: true })} />
+                                                <FormHelperText>Points for correct answer. You can assign more points to hard questions if you prefer.</FormHelperText>
+                                                <FormErrorMessage>{errors.question && errors.question[index]?.points?.message}</FormErrorMessage>
+                                            </FormControl>
 
-                                <FormControl id="points" isRequired isInvalid={errors.question && !!errors.question[index]?.optionD}>
-                                    <FormLabel>Question points</FormLabel>
-                                    <Input type="number" placeholder="Question points" {...register(`question.${index}.points`, { valueAsNumber: true })} />
-                                    <FormHelperText>Points for correct answer. You can assign more points to hard questions if you prefer.</FormHelperText>
-                                    <FormErrorMessage>{errors.question && errors.question[index]?.points?.message}</FormErrorMessage>
-                                </FormControl>
+                                            <ControlledSelect<createQuizFormValues, SelectType, true>
+                                                name={`question.${index}.correctAnswer`}
+                                                control={control}
+                                                label="Select correct answer"
+                                                placeholder="Select correct answer"
+                                                options={correctAnswerOption}
+                                                useBasicStyles
+                                            />
 
-                                <ControlledSelect<createQuizFormValues, SelectType, true>
-                                    name={`question.${index}.correctAnswer`}
-                                    control={control}
-                                    label="Select correct answer"
-                                    placeholder="Select correct answer"
-                                    options={correctAnswerOption}
-                                    useBasicStyles
-                                />
-
-                                <Button onClick={() => remove(index)}>{`Remove question ${index + 1}`}</Button>
-                            </div>)
-                        })}
+                                            <Button onClick={() => remove(index)}>{`Remove question ${index + 1}`}</Button>
+                                        </AccordionPanel>
+                                    </AccordionItem>
+                                </div>)
+                            })}
+                        </Accordion>
                         <Button
                             onClick={() => {
                                 append({
@@ -182,6 +195,7 @@ export const CreateQuiz = () => {
                                     optionB: "",
                                     optionC: "",
                                     optionD: "",
+                                    points: 1,
                                     correctAnswer: [{
                                         label: 'Option A',
                                         value: 'optionA',
@@ -195,9 +209,6 @@ export const CreateQuiz = () => {
                         >
                             Add new question
                         </Button>
-                        {/* <FormControl id="question" isInvalid={!!(errors.question && Object.keys(errors.question).length)}>
-                            <FormErrorMessage>{errors.question?.root?.message}</FormErrorMessage>
-                        </FormControl> */}
                         <Stack spacing={10} pt={2}>
                             <Button
                                 type="submit"
@@ -212,11 +223,6 @@ export const CreateQuiz = () => {
                             >
                                 Publish quiz
                             </Button>
-                        </Stack>
-                        <Stack pt={6}>
-                            <Text align={'center'}>
-                                hsdbjhdjkhdjdhj
-                            </Text>
                         </Stack>
                     </Stack>
                 </Box>
