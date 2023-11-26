@@ -10,15 +10,14 @@ export const defaultValuesQuiz: createQuizFormValues = {
     question: [
         {
             questionTitle: "",
-            optionA: "",
-            optionB: "",
-            optionC: "",
-            optionD: "",
-            points: 1,
-            correctAnswer: [{
-                label: 'Option A',
-                value: 'optionA',
+            options: [{
+                optionText: "",
+            },
+            {
+                optionText: "",
             }],
+            points: 1,
+            correctAnswer: [{ label: 'Option 1', value: 'option1' }],
         }
     ],
 };
@@ -40,24 +39,10 @@ export const visibilityOptions: SelectType[] = [
     { label: "Public", value: "public" },
 ];
 
-export const correctAnswerOption = [
-    {
-        label: 'Option A',
-        value: 'optionA',
-    },
-    {
-        label: 'Option B',
-        value: 'optionB',
-    },
-    {
-        label: 'Option C',
-        value: 'optionC',
-    },
-    {
-        label: 'Option D',
-        value: 'optionD',
-    },
-];
+export const correctAnswerOption = (numOptions: number) => Array.from({ length: numOptions }, (_, i) => ({
+    label: `Option ${i + 1}`,
+    value: `option${i + 1}`,
+}));
 
 export const CreateQuizValidation = z.object({
     title: z.string()
@@ -73,23 +58,16 @@ export const CreateQuizValidation = z.object({
     question: z.array(
         z.object({
             questionTitle: z.string().min(10, { message: 'Min length should be 10 symbols' }),
-            optionA: z.string().min(5, { message: 'Min length should be 5 symbols' }),
-            optionB: z.string().min(5, { message: 'Min length should be 5 symbols' }),
-            optionC: z.string().min(5, { message: 'Min length should be 5 symbols' }),
-            optionD: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+            options: z.array(
+                z.object({
+                    optionText: z.string().min(5, { message: 'Min length should be 5 symbols' }),
+                })
+            ).min(2, { message: 'Please add at least 2 options for your question' }),
             points: z.number().min(1, { message: "Question points should be at least 1" }),
             correctAnswer: selectSchema
                 .array()
                 .min(1, { message: "Please pick at least 1 correct answer" }),
         })
     )
-        .min(1, { message: "Please add at least 1 question for your quiz" }),
-
-    // .refine((questions) => questions.length > 0, {
-    //     message: "Please add at least 1 question for your quiz",
-    //   })
-    //   .refine((questions) =>
-    //     questions.every((question) => question.correctAnswer.length > 0),
-    //     { message: "Please pick at least 1 correct answer for each question" }
-    //   )
+        .min(1, { message: "Please add at least 1 question for your quiz" })
 })
