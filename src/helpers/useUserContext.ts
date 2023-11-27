@@ -1,16 +1,16 @@
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../config/firebase-config.ts";
-import { useEffect, useState } from "react";
-import { getUserByEmail } from "../services/users.services.ts";
-import { onValue, ref } from "firebase/database";
-import { AppUser } from "../common/interfaces.ts";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../config/firebase-config.ts';
+import { useEffect, useState } from 'react';
+import { getUserByEmail, getUserByUID } from '../services/users.services.ts';
+import { onValue, ref } from 'firebase/database';
+import { AppUser } from '../common/interfaces.ts';
 import { User, UserCredential } from 'firebase/auth';
 
 export interface AppState {
-    user: User | UserCredential | null | undefined;
-    userData?: AppUser | null;
-    isLoggedIn?: boolean;
-  }
+  user: User | UserCredential | null | undefined;
+  userData?: AppUser | null;
+  isLoggedIn?: boolean;
+}
 
 export const useUserContext = () => {
   const [user, loading] = useAuthState(auth);
@@ -21,7 +21,7 @@ export const useUserContext = () => {
   });
 
   if (appState.user !== user) {
-    setAppState(prevState => ({ ...prevState, user }));
+    setAppState((prevState) => ({ ...prevState, user }));
   }
 
   useEffect(() => {
@@ -33,20 +33,22 @@ export const useUserContext = () => {
       });
       return;
     }
-    !loading && (async () => {
-      try {
-        if (user?.email) {
-            const result = await getUserByEmail(user.email);
+    !loading &&
+      (async () => {
+        try {
+          if (user?.email) {
+            const result = await getUserByUID(user.uid);
+
             setAppState((prev) => ({
               ...prev,
               userData: Object.values(result.val())[0] as AppUser,
               isLoggedIn: !!result,
             }));
+          }
+        } catch (error) {
+          console.log(error.message);
         }
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
+      })();
   }, [user, loading, appState.userData?.profilePictureURL]);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export const useUserContext = () => {
       const userRef = ref(db, `users/${appState.userData.username}`);
 
       const userListener = onValue(userRef, (snapshot) => {
-        setAppState((prev) => ({ ...prev, userData: snapshot.val() }))
+        setAppState((prev) => ({ ...prev, userData: snapshot.val() }));
       });
       return () => {
         userListener();
@@ -66,6 +68,6 @@ export const useUserContext = () => {
     loading,
     user,
     appState,
-    setAppState
-  }
-}
+    setAppState,
+  };
+};
