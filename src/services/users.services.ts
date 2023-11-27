@@ -87,10 +87,8 @@ export const getUserData = (uid: string): Promise<DataSnapshot> => {
 
 /**
  * Retrieves all users.
- *
- * @returns {Promise<Array>} - A promise that resolves with an array of user objects.
  */
-export const getAllUsers = (): Promise<Array<DataSnapshot>> => {
+export const getAllUsers = () => {
     return get(ref(db, "users")).then((snapshot) => {
         if (!snapshot.exists()) {
             return [];

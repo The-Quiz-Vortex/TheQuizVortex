@@ -109,5 +109,22 @@ export const getQuizzesByAuthor = async (username: string) => {
 };
 
 
+export const getQuizzesByTitle = async (title: string) => {
+    try {
+        const snapshot = await get(
+            query(ref(db, 'quizzes'), orderByChild('title'), equalTo(title))
+        );
+
+        if (!snapshot.exists()) {
+            return [];
+        }
+
+        return fromQuizDocument(snapshot);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
 
 

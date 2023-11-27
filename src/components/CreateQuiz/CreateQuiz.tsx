@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, IconButton, Input, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Heading, Input, Stack, Text, useColorModeValue, useToast } from '@chakra-ui/react'
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { SelectType, CreateQuizValidation, createQuizFormValues, visibilityOptions, correctAnswerOption } from './createQuiz.validation.ts';
+import { SelectType, CreateQuizValidation, createQuizFormValues, visibilityOptions } from './createQuiz.validation.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { defaultValuesQuiz } from './createQuiz.validation.ts'
 import ControlledSelect from '../ControlledSelect/ControlledSelect.tsx';
@@ -12,10 +11,11 @@ import { QuizQuestion } from '../../common/interfaces.ts';
 import { modelQuizRawData } from './createQuiz.helper.ts';
 import { addQuiz } from '../../services/quiz.services.ts';
 import { fetchCategories } from '../../services/openTrivia.services.ts';
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { AddOptions } from './AddOptions.tsx';
+import { getAllUsers } from '../../services/users.services.ts';
 
 export interface QuizFormData {
+    userId: string[];
     title: string;
     categories: string[];
     visibility: string;
@@ -27,11 +27,20 @@ export const CreateQuiz = () => {
     const { userData } = useContext(AuthContext);
     const toast = useToast();
     const [categoryOptions, setCategoryOptions] = useState([]);
+    const [userOptions, setUserOptions] = useState<SelectType[]>([]);
 
     useEffect(() => {
         (async () => {
             const result = await fetchCategories()
             setCategoryOptions(result);
+
+            const usersData = await getAllUsers();
+
+            const usersList = usersData.map(user => ({
+                label: user.username,
+                value: user.username
+            }));
+            setUserOptions(usersList);
         })()
     }, []);
 
@@ -39,6 +48,8 @@ export const CreateQuiz = () => {
         handleSubmit,
         register,
         control,
+        watch,
+        resetField,
         formState: { errors, isSubmitting },
     } = useForm<createQuizFormValues>({
         resolver: zodResolver(CreateQuizValidation),
@@ -50,8 +61,15 @@ export const CreateQuiz = () => {
         name: 'question',
     });
 
+    console.log(watch('visibility'));
+
+    useEffect( () => {
+        if (watch('visibility')[0].value === 'public') {
+            resetField('users')
+        }
+    })
+
     const onSubmit: SubmitHandler<createQuizFormValues> = async (values) => {
-        console.log(values);
         try {
             setLoading(true);
             if (userData) {
@@ -132,6 +150,16 @@ export const CreateQuiz = () => {
                             options={categoryOptions}
                             useBasicStyles
                         />
+                        {watch('visibility')[0].value === 'private' &&
+                            (<ControlledSelect<createQuizFormValues, SelectType, true>
+                                isMulti
+                                name="users"
+                                control={control}
+                                label="Quiz users"
+                                placeholder="Select users"
+                                options={userOptions}
+                                useBasicStyles
+                            />)}
                         <Accordion defaultIndex={[0]} allowMultiple>
                             {fields.map((field, index) => {
                                 return (<div key={field.id}>
