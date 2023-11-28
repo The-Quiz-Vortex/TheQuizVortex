@@ -1,10 +1,12 @@
 import * as z from "zod"
+import { getQuizzesByTitle } from "../../services/quiz.services.ts";
 
 export type createQuizFormValues = z.infer<typeof CreateQuizValidation>;
 
 export const defaultValuesQuiz: createQuizFormValues = {
     title: "",
     categories: [],
+    users: [],
     visibility: [{ label: "Public", value: "public" }],
     timeLimit: 0,
     question: [
@@ -27,11 +29,6 @@ const selectSchema = z.object({
     value: z.string(),
 });
 
-const categoriesSelectSchema = z.object({
-    label: z.string(),
-    value: z.number(),
-});
-
 export type SelectType = z.infer<typeof selectSchema>;
 
 export const visibilityOptions: SelectType[] = [
@@ -46,15 +43,21 @@ export const correctAnswerOption = (numOptions: number) => Array.from({ length: 
 
 export const CreateQuizValidation = z.object({
     title: z.string()
-        .min(1, { message: 'Min length should be 3 symbols' })
-        .max(30, { message: 'Max length should be 30 symbols' }),
+        .min(3, { message: 'Min length should be 3 symbols' })
+        .max(30, { message: 'Max length should be 30 symbols' })
+        .refine(async (title) => {
+            const resultArr = await getQuizzesByTitle(title);
+            return resultArr?.length === 0
+        }, { message: 'Quiz with this title already exists' }),
     visibility: selectSchema
         .array()
         .min(1, { message: "You need to choose visibility" }),
     timeLimit: z.number().min(0).optional(),
-    categories: categoriesSelectSchema
+    categories: selectSchema
         .array()
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
+    users: selectSchema
+        .array().optional(),
     question: z.array(
         z.object({
             questionTitle: z.string().min(10, { message: 'Min length should be 10 symbols' }),

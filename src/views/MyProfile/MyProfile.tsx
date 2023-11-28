@@ -30,14 +30,23 @@ import {
 
 export default function MyProfile() {
   const { appState } = useUserContext();
-  const [profilePicURL, setProfilePicURL] = useState(appState.userData?.profilePictureURL || '');
+  const [profilePicURL, setProfilePicURL] = useState(appState.userData?.profilePictureURL);
   const toast = useToast();
 
+  useEffect(() => {
+    setProfileData({
+      firstName: appState.userData?.firstName || '',
+      lastName: appState.userData?.lastName || '',
+      phoneNumber: appState.userData?.phoneNumber || '',
+      email: appState.userData?.email || '',
+    });
+  }, [appState.userData]);
+
   const [profileData, setProfileData] = useState({
-    firstName: appState.userData?.firstName ?? '',
-    lastName: appState.userData?.lastName ?? '',
-    phoneNumber: appState.userData?.phoneNumber ?? '',
-    email: appState.userData?.email ?? '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    email: '',
   });
 
   const handleInputChange = (e) => {
@@ -47,25 +56,34 @@ export default function MyProfile() {
 
   const UpdateProfile = async () => {
     try {
-      await updateProfileFirstName(profileData.firstName, appState.userData.username);
-      await updateProfileLastName(profileData.lastName, appState.userData.username);
-      await updateProfileEmail(profileData.email, appState.userData.username);
-      await updateProfilePhone(profileData.phoneNumber, appState.userData.username);
+      await Promise.all([
+        updateProfileFirstName(profileData.firstName, appState.userData.username),
+        updateProfileLastName(profileData.lastName, appState.userData.username),
+        updateProfileEmail(profileData.email, appState.userData.username),
+        updateProfilePhone(profileData.phoneNumber, appState.userData.username),
+      ]);
+
+      setProfileData({
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        phoneNumber: profileData.phoneNumber,
+        email: profileData.email,
+      });
+
+      toast({
+        title: 'The profile has been updated successfully.',
+        status: 'success',
+        isClosable: true,
+        position: 'top',
+      });
     } catch (error) {
       console.error('Error updating profile:', error);
     }
-
-    toast({
-      title: 'The profile has been updated successfully.',
-      status: 'success',
-      isClosable: true,
-      position: 'top',
-    });
   };
 
   useEffect(() => {
     setProfilePicURL(appState.userData?.profilePictureURL || '');
-  }, [appState.userData]);
+  }, [appState.userData?.profilePictureURL]);
 
   const handleProfilePicChange = async (file) => {
     if (!file) return;
@@ -78,7 +96,7 @@ export default function MyProfile() {
       }
 
       toast({
-        title: 'Profile picture updated successfully.',
+        title: 'Profile picture updated successfully. Please refresh the page.',
         status: 'success',
         isClosable: true,
         position: 'top',
@@ -97,7 +115,7 @@ export default function MyProfile() {
 
   const handleDeletePicture = async () => {
     try {
-      await deleteProfilePic(appState.userData.username);
+      await deleteProfilePic(appState.userData?.username);
 
       toast({
         title: 'Profile picture removed.',
@@ -140,7 +158,7 @@ export default function MyProfile() {
                   <Avatar
                     size="xl"
                     name={`${appState.userData?.firstName} ${appState.userData?.lastName}`}
-                    src={appState.userData.profilePictureURL}
+                    src={profilePicURL}
                   >
                     <AvatarBadge
                       as={IconButton}
@@ -160,7 +178,7 @@ export default function MyProfile() {
                       type="file"
                       accept="image/*"
                       style={{ display: 'none' }}
-                      onChange={(e) => handleProfilePicChange(e.target.files[0])}
+                      onChange={(e) => handleProfilePicChange(e.target.files?.[0])}
                     />
                     <Button w="full" as="span">
                       Change picture
@@ -175,7 +193,7 @@ export default function MyProfile() {
                 placeholder="First name"
                 _placeholder={{ color: 'gray.500' }}
                 type="text"
-                value={profileData.firstName || appState.userData.firstName}
+                value={profileData.firstName}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -185,17 +203,17 @@ export default function MyProfile() {
                 placeholder="Last name"
                 _placeholder={{ color: 'gray.500' }}
                 type="text"
-                value={profileData.lastName || appState.userData.lastName}
+                value={profileData.lastName}
                 onChange={handleInputChange}
               />
             </FormControl>
             <FormControl id="phoneNumber">
               <FormLabel>Phone number</FormLabel>
               <Input
-                placeholder="+359xxxxxxxxx"
+                placeholder="0xxxxxxxxx"
                 _placeholder={{ color: 'gray.500' }}
                 type="text"
-                value={profileData.phoneNumber || appState.userData.phoneNumber}
+                value={profileData.phoneNumber}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -205,7 +223,7 @@ export default function MyProfile() {
                 placeholder="your-email@example.com"
                 _placeholder={{ color: 'gray.500' }}
                 type="email"
-                value={profileData.email || appState.userData.email}
+                value={profileData.email}
                 onChange={handleInputChange}
               />
             </FormControl>

@@ -1,16 +1,15 @@
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../config/firebase-config.ts";
-import { useEffect, useState } from "react";
-import { getUserByEmail } from "../services/users.services.ts";
-import { onValue, ref } from "firebase/database";
-import { AppUser } from "../common/interfaces.ts";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../config/firebase-config.ts';
+import { useEffect, useState } from 'react';
+import { getUserByEmail, getUserByUID } from '../services/users.services.ts';
+import { onValue, ref } from 'firebase/database';
+import { AppUser } from '../common/interfaces.ts';
 import { User, UserCredential } from 'firebase/auth';
 
 export interface AppState {
   user: User | UserCredential | null | undefined;
   userData?: AppUser | null;
   isLoggedIn?: boolean;
-  isAdmin?: boolean; 
 }
 
 export const useUserContext = () => {
@@ -19,11 +18,10 @@ export const useUserContext = () => {
     userData: {} as AppUser,
     isLoggedIn: undefined,
     user,
-    isAdmin: false,
   });
 
   if (appState.user !== user) {
-    setAppState(prevState => ({ ...prevState, user }));
+    setAppState((prevState) => ({ ...prevState, user }));
   }
 
   useEffect(() => {
@@ -32,10 +30,25 @@ export const useUserContext = () => {
         ...appState,
         userData: {} as AppUser,
         isLoggedIn: false,
-        isAdmin: false,
       });
       return;
     }
+    !loading &&
+      (async () => {
+        try {
+          if (user?.email) {
+            const result = await getUserByUID(user.uid);
+
+            setAppState((prev) => ({
+              ...prev,
+              userData: Object.values(result.val())[0] as AppUser,
+              isLoggedIn: !!result,
+            }));
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      })();
     !loading && (async () => {
       try {
         if (user?.email) {
