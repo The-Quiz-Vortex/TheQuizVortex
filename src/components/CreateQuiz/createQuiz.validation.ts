@@ -29,6 +29,11 @@ const selectSchema = z.object({
     value: z.string(),
 });
 
+const categoriesSelectSchema = z.object({
+    label: z.string(),
+    value: z.number(),
+});
+
 export type SelectType = z.infer<typeof selectSchema>;
 
 export const visibilityOptions: SelectType[] = [
@@ -53,7 +58,7 @@ export const CreateQuizValidation = z.object({
         .array()
         .min(1, { message: "You need to choose visibility" }),
     timeLimit: z.number().min(0).optional(),
-    categories: selectSchema
+    categories: categoriesSelectSchema
         .array()
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
     users: selectSchema

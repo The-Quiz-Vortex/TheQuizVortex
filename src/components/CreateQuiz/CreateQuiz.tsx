@@ -56,6 +56,8 @@ export const CreateQuiz = () => {
         defaultValues: defaultValuesQuiz,
     });
 
+    console.log(errors);
+    
     const { fields, append, remove } = useFieldArray({
         control: control,
         name: 'question',

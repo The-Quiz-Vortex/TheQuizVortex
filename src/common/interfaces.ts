@@ -19,6 +19,7 @@ export interface Quiz {
   author: string;
   createdOn: Date;
   totalPoints: number;
+  quizId: string;
 }
 
 //Single quiz question

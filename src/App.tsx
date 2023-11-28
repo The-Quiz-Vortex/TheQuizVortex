@@ -11,6 +11,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import _ from 'lodash';
 import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
 import MyProfile from './views/MyProfile/MyProfile.tsx';
+import Quiz from './components/Quiz/Quiz.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />
                 <Route path="/my-profile" element={<MyProfile />} />
+                <Route path="/quiz/:id" element={<Quiz />} />
               </Routes>
             </div>
           </AuthContext.Provider>
