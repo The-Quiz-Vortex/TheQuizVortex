@@ -7,11 +7,13 @@ export interface AuthContextType {
   user: User | UserCredential | null | undefined;
   isLoggedIn?: boolean;
   userData?: AppUser | null;
-  setUser: Dispatch<SetStateAction<AppState>>;
+  isAdmin?: boolean;
+  setUser: Dispatch<SetStateAction<Partial<AppState>>>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   setUser:(() => {}),
   userData: {} as AppUser,
   user: {} as User,
+  isAdmin: false,
 });

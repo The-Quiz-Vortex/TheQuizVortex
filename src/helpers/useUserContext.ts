@@ -7,10 +7,11 @@ import { AppUser } from "../common/interfaces.ts";
 import { User, UserCredential } from 'firebase/auth';
 
 export interface AppState {
-    user: User | UserCredential | null | undefined;
-    userData?: AppUser | null;
-    isLoggedIn?: boolean;
-  }
+  user: User | UserCredential | null | undefined;
+  userData?: AppUser | null;
+  isLoggedIn?: boolean;
+  isAdmin?: boolean; 
+}
 
 export const useUserContext = () => {
   const [user, loading] = useAuthState(auth);
@@ -18,6 +19,7 @@ export const useUserContext = () => {
     userData: {} as AppUser,
     isLoggedIn: undefined,
     user,
+    isAdmin: false,
   });
 
   if (appState.user !== user) {
@@ -30,18 +32,21 @@ export const useUserContext = () => {
         ...appState,
         userData: {} as AppUser,
         isLoggedIn: false,
+        isAdmin: false,
       });
       return;
     }
     !loading && (async () => {
       try {
         if (user?.email) {
-            const result = await getUserByEmail(user.email);
-            setAppState((prev) => ({
-              ...prev,
-              userData: Object.values(result.val())[0] as AppUser,
-              isLoggedIn: !!result,
-            }));
+          const result = await getUserByEmail(user.email);
+          const isAdmin = result && result.val()?.role === 'admin';
+          setAppState((prev) => ({
+            ...prev,
+            userData: Object.values(result.val())[0] as AppUser,
+            isLoggedIn: !!result,
+            isAdmin,
+          }));
         }
       } catch (error) {
         console.log(error.message);
@@ -54,7 +59,7 @@ export const useUserContext = () => {
       const userRef = ref(db, `users/${appState.userData.username}`);
 
       const userListener = onValue(userRef, (snapshot) => {
-        setAppState((prev) => ({ ...prev, userData: snapshot.val() }))
+        setAppState((prev) => ({ ...prev, userData: snapshot.val() }));
       });
       return () => {
         userListener();
@@ -66,6 +71,6 @@ export const useUserContext = () => {
     loading,
     user,
     appState,
-    setAppState
-  }
-}
+    setAppState,
+  };
+};
