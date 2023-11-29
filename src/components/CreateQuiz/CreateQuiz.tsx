@@ -55,15 +55,11 @@ export const CreateQuiz = () => {
         resolver: zodResolver(CreateQuizValidation),
         defaultValues: defaultValuesQuiz,
     });
-
-    console.log(errors);
     
     const { fields, append, remove } = useFieldArray({
         control: control,
         name: 'question',
     });
-
-    console.log(watch('visibility'));
 
     useEffect( () => {
         if (watch('visibility')[0].value === 'public') {

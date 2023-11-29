@@ -1,12 +1,13 @@
-// QuizApp.jsx
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Text, Button } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { getQuizById } from '../../services/quiz.services.ts';
 import { useCounter } from './quiz.helper.ts';
 import Question from '../Question/Question.tsx';
+import QuestionCorrection from '../Question/QuestionCorrection.tsx';
+import Results from '../Results/Results.tsx';
+import './Quiz.scss';
 
-function QuizApp() {
+function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizSize, setQuizSize] = useState({});
@@ -15,6 +16,7 @@ function QuizApp() {
   const quizRef = useRef(null);
   const questions = useRef([]);
   const selectedArr = useRef([]);
+  const score = useRef(0);
 
   const totalQuestion = questions.current.length - 1;
 
@@ -26,31 +28,33 @@ function QuizApp() {
   useEffect(() => {
     getQuizById(id).then((data) => {
       setQuiz(data);
-      questions.current = data.questions;
+      questions.current = [...data.questions];
     });
   }, []);
 
   const handleNewQuestionClick = (selectedValue, currQuestion) => {
+
     if (totalQuestion >= questionCounter.value) {
-      if (currQuestion.isCorrect) {
-        selectedArr.current.push(null);
+      if (selectedValue === currQuestion.correctAnswer) {
+        selectedArr.current.push(selectedValue);
         correctCounter.add();
-      } else if (selectedValue !== null && selectedValue !== currQuestion.correct) {
+        score.current += currQuestion.points;
+      } else if (selectedValue !== null && selectedValue !== currQuestion.correctAnswer) {
         selectedArr.current.push(selectedValue);
         wrongCounter.add();
       } else {
-        selectedArr.current.push(selectedValue);
+        selectedArr.current.push(null);
         emptyCounter.add();
       }
       questionCounter.add();
+      if (totalQuestion === questionCounter.value) {
+        setQuizFinished(true);
+      }
     }
   };
 
   const resetSelection = () => {
     selectedArr.current = [];
-    correctCounter.reset();
-    wrongCounter.reset();
-    emptyCounter.reset();
   };
 
   const handleRestartClick = () => {
@@ -88,79 +92,80 @@ function QuizApp() {
   }, [questionCounter.value]);
 
   return (
-    <Box
-      className="quiz"
+    <div
+      className="game"
       ref={quizRef}
-      data-quiz-started={quizStarted ? true : null}
-      data-quiz-finished={questionCounter.value > totalQuestion ? true : null}
+      data-game-started={quizStarted ? true : null}
+      data-game-finished={questionCounter.value > totalQuestion ? true : null}
     >
-      <Box className="intro">
-        <Box className="intro-inner">
-          <Text className="intro-title">CSS Quiz</Text>
+      <div className="intro">
+        <div className="intro-inner">
+          <h1 className="intro-title">{quiz.title}</h1>
           {!quizStarted && (
             <>
-              <Text className="intro-desc">{`The test contains ${questions.current.length} questions and there is no time limit.`}</Text>
-              <Button className="intro-button" onClick={() => setQuizStarted(true)}>
+              <p className="intro-desc">
+                {`The quiz contains ${questions.current.length} questions 
+                and there is ${quiz.timeLimit > 0 ? `${quiz.timeLimit} minutes` : 'no'} time limit.`}
+              </p>
+
+              <button
+                className="intro-button"
+                onClick={() => setQuizStarted(true)}
+              >
                 Start Quiz
-              </Button>
+              </button>
             </>
           )}
           {quizStarted && (
-            <Box className="indicator">
-              {questions.current.map((q, index) => (
-                <Box
-                  key={index}
-                  className="indicator-item"
-                  backgroundColor={indicatorBg(index)}
-                />
-              ))}
-            </Box>
+            <div className="indicator">
+              {questions.current.map((q, index) => {
+                return (
+                  <span
+                    className="indicator-item"
+                    style={{
+                      backgroundColor: indicatorBg(index)
+                    }}
+                  />
+                );
+              })}
+            </div>
           )}
-          {/* <Box className="result">
-            <Box className="result-item is-correct">
-              <Text className="result-count">{correctCounter.value}</Text>
-              <Text className="result-text">CORRECT</Text>
-            </Box>
-            <Box className="result-item is-wrong">
-              <Text className="result-count">{wrongCounter.value}</Text>
-              <Text className="result-text">WRONG</Text>
-            </Box>
-            <Box className="result-item is-empty">
-              <Text className="result-count">{emptyCounter.value}</Text>
-              <Text className="result-text">EMPTY</Text>
-            </Box>
-          </Box> */}
-          <Button className="restart-button" onClick={handleRestartClick}>
+          {quizFinished && (
+            <h4 style={{marginTop: '50px'}}>{`You ${(score.current / quiz.totalPoints) > quiz.passScore ? '' : 'did not'} pass with score of ${((score.current / quiz.totalPoints) * 100).toFixed(2)}%`}</h4>
+          )}
+          <Results
+            wrong={wrongCounter.value}
+            correct={correctCounter.value}
+            empty={emptyCounter.value}
+          />
+          <button
+            className="restart-button"
+            onClick={() => handleRestartClick()}
+          >
             Restart Quiz
-          </Button>
-        </Box>
-      </Box>
-      <Box className="quiz-area">
+          </button>
+        </div>
+      </div>
+      <div className="game-area">
         {questions.current[questionCounter.value] && (
           <Question
             data={questions.current[questionCounter.value]}
+            selections={selectedArr.current}
             buttonText={
-              questionCounter.value !== totalQuestion ? 'Next Question' : 'Finish Quiz'
+              questionCounter.value !== totalQuestion ? "Next Question" : "Finish Quiz"
             }
             onQuestionButtonClick={handleNewQuestionClick}
           />
         )}
+
         {!questions.current[questionCounter.value] && (
           <>
-            {questions.current.map((q, index) => (
-              <Question
-                key={q.quizId}
-                hasButton={false}
-                markSelection={selectedArr.current[index]}
-                showAnswer
-                data={q}
-              />
-            ))}
+            <QuestionCorrection selections={selectedArr.current} questions={questions.current} />
           </>
         )}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }
 
-export default QuizApp;
+export default Quiz;

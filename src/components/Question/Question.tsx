@@ -5,6 +5,7 @@ import gsap from 'gsap';
 
 function Question({
   data,
+  selections,
   buttonText,
   hasButton = true,
   onQuestionButtonClick,
@@ -14,6 +15,12 @@ function Question({
   const [answer, setAnswer] = useState(null);
   const parseValue = (value) => (value ? parseInt(value.split('-')[1]) : null);
   const questionRef = useRef(null);
+
+  console.log(markSelection);
+  
+  useEffect(() => {
+    setAnswer(null);
+  }, [data]);
 
   useEffect(() => {
     gsap.fromTo(
@@ -41,50 +48,50 @@ function Question({
         stagger: 0.1,
       }
     );
-  }, [data]);
+  }, [data, selections]);
 
   return (
-    <Box className="question" ref={questionRef} display="flex" flexDirection="column" width="100%">
-      <Box className="question-inner" margin="auto 0">
-        <Text className="question-text" color="#333" margin="20px 0" fontSize="18px">
-          {data.questionTitle}
-        </Text>
-        <VStack spacing="10px">
+    <div className="question" ref={questionRef}>
+      <div className="question-inner">
+        <h2 className="question-text">{data.questionTitle}</h2>
+        <ul className="question-answers">
           {data.options.map((option, index) => {
             const value = `q${data.quizId}-${index}`;
             return (
-              <Radio
+              <li
                 key={index}
-                className={option.isCorrect && showAnswer ? 'is-true' : ''}
-                isChecked={!showAnswer ? answer === value : markSelection === index}
-                value={value}
-                onChange={() => setAnswer(value)}
-                colorScheme="teal"
+                className={
+                  option.isCorrect && showAnswer ? "is-true" : ""
+                }
+                data-selected={markSelection === index ? true : null}
               >
-                {option.optionText}
-              </Radio>
+                <input
+                  type="radio"
+                  name={`q_${data.quizId}`}
+                  value={value}
+                  id={value}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  checked={
+                    !showAnswer ? answer === value : markSelection === index
+                  }
+                />
+                <label className="question-answer" htmlFor={value}>
+                  {option.optionText}
+                </label>
+              </li>
             );
           })}
-        </VStack>
-      </Box>
+        </ul>
+      </div>
       {hasButton && (
-        <Button
+        <button
           className="question-button"
           onClick={() => onQuestionButtonClick(parseValue(answer), data)}
-          backgroundColor="#1f8197"
-          color="#fff"
-          border="0"
-          padding="14px 26px"
-          borderRadius="4px"
-          marginTop="20px"
-          fontSize="16px"
-          cursor="pointer"
-          fontWeight="500"
         >
           {buttonText}
-        </Button>
+        </button>
       )}
-    </Box>
+    </div>
   );
 }
 

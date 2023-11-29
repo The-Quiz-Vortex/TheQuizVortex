@@ -20,6 +20,7 @@ export interface Quiz {
   createdOn: Date;
   totalPoints: number;
   quizId: string;
+  passScore: number;
 }
 
 //Single quiz question
