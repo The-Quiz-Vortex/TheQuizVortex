@@ -92,6 +92,7 @@ function Quiz() {
   }, [questionCounter.value]);
 
   return (
+    <div className='quizPage'>
     <div
       className="game"
       ref={quizRef}
@@ -164,6 +165,7 @@ function Quiz() {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }
