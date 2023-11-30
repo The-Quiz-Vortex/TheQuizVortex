@@ -36,3 +36,11 @@ export interface QuizOption {
   optionText: string;
   isCorrect: boolean;
 }
+
+export interface QuizResult {
+  quizId: string;
+  username: string;
+  score: number;
+  selectionArr: number[] | string[];
+  completedAt: Date;
+}

@@ -124,7 +124,3 @@ export const getQuizzesByTitle = async (title: string) => {
         console.error(error);
     }
 };
-
-
-
-
