@@ -1,6 +1,12 @@
+import { QuizQuestion } from "../../common/interfaces.ts";
 import Question from "./Question.tsx";
 
-function QuestionCorrection({ questions, selections }) {
+interface QuestionCorrectionProps {
+  questions: QuizQuestion[];
+  selections: (number | null)[];
+}
+
+function QuestionCorrection({ questions, selections }: QuestionCorrectionProps) {
     return (
       <div className="correction">
         {questions.map((question, i) => {

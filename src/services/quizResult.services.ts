@@ -2,7 +2,7 @@ import { get, push, ref, update } from "firebase/database";
 import { db } from "../config/firebase-config.ts";
 
 export const saveQuizResult = async (
-    selection: number[] | string[], 
+    selection: (number | null)[], 
     quizId: string, 
     username: string, 
     scorePoints: number,

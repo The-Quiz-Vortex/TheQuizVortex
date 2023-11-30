@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getQuizById } from '../../services/quiz.services.ts';
 import { useCounter } from './quiz.helper.ts';
@@ -13,12 +13,11 @@ import { Quiz as QuizInterface, QuizQuestion } from '../../common/interfaces.ts'
 function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
-  const [quizSize, setQuizSize] = useState({});
   const { id } = useParams();
-  const [quiz, setQuiz] = useState<QuizInterface>({});
-  const quizRef = useRef(null);
+  const [quiz, setQuiz] = useState<QuizInterface>({} as QuizInterface);
+  const quizRef = useRef<HTMLDivElement | null>(null);
   const questions = useRef<QuizQuestion[]>([]);
-  const selectedArr = useRef([]);
+  const selectedArr = useRef<(number | null)[]>([]);
   const score = useRef(0);
   const { userData } = useContext(AuthContext);
 
@@ -28,13 +27,6 @@ function Quiz() {
   const correctCounter = useCounter(0);
   const wrongCounter = useCounter(0);
   const emptyCounter = useCounter(0);
-
-  // useEffect(() => {
-  //   getQuizById(id).then((data) => {
-  //     setQuiz(data);
-  //     questions.current = [...data.questions];
-  //   });
-  // }, []);
 
   useEffect(() => {
 
@@ -52,7 +44,7 @@ function Quiz() {
     fetchQuiz();
   }, []);
 
-  const handleNewQuestionClick = async (selectedValue, currQuestion) => {
+  const handleNewQuestionClick = async (selectedValue: number | null, currQuestion: QuizQuestion) => {
 
     if (totalQuestion >= questionCounter.value) {
       if (selectedValue === currQuestion.correctAnswer) {
@@ -74,7 +66,7 @@ function Quiz() {
           quiz.quizId,
           userData?.username,
           score.current,
-          ((score.current / quiz.totalPoints) * 100).toFixed(2));
+          parseFloat(((score.current / quiz.totalPoints) * 100).toFixed(2)));
       }
     }
   };
@@ -93,7 +85,7 @@ function Quiz() {
     emptyCounter.reset();
   };
 
-  const indicatorBg = (index) => {
+  const indicatorBg = (index: number) => {
     if (questionCounter.value > index) {
       return '#fff';
     } else if (questionCounter.value === index) {
@@ -112,7 +104,7 @@ function Quiz() {
   }, [quizStarted]);
 
   useEffect(() => {
-    if (questionCounter.value > totalQuestion) {
+    if (questionCounter.value > totalQuestion && quizRef.current) {
       quizRef.current.scrollTop = 0;
     }
   }, [questionCounter.value]);

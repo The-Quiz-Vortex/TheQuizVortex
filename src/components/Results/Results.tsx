@@ -1,4 +1,10 @@
-function Results({ wrong, correct, empty }) {
+interface ResultProps {
+  wrong: number;
+  correct: number;
+  empty: number;
+}
+
+function Results({ wrong, correct, empty }: ResultProps) {
 
     return (
       <div className="result">
