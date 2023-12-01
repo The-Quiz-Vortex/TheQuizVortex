@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
 import MyProfile from './views/MyProfile/MyProfile.tsx';
 import Quiz from './components/Quiz/Quiz.tsx';
+import QuizList from './components/QuizList/QuizList.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/create-quiz" element={<CreateQuiz />} />
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
+                <Route path="/quiz/quiz-list" element={<QuizList />} />
               </Routes>
             </div>
           </AuthContext.Provider>
