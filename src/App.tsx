@@ -10,7 +10,7 @@ import { useUserContext } from './helpers/useUserContext.ts';
 import { ChakraProvider } from '@chakra-ui/react';
 import _ from 'lodash';
 import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
-import MyProfile from './views/MyProfile/MyProfile.tsx';
+import MyProfile from './components/MyProfile/MyProfile.tsx';
 import Quiz from './components/Quiz/Quiz.tsx';
 import QuizList from './components/QuizList/QuizList.tsx';
 

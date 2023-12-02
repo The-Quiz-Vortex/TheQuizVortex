@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
-import Dashboard from '../../components/Dashboard/Dashboard.tsx';
+import Dashboard from '../Dashboard/Dashboard.tsx';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import {
   updateProfileEmail,
