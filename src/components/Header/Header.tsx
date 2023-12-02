@@ -129,17 +129,17 @@ export default function WithSubnavigation() {
 
         {!loading && !user ? (
           <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-            <Button as={Link} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
+            <Button as={Link} fontSize={'sm'} fontWeight={400} variant={'link'} to={'/sign-in'}>
               Sign In
             </Button>
             <Button
-              as={'a'}
+              as={Link}
               display={{ base: 'inline-flex' }}
               fontSize={'sm'}
               fontWeight={600}
               color={'white'}
               bg={'pink.400'}
-              href={'/sign-up'}
+              to={'/sign-up'}
               _hover={{
                 bg: 'pink.300',
               }}
@@ -164,7 +164,7 @@ const DesktopNav = () => {
   const { user, loading } = useUserContext();
 
   return (
-    <Stack direction={'row'} spacing={4}>
+    <Stack direction={'row'} alignItems={'center'} spacing={4}>
       {NAV_ITEMS.map(
         (navItem) =>
           !navItem.shouldHide?.(user) && ( // Conditionally render based on shouldHide function
@@ -209,20 +209,20 @@ const DesktopNav = () => {
       )}
 
       {!loading && user && (
-        <Link as={'a'} to={'/create-quiz'}>
-          <Button
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            color={'white'}
-            bg={'gray.400'}
-            _hover={{
-              bg: 'pink.300',
-            }}
-          >
-            Create quiz
-          </Button>
-        </Link>
+        <Button
+          as={Link}
+          to={'/create-quiz'}
+          fontSize={'sm'}
+          fontWeight={600}
+          color={'white'}
+          bg={'pink.300'}
+          display={{ base: 'none', md: 'inline-flex' }}
+          _hover={{
+            bg: 'pink.400',
+          }}
+        >
+          Create quiz
+        </Button>
       )}
     </Stack>
   );
