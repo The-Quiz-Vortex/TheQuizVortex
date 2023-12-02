@@ -11,19 +11,27 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
   useDisclosure,
+  Avatar,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  VStack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
+import { FiBell, FiChevronDown } from 'react-icons/fi';
 
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
 import Signout from '../../components/Signout/signout.tsx';
+import { capitalize } from 'lodash';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
-  const { loading, user } = useUserContext();
+  const { loading, user, appState } = useUserContext();
 
   return (
     <Box>
@@ -54,10 +62,7 @@ export default function WithSubnavigation() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <a href="/" style={{ textDecoration: 'none' }}>
-            <Image
-              src="/quiz-logo.png" 
-              boxSize="40px" 
-            />
+            <Image src="/quiz-logo.png" boxSize="40px" />
           </a>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -66,9 +71,56 @@ export default function WithSubnavigation() {
         </Flex>
 
         {!loading && user && (
-          <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-            <Signout />
-          </Stack>
+          <>
+            <HStack spacing={{ base: '0', md: '6' }}>
+              <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
+              <Flex alignItems={'center'}>
+                <Menu>
+                  <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
+                    <HStack>
+                      <Avatar size={'sm'} src={appState.userData?.profilePictureURL} />
+                      <VStack
+                        display={{ base: 'none', md: 'flex' }}
+                        alignItems="flex-start"
+                        spacing="1px"
+                        ml="2"
+                      >
+                        <Text
+                          fontSize="sm"
+                          fontWeight="bold"
+                        >{`${appState.userData?.firstName} ${appState.userData?.lastName}`}</Text>
+                        <Text fontSize="xs" color="gray.600" textTransform="capitalize">
+                          {appState.userData?.role}
+                        </Text>
+                      </VStack>
+                      <Box display={{ base: 'none', md: 'flex' }}>
+                        <FiChevronDown />
+                      </Box>
+                    </HStack>
+                  </MenuButton>
+                  <MenuList
+                    bg={useColorModeValue('white', 'gray.900')}
+                    borderColor={useColorModeValue('gray.200', 'gray.700')}
+                    textAlign="left"
+                    p="2"
+                  >
+                    <MenuItem as="a" href="/my-profile">
+                      My Profile
+                    </MenuItem>
+                    <MenuItem as="a" href="/settings">
+                      Settings
+                    </MenuItem>
+                    <MenuItem as="a" href="/my-quizes">
+                      My Quizes
+                    </MenuItem>
+                    <MenuItem>
+                      <Signout />
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </Flex>
+            </HStack>
+          </>
         )}
 
         {!loading && !user ? (
