@@ -27,14 +27,13 @@ import { FiBell, FiChevronDown } from 'react-icons/fi';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
 import Signout from '../../components/Signout/signout.tsx';
-import { capitalize } from 'lodash';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
   const { loading, user, appState } = useUserContext();
 
   return (
-    <Box>
+    <Box position="sticky" top={0} zIndex={10}>
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
@@ -107,9 +106,13 @@ export default function WithSubnavigation() {
                     <MenuItem as="a" href="/my-profile">
                       My Profile
                     </MenuItem>
-                    <MenuItem as="a" href="/settings">
-                      Settings
-                    </MenuItem>
+
+                    {!loading && appState.userData?.role === 'admin' ? (
+                      <MenuItem as="a" href="/admin-settings">
+                        Admin Settings
+                      </MenuItem>
+                    ) : null}
+
                     <MenuItem as="a" href="/my-quizes">
                       My Quizes
                     </MenuItem>

@@ -13,6 +13,7 @@ import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
 import MyProfile from './components/MyProfile/MyProfile.tsx';
 import Quiz from './components/Quiz/Quiz.tsx';
 import QuizList from './components/QuizList/QuizList.tsx';
+import ManageUsers from './components/ManageUsers/ManageUsers.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />
                 <Route path="/my-profile" element={<MyProfile />} />
+                <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
                 <Route path="/quiz/quiz-list" element={<QuizList />} />
               </Routes>

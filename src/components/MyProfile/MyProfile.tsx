@@ -129,7 +129,7 @@ export default function MyProfile() {
   };
 
   return (
-    <Box>
+    <>
       <Dashboard />
       <Box minH="calc(100vh - 140px)" ml={{ base: 0, md: 60 }}>
         <Flex
@@ -253,6 +253,6 @@ export default function MyProfile() {
           </Stack>
         </Flex>
       </Box>
-    </Box>
+    </>
   );
 }
