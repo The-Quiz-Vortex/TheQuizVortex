@@ -27,6 +27,7 @@ import { FiBell, FiChevronDown } from 'react-icons/fi';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
 import Signout from '../../components/Signout/signout.tsx';
+import { Link } from 'react-router-dom';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
@@ -60,9 +61,9 @@ export default function WithSubnavigation() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <a href="/" style={{ textDecoration: 'none' }}>
+          <Link to="/" style={{ textDecoration: 'none' }}>
             <Image src="/quiz-logo.png" boxSize="40px" />
-          </a>
+          </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
@@ -103,17 +104,17 @@ export default function WithSubnavigation() {
                     textAlign="left"
                     p="2"
                   >
-                    <MenuItem as="a" href="/my-profile">
+                    <MenuItem as={Link} to="/my-profile">
                       My Profile
                     </MenuItem>
 
                     {!loading && appState.userData?.role === 'admin' ? (
-                      <MenuItem as="a" href="/admin-settings">
+                      <MenuItem as={Link} to="/admin-settings">
                         Admin Settings
                       </MenuItem>
                     ) : null}
 
-                    <MenuItem as="a" href="/my-quizes">
+                    <MenuItem as={Link} to="/my-quizes">
                       My Quizes
                     </MenuItem>
                     <MenuItem>
@@ -128,7 +129,7 @@ export default function WithSubnavigation() {
 
         {!loading && !user ? (
           <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-            <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
+            <Button as={Link} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/sign-in'}>
               Sign In
             </Button>
             <Button
@@ -171,12 +172,12 @@ const DesktopNav = () => {
               <Popover trigger={'hover'} placement={'bottom-start'}>
                 <PopoverTrigger>
                   <Box
-                    as="a"
-                    p={2}
-                    href={navItem.href ?? '#'}
+                    as={Link}
+                    to={navItem.href ?? '#'}
                     fontSize={'sm'}
                     fontWeight={500}
                     color={linkColor}
+                    p={2}
                     _hover={{
                       textDecoration: 'none',
                       color: linkHoverColor,
@@ -208,20 +209,20 @@ const DesktopNav = () => {
       )}
 
       {!loading && user && (
-        <Button
-          as={'a'}
-          display={{ base: 'none', md: 'inline-flex' }}
-          fontSize={'sm'}
-          fontWeight={600}
-          color={'white'}
-          bg={'gray.400'}
-          href={'/create-quiz'}
-          _hover={{
-            bg: 'pink.300',
-          }}
-        >
-          Create quiz
-        </Button>
+        <Link as={'a'} to={'/create-quiz'}>
+          <Button
+            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
+            fontWeight={600}
+            color={'white'}
+            bg={'gray.400'}
+            _hover={{
+              bg: 'pink.300',
+            }}
+          >
+            Create quiz
+          </Button>
+        </Link>
       )}
     </Stack>
   );
@@ -230,8 +231,8 @@ const DesktopNav = () => {
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
     <Box
-      as="a"
-      href={href}
+      as={Link}
+      to={href}
       role={'group'}
       display={'block'}
       p={2}
@@ -276,10 +277,10 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
-      <Box
+      <Link
         py={2}
         as="a"
-        href={href ?? '#'}
+        to={href ?? '#'}
         justifyContent="space-between"
         alignItems="center"
         _hover={{
@@ -298,7 +299,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             h={6}
           />
         )}
-      </Box>
+      </Link>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
         <Stack
@@ -311,7 +312,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Box as="a" key={child.label} py={2} href={child.href}>
+              <Box as={Link} key={child.label} py={2} to={child.href}>
                 {child.label}
               </Box>
             ))}

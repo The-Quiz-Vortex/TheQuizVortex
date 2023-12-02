@@ -15,6 +15,7 @@ import {
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useUserContext } from '../../helpers/useUserContext.ts';
+import { Link } from 'react-router-dom';
 
 interface LinkItemProps {
   name: string;
@@ -67,7 +68,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} href={link.path}>
+        <NavItem as={Link} key={link.name} icon={link.icon} to={link.path}>
           {link.name}
         </NavItem>
       ))}
@@ -77,7 +78,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
   return (
-    <Box as="a" href={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Box as={Link} to={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"
@@ -127,14 +128,14 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-      <a href="/" style={{ textDecoration: 'none' }}>
+      <Box as={Link} to="/" style={{ textDecoration: 'none' }}>
         <Text
           display={{ base: 'flex', md: 'none' }}
           fontSize="2xl"
           fontFamily="monospace"
           fontWeight="bold"
         ></Text>
-      </a>
+      </Box>
     </Flex>
   );
 };
