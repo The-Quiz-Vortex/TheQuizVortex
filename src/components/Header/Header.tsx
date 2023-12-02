@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { Image } from '@chakra-ui/react';
 
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
@@ -52,13 +53,12 @@ export default function WithSubnavigation() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
-          >
-            Logo
-          </Text>
+          <a href="/" style={{ textDecoration: 'none' }}>
+            <Image
+              src="/quiz-logo.png" 
+              boxSize="40px" 
+            />
+          </a>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />

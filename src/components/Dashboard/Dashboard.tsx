@@ -31,6 +31,7 @@ import {
   FiChevronDown,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
+import { Link } from 'react-router-dom';
 
 interface LinkItemProps {
   name: string;
@@ -72,9 +73,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <a href="/" style={{ textDecoration: 'none' }}>
+          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+            Logo
+          </Text>
+        </a>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
@@ -138,7 +141,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-
+<a href="/" style={{ textDecoration: 'none' }}>
       <Text
         display={{ base: 'flex', md: 'none' }}
         fontSize="2xl"
@@ -147,7 +150,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       >
         Logo
       </Text>
-
+      </a>
+      
       <HStack spacing={{ base: '0', md: '6' }}>
         <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
         <Flex alignItems={'center'}>
