@@ -10,6 +10,7 @@ import { useUserContext } from './helpers/useUserContext.ts';
 import { ChakraProvider } from '@chakra-ui/react';
 import _ from 'lodash';
 import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
+import CreateRoom from './components/CreateRoom/CreateRoom.tsx';
 import MyProfile from './components/MyProfile/MyProfile.tsx';
 import Quiz from './components/Quiz/Quiz.tsx';
 import QuizList from './components/QuizList/QuizList.tsx';
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/sign-in" element={<Signin />} />
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />
+                <Route path="/create-room" element={<CreateRoom />} />
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
