@@ -9,6 +9,8 @@ import './Quiz.scss';
 import { saveQuizResult } from '../../services/quizResult.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { Quiz as QuizInterface, QuizQuestion } from '../../common/interfaces.ts';
+import { NOW_IN_MS } from '../../common/constants.ts';
+import CountDownTimer from '../CountDownTimer/CountDownTimer.tsx';
 
 function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
@@ -20,6 +22,8 @@ function Quiz() {
   const selectedArr = useRef<(number | null)[]>([]);
   const score = useRef(0);
   const { userData } = useContext(AuthContext);
+  const [timer, setTimer] = useState(0);
+  const [remainingQ, setRemainingQ] = useState(0);
 
   const totalQuestion = questions.current.length - 1;
 
@@ -27,7 +31,7 @@ function Quiz() {
   const correctCounter = useCounter(0);
   const wrongCounter = useCounter(0);
   const emptyCounter = useCounter(0);
-
+  
   useEffect(() => {
 
     const fetchQuiz = async () => {
@@ -35,7 +39,11 @@ function Quiz() {
         if (id) {
           const data = await getQuizById(id);
           setQuiz(data);
-            questions.current = [...data.questions];
+          questions.current = [...data.questions];
+          const convertedTimerToMs = data.timeLimit * 60 * 1000;
+          const dateTimeAfterTimer = NOW_IN_MS + convertedTimerToMs;
+          setTimer(dateTimeAfterTimer);
+          setRemainingQ(data.questions.length);
         }
       } catch (error) {
         console.log(error);
@@ -43,6 +51,27 @@ function Quiz() {
     }
     fetchQuiz();
   }, []);
+
+  useEffect(() => {
+    if (quizFinished && userData) {
+      (async () => {
+        console.log('here');
+        if (quizFinished && quizRef.current) {
+          quizRef.current.scrollTop = 0;
+        }
+
+        selectedArr.current = selectedArr.current.concat(Array(remainingQ).fill(null));
+        emptyCounter.set(emptyCounter.value + remainingQ);
+        questionCounter.set(totalQuestion);
+        await saveQuizResult(
+          selectedArr.current,
+          quiz.quizId,
+          userData?.username,
+          score.current,
+          parseFloat(((score.current / quiz.totalPoints) * 100).toFixed(2)));
+      })();
+    }
+  }, [quizFinished])
 
   const handleNewQuestionClick = async (selectedValue: number | null, currQuestion: QuizQuestion) => {
 
@@ -59,14 +88,9 @@ function Quiz() {
         emptyCounter.add();
       }
       questionCounter.add();
+      setRemainingQ(remainingQ - 1);
       if (totalQuestion === questionCounter.value && userData) {
         setQuizFinished(true);
-        await saveQuizResult(
-          selectedArr.current,
-          quiz.quizId,
-          userData?.username,
-          score.current,
-          parseFloat(((score.current / quiz.totalPoints) * 100).toFixed(2)));
       }
     }
   };
@@ -102,24 +126,23 @@ function Quiz() {
       document.body.classList.remove('quiz-started');
     }
   }, [quizStarted]);
-
-  useEffect(() => {
-    if (questionCounter.value > totalQuestion && quizRef.current) {
-      quizRef.current.scrollTop = 0;
-    }
-  }, [questionCounter.value]);
-
+  
   return (
     <div className='quizPage'>
       <div
         className="game"
         ref={quizRef}
         data-game-started={quizStarted ? true : null}
-        data-game-finished={questionCounter.value > totalQuestion ? true : null}
+        data-game-finished={questionCounter.value > totalQuestion || quizFinished ? true : null}
       >
         <div className="intro">
           <div className="intro-inner">
             <h1 className="intro-title">{quiz.title}</h1>
+            {quizStarted && timer > 0 && (
+              <CountDownTimer
+                targetDate={timer}
+                quizFinished={quizFinished}
+                setQuizFinished={setQuizFinished} />)}
             {!quizStarted && (
               <>
                 <p className="intro-desc">
@@ -169,7 +192,7 @@ function Quiz() {
           </div>
         </div>
         <div className="game-area">
-          {questions.current[questionCounter.value] && (
+          {quizStarted && !quizFinished && (
             <Question
               data={questions.current[questionCounter.value]}
               selections={selectedArr.current}
@@ -180,7 +203,7 @@ function Quiz() {
             />
           )}
 
-          {!questions.current[questionCounter.value] && (
+          {quizFinished && (
             <>
               <QuestionCorrection selections={selectedArr.current} questions={questions.current} />
             </>

@@ -7,5 +7,7 @@ export function useCounter(initialState: number) {
 
     const add = () => setValue((value) => (value += 1));
 
-    return { value, add, reset };
+    const set = (v) => setValue(v);
+
+    return { value, add, reset, set};
 }

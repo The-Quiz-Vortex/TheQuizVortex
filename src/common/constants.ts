@@ -1,0 +1,1 @@
+export const NOW_IN_MS = new Date().getTime();
