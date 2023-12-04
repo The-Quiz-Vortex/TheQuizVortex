@@ -12,7 +12,7 @@ import {
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from 'react-icons/fi';
+import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiBarChart2 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { Link } from 'react-router-dom';
@@ -40,7 +40,8 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: FiHome, path: '/dashboard' },
   { name: 'Browse quizzes', icon: FiTrendingUp, path: '/quiz/quiz-list' },
   { name: 'Explore', icon: FiCompass, path: '/explore' },
-  { name: 'Favourites', icon: FiStar, path: '/favourites' },
+  { name: 'Favorites', icon: FiStar, path: '/favorites' },
+  { name: 'Scoreboard', icon: FiBarChart2, path: '/scoreboard' },
   { name: 'Settings', icon: FiSettings, path: '/settings' },
 ];
 
