@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { getAllClassrooms } from '../../services/rooms.services.ts';
 import {
   Heading,
   Box,
@@ -12,6 +10,8 @@ import {
   SimpleGrid,
   Divider,
 } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
+import { getAllClassrooms } from '../../services/rooms.services.ts';
 import { Link } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard.tsx';
 
@@ -63,11 +63,9 @@ export default function ClassroomList() {
                   overflow={'hidden'}
                 >
                   <Image
-                    h={'120px'}
+                    h={'140px'}
                     w={'full'}
-                    src={
-                      'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-                    }
+                    src={'src/assets/classroom-placeholder.jpg'}
                     objectFit="cover"
                     alt="#"
                   />
@@ -81,13 +79,13 @@ export default function ClassroomList() {
 
                     <Stack direction={'row'} justify={'center'} spacing={6}>
                       <Stack spacing={0} align={'center'}>
-                        <Text fontWeight={600}>{Object.keys(classroom.quizzes).length}</Text>
+                        <Text fontWeight={600}>{Object.keys(classroom.quizzes || {}).length}</Text>
                         <Text fontSize={'sm'} color={'gray.500'}>
                           Quizzes
                         </Text>
                       </Stack>
                       <Stack spacing={0} align={'center'}>
-                        <Text fontWeight={600}>{Object.keys(classroom.students).length}</Text>
+                        <Text fontWeight={600}>{Object.keys(classroom.students || {}).length}</Text>
                         <Text fontSize={'sm'} color={'gray.500'}>
                           Students
                         </Text>
