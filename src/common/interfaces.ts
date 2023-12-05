@@ -39,9 +39,21 @@ export interface QuizOption {
 }
 
 export interface QuizResult {
+  quizResultId: string;
+  selection: (number | null)[];
   quizId: string;
   username: string;
-  score: number;
-  selectionArr: number[] | string[];
+  scorePoints: number;
+  scorePercent: number;
   completedAt: Date;
+}
+
+export interface Classroom {
+  classRoomName: string;
+  quizzes: [];
+  students: [];
+  teacher: {
+    uid: string;
+    username: string;
+  };
 }

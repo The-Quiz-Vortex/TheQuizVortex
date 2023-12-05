@@ -38,7 +38,7 @@ export default function WithSubnavigation() {
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
-        minH={'60px'}
+        minH={'80px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
@@ -161,7 +161,7 @@ const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-  const { user, loading } = useUserContext();
+  const { user, loading, appState } = useUserContext();
 
   return (
     <Stack direction={'row'} alignItems={'center'} spacing={4}>
@@ -222,6 +222,23 @@ const DesktopNav = () => {
           }}
         >
           Create quiz
+        </Button>
+      )}
+
+      {!loading && appState.userData?.role === 'teacher' && (
+        <Button
+          as={Link}
+          to={'/create-room'}
+          fontSize={'sm'}
+          fontWeight={600}
+          color={'white'}
+          bg={'blue.300'}
+          display={{ base: 'none', md: 'inline-flex' }}
+          _hover={{
+            bg: 'blue.400',
+          }}
+        >
+          Create room
         </Button>
       )}
     </Stack>

@@ -10,10 +10,13 @@ import { useUserContext } from './helpers/useUserContext.ts';
 import { ChakraProvider } from '@chakra-ui/react';
 import _ from 'lodash';
 import { CreateQuiz } from './components/CreateQuiz/CreateQuiz.tsx';
+import CreateRoom from './components/CreateRoom/CreateRoom.tsx';
 import MyProfile from './components/MyProfile/MyProfile.tsx';
 import Quiz from './components/Quiz/Quiz.tsx';
 import QuizList from './components/QuizList/QuizList.tsx';
 import ManageUsers from './components/ManageUsers/ManageUsers.tsx';
+import Scoreboard from './components/Scoreboard/Scoreboard.tsx';
+import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -32,10 +35,13 @@ function App() {
                 <Route path="/sign-in" element={<Signin />} />
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />
+                <Route path="/create-room" element={<CreateRoom />} />
+                <Route path="/my-classrooms" element={<MyClassrooms />} />
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
                 <Route path="/quiz/quiz-list" element={<QuizList />} />
+                <Route path="/scoreboard" element={<Scoreboard />} />
               </Routes>
             </div>
           </AuthContext.Provider>

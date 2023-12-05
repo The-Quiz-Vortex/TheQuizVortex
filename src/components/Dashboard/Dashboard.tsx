@@ -12,7 +12,16 @@ import {
   BoxProps,
   FlexProps,
 } from '@chakra-ui/react';
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from 'react-icons/fi';
+import {
+  FiHome,
+  FiTrendingUp,
+  FiCompass,
+  FiStar,
+  FiSettings,
+  FiMenu,
+  FiBarChart2,
+  FiTrello,
+} from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { Link } from 'react-router-dom';
@@ -39,8 +48,10 @@ interface SidebarProps extends BoxProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: FiHome, path: '/dashboard' },
   { name: 'Browse quizzes', icon: FiTrendingUp, path: '/quiz/quiz-list' },
+  { name: 'My classrooms', icon: FiTrello, path: '/my-classrooms' },
   { name: 'Explore', icon: FiCompass, path: '/explore' },
-  { name: 'Favourites', icon: FiStar, path: '/favourites' },
+  { name: 'Favorites', icon: FiStar, path: '/favorites' },
+  { name: 'Scoreboard', icon: FiBarChart2, path: '/scoreboard' },
   { name: 'Settings', icon: FiSettings, path: '/settings' },
 ];
 
