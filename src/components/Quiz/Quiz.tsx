@@ -40,9 +40,7 @@ function Quiz() {
           const data = await getQuizById(id);
           setQuiz(data);
           questions.current = [...data.questions];
-          const convertedTimerToMs = data.timeLimit * 60 * 1000;
-          const dateTimeAfterTimer = NOW_IN_MS + convertedTimerToMs;
-          setTimer(dateTimeAfterTimer);
+          
           setRemainingQ(data.questions.length);
         }
       } catch (error) {
@@ -51,6 +49,12 @@ function Quiz() {
     }
     fetchQuiz();
   }, []);
+
+  useEffect(() => {
+    const convertedTimerToMs = quiz.timeLimit * 60 * 1000;
+          const dateTimeAfterTimer = new Date().getTime() + convertedTimerToMs;
+          setTimer(dateTimeAfterTimer);
+  }, [quizStarted])
 
   useEffect(() => {
     if (quizFinished && userData) {
