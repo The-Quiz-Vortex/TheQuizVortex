@@ -15,12 +15,9 @@ import {
 import { Link } from 'react-router-dom';
 import { Quiz } from '../../common/interfaces.ts';
 import Dashboard from '../Dashboard/Dashboard.tsx';
-import { format } from 'date-fns';
 
 export default function QuizList() {
   const [quizzes, setQuizzes] = useState([] as Quiz[]);
-
-  //   console.log(quizzes);
 
   useEffect(() => {
     const fetchQuizzes = async () => {
@@ -31,14 +28,12 @@ export default function QuizList() {
     fetchQuizzes();
   }, []);
 
-  //   console.log(quizzes);
-
   return (
     <>
       <Dashboard />
-      <Box minH="calc(100vh - 140px)" ml={{ base: 0, md: 60 }}>
+      <Box ml={{ base: 0, md: 60 }}>
         <Flex
-          minH={'100vh'}
+          minH={'calc(100vh - 80px)'}
           align={'center'}
           justify={'center'}
           bg={useColorModeValue('gray.50', 'gray.800')}

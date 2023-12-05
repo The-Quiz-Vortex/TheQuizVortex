@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   Button,
   FormLabel,
+  useToast,
 } from '@chakra-ui/react';
 import { getAllQuizzes } from '../../services/quiz.services';
 import { useUserContext } from '../../helpers/useUserContext';
@@ -16,9 +17,11 @@ import { getAllUsers } from '../../services/users.services';
 import Select from 'react-select';
 import Dashboard from '../Dashboard/Dashboard';
 import { db } from '../../config/firebase-config';
-import { push, ref, set, get } from 'firebase/database';
+import { push, ref, set } from 'firebase/database';
+import { Classroom, validateClassroom } from './createRoom.validations';
 
 const CreateRoom = () => {
+  const toast = useToast();
   const { appState } = useUserContext();
   const [quizzes, setQuizzes] = useState([]);
   const [students, setStudents] = useState([]);
@@ -27,22 +30,16 @@ const CreateRoom = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
-    // Fetch data when the component mounts
-    // Assuming getAllQuizzes and getAllUsers are asynchronous functions
     const fetchData = async () => {
-      // Fetch classroom name
-
-      // Fetch quizzes
       const quizzesData = await getAllQuizzes();
       setQuizzes(quizzesData);
 
-      // Fetch students
       const studentsData = await getAllUsers();
       setStudents(studentsData);
     };
 
     fetchData();
-  }, []); // Empty dependency array to fetch data only once
+  }, []);
 
   const resetForm = () => {
     setClassroomName('');
@@ -50,52 +47,86 @@ const CreateRoom = () => {
     setSelectedStudents([]);
   };
 
-  const createClassroom = async () => {
-    const selectedQuizzesIds = selectedQuizzes.map((quiz) => quiz.value);
-    const selectedStudentsIds = selectedStudents.map((student) => student.value);
-
-    const classroomsRef = ref(db, 'classRooms');
-    const newClassroomRef = push(classroomsRef);
-
-    // Create an object to hold quizzes data
-    const quizzesData = {};
-    for (const quizId of selectedQuizzesIds) {
-      const quizKey = push(ref(db, 'quizzes')).key;
-      quizzesData[quizKey] = { quizId };
-    }
-
-    // Create an object to hold students data
-    const studentsData = {};
-    for (const uid of selectedStudentsIds) {
-      const studentKey = push(ref(db, 'students')).key;
-      studentsData[studentKey] = { uid };
-    }
-
-    // Set data for the new classroom using the generated key
-    await set(newClassroomRef, {
-      classRoomName: classroomName,
-      quizzes: quizzesData,
-      students: studentsData,
-      teacher: {
-        uid: appState.userData?.uid,
-        username: appState.userData?.username,
-      },
+  const showToast = (status: string, title: string) => {
+    toast({
+      title,
+      status: status,
+      duration: 3000,
+      isClosable: true,
+      position: 'top',
     });
+  };
 
-    // Reset the form or navigate to another page
-    resetForm();
+  const createClassroom = async () => {
+    try {
+      if (
+        !classroomName ||
+        !selectedQuizzes.length ||
+        !selectedStudents.length ||
+        !appState.userData?.uid ||
+        !appState.userData?.username
+      ) {
+        showToast('error', 'All fields are required');
+        return;
+      }
 
-    // Return a resolved promise
-    return Promise.resolve();
+      const classroomData: Classroom = {
+        classRoomName: classroomName,
+        quizzes: {},
+        students: {},
+        teacher: {
+          uid: appState.userData?.uid || '',
+          username: appState.userData?.username || '',
+        },
+      };
+
+      // Validate using Zod schema
+      validateClassroom(classroomData);
+
+      const selectedQuizzesIds = selectedQuizzes.map((quiz) => quiz.value);
+      const selectedStudentsIds = selectedStudents.map((student) => student.value);
+
+      const classroomsRef = ref(db, 'classRooms');
+      const newClassroomRef = push(classroomsRef);
+
+      const quizzesData = {};
+      for (const quizId of selectedQuizzesIds) {
+        const quizKey = push(ref(db, 'quizzes')).key;
+        quizzesData[quizKey] = { quizId };
+      }
+
+      const studentsData = {};
+      for (const uid of selectedStudentsIds) {
+        const studentKey = push(ref(db, 'students')).key;
+        studentsData[studentKey] = { uid };
+      }
+
+      await set(newClassroomRef, {
+        classRoomName: classroomName,
+        quizzes: quizzesData,
+        students: studentsData,
+        teacher: {
+          uid: appState.userData?.uid,
+          username: appState.userData?.username,
+        },
+      });
+
+      resetForm();
+
+      showToast('Classroom created successfully!');
+    } catch (error) {
+      console.error('Error creating classroom:', error);
+      showToast('Error creating classroom. Please try again.');
+    }
   };
 
   return (
     <>
       <Dashboard />
 
-      <Box minH="calc(100vh - 140px)" ml={{ base: 0, md: 60 }}>
+      <Box ml={{ base: 0, md: 60 }}>
         <Flex
-          minH={'100vh'}
+          minH={'calc(100vh - 80px)'}
           align={'center'}
           justify={'center'}
           flexDirection={'column'}
@@ -129,6 +160,7 @@ const CreateRoom = () => {
               borderColor={'gray.300'}
               value={classroomName}
               onChange={(e) => setClassroomName(e.target.value)}
+              isRequired
             />
             <FormLabel mt={'2'} mb={'0'}>
               Select your quizzes:

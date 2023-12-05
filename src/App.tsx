@@ -16,6 +16,7 @@ import Quiz from './components/Quiz/Quiz.tsx';
 import QuizList from './components/QuizList/QuizList.tsx';
 import ManageUsers from './components/ManageUsers/ManageUsers.tsx';
 import Scoreboard from './components/Scoreboard/Scoreboard.tsx';
+import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />
                 <Route path="/create-room" element={<CreateRoom />} />
+                <Route path="/my-classrooms" element={<MyClassrooms />} />
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
