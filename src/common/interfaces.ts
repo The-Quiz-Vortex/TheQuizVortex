@@ -47,3 +47,13 @@ export interface QuizResult {
   scorePercent: number;
   completedAt: Date;
 }
+
+export interface Classroom {
+  classRoomName: string;
+  quizzes: [];
+  students: [];
+  teacher: {
+    uid: string;
+    username: string;
+  };
+}
