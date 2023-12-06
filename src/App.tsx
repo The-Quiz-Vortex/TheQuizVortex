@@ -17,6 +17,7 @@ import QuizList from './components/QuizList/QuizList.tsx';
 import ManageUsers from './components/ManageUsers/ManageUsers.tsx';
 import Scoreboard from './components/Scoreboard/Scoreboard.tsx';
 import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
+import BrowseQuizzes from './components/BrowseQuizzes/BrowseQuizzes.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -40,7 +41,7 @@ function App() {
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />
-                <Route path="/quiz/quiz-list" element={<QuizList />} />
+                <Route path="/browse-quizzes" element={<BrowseQuizzes />} />
                 <Route path="/scoreboard" element={<Scoreboard />} />
               </Routes>
             </div>

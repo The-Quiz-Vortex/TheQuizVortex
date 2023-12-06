@@ -16,30 +16,11 @@ import { Link } from 'react-router-dom';
 import { Quiz } from '../../common/interfaces.ts';
 import Dashboard from '../Dashboard/Dashboard.tsx';
 
-export default function QuizList() {
-  const [quizzes, setQuizzes] = useState([] as Quiz[]);
-
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      const quizzesData = await getAllQuizzes();
-      quizzesData && setQuizzes(quizzesData);
-    };
-
-    fetchQuizzes();
-  }, []);
+export default function QuizList({quizzes}: {quizzes: Quiz[]}) {
+ 
 
   return (
     <>
-      <Dashboard />
-      <Box ml={{ base: 0, md: 60 }}>
-        <Flex
-          minH={'calc(100vh - 80px)'}
-          align={'center'}
-          justify={'center'}
-          bg={useColorModeValue('gray.50', 'gray.800')}
-          pt="20"
-          pb="20"
-        >
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8} mx={{ base: 4, md: 8 }}>
             {quizzes.map((quiz, index) => (
               <Box
@@ -113,8 +94,7 @@ export default function QuizList() {
               </Box>
             ))}
           </SimpleGrid>
-        </Flex>
-      </Box>
+      
     </>
   );
 }
