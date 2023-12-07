@@ -34,17 +34,18 @@ export const useUserContext = () => {
       });
       return;
     }
-
+  
     !loading &&
       (async () => {
         try {
           if (user?.email) {
             const result = await getUserByUID(user.uid);
-            const isAdmin = result && result.val()?.role === 'admin';
-
+            const userDataFromDB = Object.values(result.val())[0] as AppUser;         
+            const isAdmin = userDataFromDB && userDataFromDB.role?.toLowerCase() === 'admin';
+  
             setAppState((prev) => ({
               ...prev,
-              userData: Object.values(result.val())[0] as AppUser,
+              userData: userDataFromDB,
               isLoggedIn: !!result,
               isAdmin,
             }));
@@ -75,3 +76,4 @@ export const useUserContext = () => {
     setAppState,
   };
 };
+
