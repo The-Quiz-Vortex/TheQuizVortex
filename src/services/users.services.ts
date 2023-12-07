@@ -282,3 +282,31 @@ export const removeAdminUser = (username: string): Promise<void> => {
 
   return update(ref(db), updateAdminStatus);
 };
+
+/**
+ * Grants teacher privileges to a user.
+ *
+ * @param {string} username - The username of the user to make a teacher.
+ * @returns {Promise<void>} - A promise that resolves after granting teacher privileges.
+ */
+export const makeTeacherUser = (username: string): Promise<void> => {
+  const updateTeacherStatus: { [key: string]: string } = {};
+
+  updateTeacherStatus[`/users/${username}/role`] = 'teacher';
+
+  return update(ref(db), updateTeacherStatus);
+};
+
+/**
+ * Grants student privileges to a user.
+ *
+ * @param {string} username - The username of the user to make a student.
+ * @returns {Promise<void>} - A promise that resolves after granting student privileges.
+ */
+export const makeStudentUser = (username: string): Promise<void> => {
+  const updateStudentStatus: { [key: string]: string } = {};
+
+  updateStudentStatus[`/users/${username}/role`] = 'student';
+
+  return update(ref(db), updateStudentStatus);
+};

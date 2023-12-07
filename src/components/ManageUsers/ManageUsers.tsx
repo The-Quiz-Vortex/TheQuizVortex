@@ -11,13 +11,16 @@ import {
   Flex,
   useColorModeValue,
   Avatar,
+  Select,
 } from '@chakra-ui/react';
 import {
   getAllUsers,
-  makeAdminUser,
-  removeAdminUser,
   blockUser,
   unblockUser,
+  makeAdminUser,
+  removeAdminUser,
+  makeTeacherUser,
+  makeStudentUser,
 } from '../../services/users.services.ts';
 import { AppUser } from '../../common/interfaces.ts';
 import Dashboard from '../Dashboard/Dashboard.tsx';
@@ -29,7 +32,7 @@ const ManageUsers: React.FC = () => {
     const getAllUsersData = async () => {
       try {
         const usersData = await getAllUsers();
-        setUsers(usersData || []); // Set usersData or an empty array if it's null
+        setUsers(usersData || []);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -37,26 +40,49 @@ const ManageUsers: React.FC = () => {
     getAllUsersData();
   }, [users]);
 
-  const handleToggleAdmin = (username: string, currentRole: string) => {
-    const newRole = currentRole === 'user' ? 'admin' : 'user';
-    (newRole === 'admin' ? makeAdminUser(username) : removeAdminUser(username)).then(() => {
-      // Update the user role in the local state
+  const handleToggleBlock = (username: string, isBlocked: boolean) => {
+    const newBlockedStatus = !isBlocked;
+    (newBlockedStatus ? blockUser(username) : unblockUser(username)).then(() => {
       setUsers((prevUsers) =>
-        prevUsers.map((user) => (user.username === username ? { ...user, role: newRole } : user))
+        prevUsers.map((user) =>
+          user.username === username ? { ...user, blockedStatus: newBlockedStatus } : user
+        )
       );
     });
   };
 
-  const handleToggleBlock = (username: string, isBlocked: boolean) => {
-    const newBlockedStatus = !isBlocked;
-    (newBlockedStatus ? blockUser(username) : unblockUser(username)).then(() => {
-      // Update the user status in the local state
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.username === username ? { ...user, blocked: newBlockedStatus } : user
-        )
-      );
-    });
+  const handleRoleChange = (username: string, newRole: string) => {
+    switch (newRole) {
+      case 'admin':
+        makeAdminUser(username).then(() => {
+          setUsers((prevUsers) =>
+            prevUsers.map((user) => (user.username === username ? { ...user, role: 'admin' } : user))
+          );
+        });
+        break;
+      case 'teacher':
+        makeTeacherUser(username).then(() => {
+          setUsers((prevUsers) =>
+            prevUsers.map((user) => (user.username === username ? { ...user, role: 'teacher' } : user))
+          );
+        });
+        break;
+      case 'student':
+        makeStudentUser(username).then(() => {
+          setUsers((prevUsers) =>
+            prevUsers.map((user) => (user.username === username ? { ...user, role: 'student' } : user))
+          );
+        });
+        break;
+      default:
+        // Assuming 'user' is the default role
+        removeAdminUser(username).then(() => {
+          setUsers((prevUsers) =>
+            prevUsers.map((user) => (user.username === username ? { ...user, role: 'user' } : user))
+          );
+        });
+        break;
+    }
   };
 
   return (
@@ -102,15 +128,15 @@ const ManageUsers: React.FC = () => {
                   <Td textTransform={'capitalize'}>{user.role}</Td>
                   <Td>{user.blockedStatus ? 'Yes' : 'No'}</Td>
                   <Td>
-                    <Button
-                      colorScheme={user.role === 'user' ? 'teal' : 'red'}
-                      size="sm"
-                      m="1"
-                      minWidth={'130px'}
-                      onClick={() => handleToggleAdmin(user.username, user.role)}
+                    <Select
+                      defaultValue={user.role}
+                      onChange={(e) => handleRoleChange(user.username, e.target.value)}
                     >
-                      {user.role === 'user' ? 'Make Admin' : 'Remove Admin'}
-                    </Button>
+                      <option value="admin">Admin</option>
+                      <option value="teacher">Teacher</option>
+                      <option value="student">Student</option>
+                      <option value="user">User</option>
+                    </Select>
                     <Button
                       colorScheme={user.blockedStatus ? 'green' : 'orange'}
                       size="sm"
