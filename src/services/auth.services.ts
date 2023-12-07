@@ -38,17 +38,3 @@ export const loginUser = (email: string, password: string): Promise<UserCredenti
 export const logoutUser = (): Promise<void> => {
   return signOut(auth);
 };
-
-/**
- * Gets the current authenticated user.
- *
- * @returns {Promise<User | null>} - A promise that resolves with the current user or null if not authenticated.
- */
-export const getCurrentUser = (): Promise<User | null> => {
-  return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      unsubscribe();
-      resolve(user);
-    });
-  });
-};

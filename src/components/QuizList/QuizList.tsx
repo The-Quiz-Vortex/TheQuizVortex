@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { getAllQuizzes } from '../../services/quiz.services.ts';
 import {
   Heading,
   Box,
@@ -14,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { Quiz } from '../../common/interfaces.ts';
-import Dashboard from '../Dashboard/Dashboard.tsx';
 
 export default function QuizList({quizzes}: {quizzes: Quiz[]}) {
  

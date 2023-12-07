@@ -1,49 +1,147 @@
-import React, { useEffect, useState } from 'react';
-import { getQuizResultsByUsername } from '../../services/quizResult.services';
-import { QuizResult } from '../../common/interfaces';
-import { getCurrentUser } from '../../services/auth.services';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { getAllResults } from '../../services/quizResult.services';
+import { AppUser, QuizResult } from '../../common/interfaces';
+import { AuthContext } from '../../context/AuthContext.tsx';
+import { Avatar, Box, Flex, Heading, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
+import Dashboard from '../Dashboard/Dashboard.tsx';
+import _ from 'lodash';
+import { getAllUsers } from '../../services/users.services.ts';
+import { SelectType } from '../CreateQuiz/createQuiz.validation.ts';
+import { getQuizById } from '../../services/quiz.services.ts';
+import { Select } from 'chakra-react-select';
 
 const Scoreboard: React.FC = () => {
-  const [userQuizResults, setUserQuizResults] = useState<QuizResult[]>([]);
+  const [scoreboardData, setScoreboardData] = useState<{ username: string; averageScore: number; }[]>([]);
+  const { userData } = useContext(AuthContext);
+  const [allUsers, setAllUsers] = useState<Array<AppUser>>([]);
+  const [quizNames, setQuizNames] = useState<SelectType[]>([]);
+  const [selectedQuiz, setSelectedQuiz] = useState<SelectType>();
+  const generalCategory = useRef<SelectType>({ label: 'General', value: 'general' });
+  const allResultsData = useRef([]);
+
+  const findScores = (quizId?: SelectType | undefined) => {
+    const data = quizId && quizId?.value !== 'general' ? allResultsData.current.filter(result => result.quizId === quizId.value) : allResultsData.current;
+   console.log(data);
+   
+    const groupedResults = _.groupBy(data, 'username');
+    const scoreboard = _(groupedResults)
+      .map((userResults, username) => {
+        const averageScore = Math.round(_.meanBy(userResults, 'scorePercent'));
+
+        return {
+          username,
+          averageScore,
+        };
+      })
+      .sortBy('averageScore')
+      .reverse()
+      .value();
+    setScoreboardData(scoreboard);
+    return scoreboard;
+  }
 
   useEffect(() => {
-    const fetchUserQuizResults = async () => {
+    findScores(selectedQuiz);
+  }, [selectedQuiz])
+
+  useEffect(() => {
+    (async () => {
       try {
-        // Fetch the current authenticated user
-        const currentUser = await getCurrentUser();
-  
-        if (currentUser && currentUser.uid) {
-          // Use the UID from the current user to fetch quiz results
-          getQuizResultsByUsername(currentUser.uid, setUserQuizResults);
-        } else {
-          console.error('User not authenticated or UID is null');
-        }
+        const users = await getAllUsers();
+        setAllUsers(users || []);
+        const allResults = await getAllResults();
+        allResultsData.current = allResults;
+        findScores();
+
+        let quizList = _.uniqBy(allResults, 'quizId');
+        quizList = await Promise.all(quizList.map(async (result) => {
+          const quiz = await getQuizById(result.quizId);
+
+          return {
+            quizId: result.quizId,
+            name: quiz?.title,
+          }
+        }) || []);
+
+        const quizListData = quizList.map((quiz) => {
+          return {
+            label: quiz?.name,
+            value: quiz?.quizId
+          }
+        });
+
+        setQuizNames([...quizListData, generalCategory.current]);
       } catch (error) {
         console.error('Error fetching quiz results:', error);
       }
-    };
-  
-    fetchUserQuizResults();
+    })()
   }, []);
 
   return (
-    <div>
-      <h2>Your Quiz Results</h2>
-      {userQuizResults.length === 0 ? (
-        <p>No quiz results available.</p>
-      ) : (
-        <ul>
-          {userQuizResults.map((result) => (
-            <li key={result.quizResultId}>
-              <p>Quiz ID: {result.quizId}</p>
-              <p>Score Points: {result.scorePoints}</p>
-              <p>Score Percent: {result.scorePercent}</p>
-              {/* Add more details as needed */}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <Dashboard />
+      <Box ml={{ base: 0, md: 50 }}>
+        <Flex
+          align={'center'}
+          justify={'center'}
+          bg={useColorModeValue('gray.50', 'gray.800')}
+          mt={20}
+        >
+          <Select
+            name="options"
+            size="lg"
+            focusBorderColor="green.500"
+            placeholder="Select Quiz"
+            options={quizNames}
+            defaultValue={generalCategory.current}
+            onChange={val => setSelectedQuiz(val)}
+          />
+          <Heading size="lg" ml={10}>Scoreboard</Heading>
+        </Flex>
+        <Flex
+          align={'center'}
+          justify={'center'}
+          bg={useColorModeValue('gray.50', 'gray.800')}
+        >
+          <Table
+            variant="simple"
+            background={'white'}
+            border={'1px'}
+            borderColor={'gray.100'}
+            maxWidth={'90%'}
+            mt={'20'}
+            mb={'20'}
+          >
+            <Thead>
+              <Tr>
+                <Th>Rank</Th>
+                <Th>Username</Th>
+                <Th>Name</Th>
+                <Th>Score</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {scoreboardData.map((user, index) => {
+                const userInfo = allUsers.find(u => u.username === user.username);
+                return (
+                  <Tr key={user.username}>
+                    <Td>{`${index + 1}`}</Td>
+                    <Td>
+                      <Box display="flex" justifyContent="flex-start" alignItems="center" gap="20px">
+                        <Avatar size={'md'} src={userInfo?.profilePictureURL} />
+                        {user.username}
+                      </Box>
+                    </Td>
+                    <Td>{`${userInfo?.firstName} ${userInfo?.lastName}`}</Td>
+                    <Td>{`${user.averageScore}`}</Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
+        </Flex>
+      </Box>
+    </>
   );
 };
 
