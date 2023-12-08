@@ -22,3 +22,31 @@ export const getAllClassrooms = async (): Promise<Classroom[] | undefined> => {
     console.error(error);
   }
 };
+
+export const getSingleClassroom = async (classRoomName: string): Promise<Classroom | undefined> => {
+  try {
+    if (!classRoomName) {
+      return undefined;
+    }
+
+    const classroomsSnapshot: DataSnapshot = await get(ref(db, 'classRooms'));
+
+    if (!classroomsSnapshot.exists()) {
+      return undefined;
+    }
+
+    let foundClassroom: Classroom | undefined;
+
+    classroomsSnapshot.forEach((childSnapshot) => {
+      const classroom = childSnapshot.val();
+
+      if (classroom.classRoomName.toLowerCase() === classRoomName.toLowerCase()) {
+        foundClassroom = classroom;
+      }
+    });
+
+    return foundClassroom;
+  } catch (error) {
+    console.error(error);
+  }
+};

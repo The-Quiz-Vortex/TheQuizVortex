@@ -18,6 +18,7 @@ import ManageUsers from './components/ManageUsers/ManageUsers.tsx';
 import Scoreboard from './components/Scoreboard/Scoreboard.tsx';
 import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
 import BrowseQuizzes from './components/BrowseQuizzes/BrowseQuizzes.tsx';
+import SingleClassroom from './components/SingleClassroom/SingleClassroom.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/create-quiz" element={<CreateQuiz />} />
                 <Route path="/create-room" element={<CreateRoom />} />
                 <Route path="/my-classrooms" element={<MyClassrooms />} />
+                <Route path="/classroom/:classRoomName" element={<SingleClassroom />} />
                 <Route path="/my-profile" element={<MyProfile />} />
                 <Route path="/admin-settings" element={<ManageUsers />} />
                 <Route path="/quiz/:id" element={<Quiz />} />

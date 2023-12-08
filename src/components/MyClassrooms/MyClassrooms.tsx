@@ -96,7 +96,11 @@ export default function ClassroomList() {
                       Teacher: {classroom.teacher && classroom.teacher.username}
                     </Text>
 
-                    <Link to={`/classroom/${classroom.classroomId}`}>
+                    <Link
+                      to={`/classroom/${classroom.classRoomName
+                        .toLowerCase()
+                        .replaceAll(' ', '-')}`}
+                    >
                       <Button
                         w={'full'}
                         mt={8}

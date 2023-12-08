@@ -84,7 +84,16 @@ const CreateRoom = () => {
       validateClassroom(classroomData);
 
       const selectedQuizzesIds = selectedQuizzes.map((quiz) => quiz.value);
-      const selectedStudentsIds = selectedStudents.map((student) => student.value);
+      const selectedStudentsInfo = selectedStudents.map((student) => {
+        const selectedStudent = students.find((s) => s.uid === student.value);
+        return {
+          uid: selectedStudent?.uid || '',
+          username: selectedStudent?.username || '',
+          firstName: selectedStudent?.firstName || '',
+          lastName: selectedStudent?.lastName || '',
+          profilePictureURL: selectedStudent?.profilePictureURL || '',
+        };
+      });
 
       const classroomsRef = ref(db, 'classRooms');
       const newClassroomRef = push(classroomsRef);
@@ -96,9 +105,10 @@ const CreateRoom = () => {
       }
 
       const studentsData = {};
-      for (const uid of selectedStudentsIds) {
+      for (const uid of selectedStudentsInfo) {
         const studentKey = push(ref(db, 'students')).key;
         studentsData[studentKey] = { uid };
+        studentsData[studentKey] = studentsData[studentKey].uid;
       }
 
       await set(newClassroomRef, {
@@ -113,10 +123,10 @@ const CreateRoom = () => {
 
       resetForm();
 
-      showToast('Classroom created successfully!');
+      showToast('success', 'Classroom created successfully!');
     } catch (error) {
-      console.error('Error creating classroom:', error);
-      showToast('Error creating classroom. Please try again.');
+      console.error('error', 'Error creating classroom:', error);
+      showToast('erorr', 'Error creating classroom. Please try again.');
     }
   };
 
