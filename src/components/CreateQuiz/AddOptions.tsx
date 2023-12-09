@@ -1,5 +1,5 @@
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
-import { Box, FormControl, FormErrorMessage, FormLabel, IconButton, Input } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import React from 'react'
 import { Control, FieldErrors, UseFormRegister, useFieldArray } from 'react-hook-form';
 import { SelectType, correctAnswerOption, createQuizFormValues } from './createQuiz.validation.ts';
@@ -20,22 +20,26 @@ export const AddOptions: React.FC<AddOptionsProps> = ({ index, register, control
     return (
         <div>
             {options.map((option, optionIndex) => (
-                <Box key={option.id}>
+                <Box key={option.id} mt={5}>
                     <FormControl id={`option`} isRequired isInvalid={errors.question && !!errors.question[index]?.options}>
                         <FormLabel>{`Option ${optionIndex + 1}`}</FormLabel>
-                        <Input type="text"
-                            placeholder={
-                                `Option ${optionIndex + 1}`} {...register(`question.${index}.options.${optionIndex}.optionText`)
-                            } />
+                        <InputGroup>
+                            <Input type="text"
+                                placeholder={`Option ${optionIndex + 1}`}
+                                {...register(`question.${index}.options.${optionIndex}.optionText`)}
+                            />
+                            <InputRightElement children={<IconButton aria-label="Remove Option" icon={<MinusIcon />} onClick={() => removeOption(optionIndex)} />} />
+                        </InputGroup>
                         <FormErrorMessage>
-                            {errors.question && errors.question[index]?.options[optionIndex]?.optionText?.message}
+                            {errors.question && errors.question[index]?.options && errors.question[index]?.options[optionIndex]?.optionText?.message}
                         </FormErrorMessage>
                     </FormControl>
-
-                    <IconButton aria-label="Remove Option" icon={<MinusIcon />} onClick={() => removeOption(optionIndex)} />
                 </Box>
             ))}
-            <IconButton aria-label="Add Option" icon={<AddIcon />} onClick={() => appendOption({ optionText: '' })} />
+
+            <Button leftIcon={<AddIcon />} mt={5} onClick={() => appendOption({ optionText: '' })}>
+                Add Option
+            </Button>
 
             <ControlledSelect<createQuizFormValues, SelectType, true>
                 name={`question.${index}.correctAnswer`}

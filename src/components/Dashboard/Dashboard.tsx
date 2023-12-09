@@ -74,18 +74,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between" textAlign="left">
-        {appState.userData?.username ? (<p>
+      <Image align='center' src="/quiz-logo.png" alt='quiztime' h="80px" m="5" />
+      {appState.userData?.username && <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between" textAlign="left">
+         <p>
           Welcome,
           <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" textAlign="left">
             @{appState.userData?.username}
           </Text>
         </p>
-        ) : (
-          <Image align='center' src="/quiz-logo.png" alt='quiztime' h="80px" />
-        )}
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
-      </Flex>
+      </Flex>}
       {(!user ? LinkItems : LinkItems.slice(0, -1)).map((link) => (
         <NavItem as={Link} key={link.name} icon={link.icon} to={!user && link.name !== 'Explore' && link.name !== 'Sample quiz' && link.name !== 'Scoreboard' ? '#' : link.path}>
           {link.name}

@@ -54,7 +54,7 @@ function ControlledSelect<
   };
 
   return (
-    <FormControl id={name} isInvalid={!!error}>
+    <FormControl id={name} isRequired isInvalid={!!error}>
       {label && <FormLabel>{label}</FormLabel>}
       <Select<Option, IsMulti, Group>
         options={options}

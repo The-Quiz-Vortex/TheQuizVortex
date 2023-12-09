@@ -9,6 +9,7 @@ export const defaultValuesQuiz: createQuizFormValues = {
     users: [],
     visibility: [{ label: "Public", value: "public" }],
     timeLimit: 0,
+    passingScore: '',
     question: [
         {
             questionTitle: "",
@@ -58,6 +59,7 @@ export const CreateQuizValidation = z.object({
         .array()
         .min(1, { message: "You need to choose visibility" }),
     timeLimit: z.number().min(0).optional(),
+    passingScore: z.number().min(1, { message: "Score cannot be zero" }).max(100, { message: "Score cannot be higher than 100" }),
     categories: categoriesSelectSchema
         .array()
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
