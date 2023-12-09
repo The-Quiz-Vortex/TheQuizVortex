@@ -23,6 +23,7 @@ import {
   FiBarChart2,
   FiTrello,
   FiLock,
+  FiCheckCircle,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useUserContext } from '../../helpers/useUserContext.ts';
@@ -55,6 +56,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'My classrooms', icon: FiTrello, path: '/my-classrooms' },
   { name: 'Explore', icon: FiCompass, path: '/browse-quizzes' },
   { name: 'Scoreboard', icon: FiBarChart2, path: '/scoreboard' },
+  { name: 'Sample quiz', icon: FiCheckCircle, path: '/quiz/-NlEYL1_BWkrz20uy9uW' },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -84,10 +86,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         )}
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <NavItem as={Link} key={link.name} icon={link.icon} to={!user && link.name !== 'Explore' && link.name !== 'Scoreboard' ? '#' : link.path}>
+      {(!user ? LinkItems : LinkItems.slice(0, -1)).map((link) => (
+        <NavItem as={Link} key={link.name} icon={link.icon} to={!user && link.name !== 'Explore' && link.name !== 'Sample quiz' && link.name !== 'Scoreboard' ? '#' : link.path}>
           {link.name}
-          {!user && link.name !== 'Explore' && link.name !== 'Scoreboard' && <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />}
+          {!user && link.name !== 'Explore' && link.name !== 'Scoreboard' && link.name !== 'Sample quiz' && <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />}
         </NavItem>
       ))}
     </Box>

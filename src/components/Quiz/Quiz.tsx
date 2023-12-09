@@ -30,7 +30,7 @@ function Quiz() {
   const correctCounter = useCounter(0);
   const wrongCounter = useCounter(0);
   const emptyCounter = useCounter(0);
-  
+
   useEffect(() => {
 
     const fetchQuiz = async () => {
@@ -39,7 +39,7 @@ function Quiz() {
           const data = await getQuizById(id);
           setQuiz(data);
           questions.current = [...data.questions];
-          
+
           setRemainingQ(data.questions.length);
         }
       } catch (error) {
@@ -50,15 +50,17 @@ function Quiz() {
   }, []);
 
   useEffect(() => {
-    const convertedTimerToMs = quiz.timeLimit * 60 * 1000;
-          const dateTimeAfterTimer = new Date().getTime() + convertedTimerToMs;
-          setTimer(dateTimeAfterTimer);
-  }, [quizStarted])
+    if (quiz.timeLimit !== 0) {
+      const convertedTimerToMs = quiz.timeLimit * 60 * 1000;
+      const dateTimeAfterTimer = new Date().getTime() + convertedTimerToMs;
+      setTimer(dateTimeAfterTimer);
+    }
+  }, [quizStarted]);
 
   useEffect(() => {
-    if (quizFinished && userData) {
+    if (quizFinished && userData && quiz.title !== "Sample quiz") {
       (async () => {
-        console.log('here');
+
         if (quizFinished && quizRef.current) {
           quizRef.current.scrollTop = 0;
         }
@@ -129,7 +131,7 @@ function Quiz() {
       document.body.classList.remove('quiz-started');
     }
   }, [quizStarted]);
-  
+
   return (
     <div className='quizPage'>
       <div
@@ -150,7 +152,8 @@ function Quiz() {
               <>
                 <p className="intro-desc">
                   {`The quiz contains ${questions.current.length} questions 
-                and there is ${quiz.timeLimit > 0 ? `${quiz.timeLimit} minutes` : 'no'} time limit.`}
+                and there is ${quiz.timeLimit > 0 ? `${quiz.timeLimit} minutes` : 'no'} time limit. `}
+                  {quiz.title === "Sample quiz" && `This is a sample quiz and your answers will not be saved.`}
                 </p>
 
                 <button
