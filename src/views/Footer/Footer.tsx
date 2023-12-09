@@ -6,7 +6,7 @@ const accounts = [
         url: 'https://github.com/The-Quiz-Vortex/TheQuizVortex',
         label: 'Github Account',
         type: 'gray',
-        icon: <FaGithub />
+        icon: <FaGithub size={40}/>
     }
 ];
 export default function Footer() {
@@ -44,29 +44,20 @@ export default function Footer() {
 
                 <Stack direction="row" spacing={5} pt={{ base: 4, md: 0 }} alignItems="center">
                     {accounts.map((sc, index) => (
+                        <Link to={sc.url}>
                         <IconButton
                             key={index}
-                            as={Link}
-                            isExternal
-                            href={sc.url}
                             aria-label={sc.label}
                             colorScheme={sc.type}
                             icon={sc.icon}
                             rounded="md"
                         />
+                        </Link>
                     ))}
                 </Stack>
             </Stack>
         </>
     );
 }
-
-const CustomLink = ({ children, ...props }: LinkProps) => {
-    return (
-        <Link to="#" fontSize="sm" _hover={{ textDecoration: 'underline' }} {...props}>
-            {children}
-        </Link>
-    );
-};
 
 

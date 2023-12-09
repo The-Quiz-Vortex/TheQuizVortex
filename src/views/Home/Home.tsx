@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import Signout from '../../components/Signout/signout.tsx';
 import { Fragment } from 'react';
+import SingleTierPricing from '../Pricing/SinglePricingCard.tsx';
 
 const Blur = (props: IconProps) => {
   return (
@@ -244,7 +245,7 @@ export default function Home() {
         <Blur position={'absolute'} top={-10} left={-10} style={{ filter: 'blur(70px)' }} />
       </Box>
 
-      <Container maxW="6xl" py={10} mt={100}>
+      <Container maxW="6xl" py={10} mt={100} mb={100}>
         <chakra.h2 fontSize="4xl" fontWeight="bold" textAlign="center" mb={10}>
           How it works?
         </chakra.h2>
@@ -287,6 +288,8 @@ export default function Home() {
           />
         </Stack>
       </Container>
+      <Divider  />
+      <SingleTierPricing />
     </>
   );
 }
