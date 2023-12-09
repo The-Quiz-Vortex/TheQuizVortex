@@ -47,12 +47,9 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: FiHome, path: '/dashboard' },
-  { name: 'Browse quizzes', icon: FiTrendingUp, path: '/browse-quizzes' },
   { name: 'My classrooms', icon: FiTrello, path: '/my-classrooms' },
-  { name: 'Explore', icon: FiCompass, path: '/explore' },
-  { name: 'Favorites', icon: FiStar, path: '/favorites' },
+  { name: 'Explore', icon: FiCompass, path: '/browse-quizzes' },
   { name: 'Scoreboard', icon: FiBarChart2, path: '/scoreboard' },
-  { name: 'Settings', icon: FiSettings, path: '/settings' },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -69,13 +66,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between">
-        <p>
+      <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between" textAlign="left">
+        {appState.userData?.username && <p>
           Welcome,
           <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" textAlign="left">
-            {appState.userData?.username}
+            @{appState.userData?.username}
           </Text>
-        </p>
+        </p>}
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (

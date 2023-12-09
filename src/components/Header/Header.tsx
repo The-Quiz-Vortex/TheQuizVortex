@@ -225,7 +225,7 @@ const DesktopNav = () => {
         </Button>
       )}
 
-      {!loading && appState.userData?.role === 'teacher' && (
+      {!loading && (appState.userData?.role === 'teacher' || appState.userData?.role === 'admin') && (
         <Button
           as={Link}
           to={'/create-room'}
@@ -357,31 +357,10 @@ const NAV_ITEMS: Array<NavItem> = [
     label: 'Dashboard',
     href: '/dashboard',
     shouldHide: (user) => !user, // Hide for not signed-in users
-  },
+  } ,
   {
-    label: 'Categories',
-    href: '/categories',
-    children: [
-      {
-        label: 'Technology',
-        subLabel: 'Lorem ipsum dolor sit amet uns',
-        href: '/technology',
-      },
-      {
-        label: 'Animals',
-        subLabel: 'Lorem ipsum dolor sit amet un',
-        href: '/animals',
-      },
-      {
-        label: 'Countries',
-        subLabel: 'Lorem ipsum dolor sit amet un',
-        href: '/countries',
-      },
-    ],
-  },
-  {
-    label: 'Trending',
-    href: '/trending',
+    label: 'Browse quizzes',
+    href: '/browse-quizzes',
   },
   {
     label: 'Contact',
