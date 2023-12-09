@@ -19,6 +19,7 @@ import Scoreboard from './components/Scoreboard/Scoreboard.tsx';
 import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
 import BrowseQuizzes from './components/BrowseQuizzes/BrowseQuizzes.tsx';
 import SingleClassroom from './components/SingleClassroom/SingleClassroom.tsx';
+import Footer from './views/Footer/Footer.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -50,6 +51,7 @@ function App() {
           </AuthContext.Provider>
         )}
       </div>
+      <Footer />
     </ChakraProvider>
   );
 }
