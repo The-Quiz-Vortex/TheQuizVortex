@@ -180,7 +180,7 @@ function Quiz() {
             )}
             {quizFinished && (
               <h4 style={{ marginTop: '50px' }}>
-                {`You ${(score.current / quiz.totalPoints) > quiz.passScore ? '' : 'did not'} 
+                {`You ${(score.current / quiz.totalPoints) > quiz.passingScore ? '' : 'did not'} 
                 pass with score of ${((score.current / quiz.totalPoints) * 100).toFixed(2)}%`}
               </h4>
             )}

@@ -21,7 +21,7 @@ import { FiLock } from 'react-icons/fi';
 export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
   const { appState } = useUserContext();
   const {user} = useContext(AuthContext);
-  const [quizzesState, setQuizzes] = useState<Quiz[]>(quizzes); 
+  const [quizzesState, setQuizzes] = useState<Quiz[]>(quizzes);
 
   const canEditOrDelete = (quizAuthor: string) => {
     return appState.isAdmin || appState.userData?.username === quizAuthor;

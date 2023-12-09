@@ -21,7 +21,7 @@ export interface Quiz {
   createdOn: Date;
   totalPoints: number;
   quizId: string;
-  passScore: number;
+  passingScore: number;
 }
 
 //Single quiz question
