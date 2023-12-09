@@ -80,7 +80,7 @@ const Scoreboard: React.FC = () => {
   return (
     <>
       <Dashboard />
-      <Box ml={{ base: 0, md: 50 }}>
+      <Box ml={200}>
         <Flex
           align={'center'}
           justify={'center'}

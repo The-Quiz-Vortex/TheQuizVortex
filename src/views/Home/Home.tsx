@@ -78,7 +78,7 @@ export default function Home() {
           <Heading lineHeight={1.1} fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}>
             Welcome to{' '}
             <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
-              QuizMasters
+              QuizVortex
             </Text>{' '}
             platform
           </Heading>
