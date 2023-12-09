@@ -9,6 +9,7 @@ import { getAllUsers } from '../../services/users.services.ts';
 import { SelectType } from '../CreateQuiz/createQuiz.validation.ts';
 import { getQuizById } from '../../services/quiz.services.ts';
 import { Select } from 'chakra-react-select';
+import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 
 const Scoreboard: React.FC = () => {
   const [scoreboardData, setScoreboardData] = useState<{ username: string; averageScore: number; }[]>([]);
@@ -21,8 +22,8 @@ const Scoreboard: React.FC = () => {
 
   const findScores = (quizId?: SelectType | undefined) => {
     const data = quizId && quizId?.value !== 'general' ? allResultsData.current.filter(result => result.quizId === quizId.value) : allResultsData.current;
-   console.log(data);
-   
+    console.log(data);
+
     const groupedResults = _.groupBy(data, 'username');
     const scoreboard = _(groupedResults)
       .map((userResults, username) => {
@@ -85,7 +86,7 @@ const Scoreboard: React.FC = () => {
           align={'center'}
           justify={'center'}
           bg={useColorModeValue('gray.50', 'gray.800')}
-          mt={20}
+          pt={20}
         >
           <Select
             name="options"
@@ -133,7 +134,13 @@ const Scoreboard: React.FC = () => {
                       </Box>
                     </Td>
                     <Td>{`${userInfo?.firstName} ${userInfo?.lastName}`}</Td>
-                    <Td>{`${user.averageScore}`}</Td>
+                    <Td><Box display="flex" alignItems="center">
+                      {user.averageScore}
+                      {user.averageScore > 90 && <GiRank3 style={{ color: 'gold', marginLeft: '5px', fontSize: '1.5rem' }} />}
+                      {user.averageScore > 80 && <GiRank2 style={{ color: 'blue', marginLeft: '5px', fontSize: '1.5rem' }} />}
+                      {user.averageScore > 65 && <GiRank1 style={{ color: 'gray', marginLeft: '5px', fontSize: '1.5rem' }} />}
+                    </Box>
+                    </Td>
                   </Tr>
                 )
               })}

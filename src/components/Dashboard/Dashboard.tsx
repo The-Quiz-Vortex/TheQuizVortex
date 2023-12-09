@@ -11,6 +11,7 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Image,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -21,10 +22,14 @@ import {
   FiMenu,
   FiBarChart2,
   FiTrello,
+  FiLock,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext.tsx';
+
 
 interface LinkItemProps {
   name: string;
@@ -54,6 +59,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const { appState } = useUserContext();
+  const { user } = useContext(AuthContext);
 
   return (
     <Box
@@ -67,17 +73,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between" textAlign="left">
-        {appState.userData?.username && <p>
+        {appState.userData?.username ? (<p>
           Welcome,
           <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" textAlign="left">
             @{appState.userData?.username}
           </Text>
-        </p>}
+        </p>
+        ) : (
+          <Image align='center' src="/quiz-logo.png" alt='quiztime' h="80px" />
+        )}
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem as={Link} key={link.name} icon={link.icon} to={link.path}>
+        <NavItem as={Link} key={link.name} icon={link.icon} to={!user && link.name !== 'Explore' && link.name !== 'Scoreboard' ? '#' : link.path}>
           {link.name}
+          {!user && link.name !== 'Explore' && link.name !== 'Scoreboard' && <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />}
         </NavItem>
       ))}
     </Box>
@@ -85,6 +95,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 };
 
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
+  const { user } = useContext(AuthContext);
+
   return (
     <Box as={Link} to={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex

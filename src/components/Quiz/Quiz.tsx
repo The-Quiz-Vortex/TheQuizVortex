@@ -9,7 +9,6 @@ import './Quiz.scss';
 import { saveQuizResult } from '../../services/quizResult.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { Quiz as QuizInterface, QuizQuestion } from '../../common/interfaces.ts';
-import { NOW_IN_MS } from '../../common/constants.ts';
 import CountDownTimer from '../CountDownTimer/CountDownTimer.tsx';
 
 function Quiz() {

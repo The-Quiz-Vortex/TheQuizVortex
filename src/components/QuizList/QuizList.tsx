@@ -14,10 +14,13 @@ import { Link } from 'react-router-dom';
 import { Quiz } from '../../common/interfaces.ts';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
-import React, { useState } from 'react'; // Import useState
+import React, { useContext, useState } from 'react'; // Import useState
+import { AuthContext } from '../../context/AuthContext.tsx';
+import { FiLock } from 'react-icons/fi';
 
 export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
   const { appState } = useUserContext();
+  const {user} = useContext(AuthContext);
   const [quizzesState, setQuizzes] = useState<Quiz[]>(quizzes); 
 
   const canEditOrDelete = (quizAuthor: string) => {
@@ -115,7 +118,7 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
                 </Stack>
               </Stack>
 
-              <Link to={`/quiz/${quiz.quizId}`}>
+              <Link to={!user ? '#' : `/quiz/${quiz.quizId}`}>
                 <Button
                   w={'full'}
                   mt={8}
@@ -130,6 +133,7 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
                   }}
                 >
                   Take Quiz
+                  {!user && <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />}
                 </Button>
               </Link>
 
