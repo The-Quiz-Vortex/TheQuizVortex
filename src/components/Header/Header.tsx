@@ -73,7 +73,6 @@ export default function WithSubnavigation() {
         {!loading && user && (
           <>
             <HStack spacing={{ base: '0', md: '6' }}>
-              <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
               <Flex alignItems={'center'}>
                 <Menu>
                   <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
@@ -113,10 +112,6 @@ export default function WithSubnavigation() {
                         Admin Settings
                       </MenuItem>
                     ) : null}
-
-                    <MenuItem as={Link} to="/my-quizes">
-                      My Quizes
-                    </MenuItem>
                     <MenuItem>
                       <Signout />
                     </MenuItem>
@@ -357,7 +352,7 @@ const NAV_ITEMS: Array<NavItem> = [
     label: 'Dashboard',
     href: '/dashboard',
     shouldHide: (user) => !user, // Hide for not signed-in users
-  } ,
+  },
   {
     label: 'Browse quizzes',
     href: '/browse-quizzes',
