@@ -20,6 +20,7 @@ import MyClassrooms from './components/MyClassrooms/MyClassrooms.tsx';
 import BrowseQuizzes from './components/BrowseQuizzes/BrowseQuizzes.tsx';
 import SingleClassroom from './components/SingleClassroom/SingleClassroom.tsx';
 import Footer from './views/Footer/Footer.tsx';
+import DashboardsStats from './components/DashboardStats/DashboardsStats.tsx';
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard-stats" element={<DashboardsStats />} />
                 <Route path="/sign-in" element={<Signin />} />
                 <Route path="/sign-up" element={<Signup />} />
                 <Route path="/create-quiz" element={<CreateQuiz />} />

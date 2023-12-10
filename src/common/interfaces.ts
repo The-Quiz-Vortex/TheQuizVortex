@@ -22,6 +22,8 @@ export interface Quiz {
   totalPoints: number;
   quizId: string;
   passingScore: number;
+  ongoingStartDate: Date;
+  finishDate: Date;
 }
 
 //Single quiz question

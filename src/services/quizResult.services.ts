@@ -8,6 +8,8 @@ import {
   equalTo,
   DataSnapshot,
   onValue,
+  startAt,
+  endAt,
 } from "firebase/database";
 import { db } from "../config/firebase-config.ts";
 import { QuizResult } from "../common/interfaces";
@@ -112,6 +114,30 @@ export const getAllResults = async () => {
     if (!snapshot.exists()) {
       return [];
     }
+    return fromQuizResultDocument(snapshot);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const getQuizResultsLastWeek = async () => {
+  try {
+   // Get the current date
+const now = new Date();
+
+// Get the date one week ago
+const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+
+// Convert the dates to timestamps
+const nowTimestamp = now.getTime();
+const oneWeekAgoTimestamp = oneWeekAgo.getTime();
+
+const snapshot = await get(query(ref(db, 'quizResults'), orderByChild('completedAt'), startAt(oneWeekAgoTimestamp), endAt(nowTimestamp)));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+
     return fromQuizResultDocument(snapshot);
   } catch (error) {
     console.error(error);

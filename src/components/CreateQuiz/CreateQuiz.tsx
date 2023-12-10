@@ -101,24 +101,24 @@ export const CreateQuiz = () => {
 
     return (
         <>
-            {isSubmitted && 
-            <Container minHeight='100vh' minW={'100%'} pt={50} textAlign={'center'} 
-            bg={useColorModeValue('pink.50', 'pink.800')}>
-            <Heading fontSize={'4xl'}
-                justify={'center'}>
-                Congrats! You have created your quiz.
-            </Heading>
-            <br />
-            <Text fontSize={'lg'} color={'gray.600'}>
-                Click below to view your Dashboard with more info.
-            </Text>
+            {isSubmitted &&
+                <Container minHeight='100vh' minW={'100%'} pt={50} textAlign={'center'}
+                    bg={useColorModeValue('pink.50', 'pink.800')}>
+                    <Heading fontSize={'4xl'}
+                        justify={'center'}>
+                        Congrats! You have created your quiz.
+                    </Heading>
+                    <br />
+                    <Text fontSize={'lg'} color={'gray.600'}>
+                        Click below to view your Dashboard with more info.
+                    </Text>
 
-            <Button as={Link} to='/dashboard' mt={10} colorScheme='teal'>
-                <Link to='/dashboard'>
-                    Go to Dashboard
-                </Link>
-            </Button>
-            </Container>}
+                    <Button as={Link} to='/dashboard' mt={10} colorScheme='teal'>
+                        <Link to='/dashboard'>
+                            Go to Dashboard
+                        </Link>
+                    </Button>
+                </Container>}
             {!isSubmitted && <Flex
                 minH={'100vh'}
                 align={'center'}
@@ -189,6 +189,23 @@ export const CreateQuiz = () => {
                                     options={userOptions}
                                     useBasicStyles
                                 />)}
+
+                            <HStack>
+                                <Box>
+                                    <FormControl id="startDate" isRequired isInvalid={!!errors.startDate}>
+                                        <FormLabel>Start date</FormLabel>
+                                        <Input type="date" min={new Date().toISOString().split('T')[0]} {...register("startDate", { valueAsDate: true })} />
+                                        <FormErrorMessage>{errors.startDate?.message}</FormErrorMessage>
+                                    </FormControl>
+                                </Box>
+                                <Box>
+                                    <FormControl id="endDate" isRequired isInvalid={!!errors.endDate}>
+                                        <FormLabel>End date</FormLabel>
+                                        <Input type="date" min={new Date().toISOString().split('T')[0]} {...register("endDate", { valueAsDate: true })} />
+                                        <FormErrorMessage>{errors.endDate?.message}</FormErrorMessage>
+                                    </FormControl>
+                                </Box>
+                            </HStack>
                             <Accordion defaultIndex={[0]} allowMultiple>
                                 {fields.map((field, index) => {
                                     return (<div key={field.id}>

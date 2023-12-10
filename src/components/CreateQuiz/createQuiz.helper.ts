@@ -8,6 +8,8 @@ export const modelQuizRawData = (data: createQuizFormValues) => {
       timeLimit: data.timeLimit,
       passingScore: data.passingScore,
       users: data.users?.map(user => user.value) || null,
+      ongoingStartDate: data.startDate.getTime(),
+      finishDate: data.endDate.getTime(),
       categories: data.categories.map(category => category.value),
       questions: data.question.map((question) => ({
         questionTitle: question.questionTitle,

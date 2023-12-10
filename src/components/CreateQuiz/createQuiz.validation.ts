@@ -9,6 +9,8 @@ export const defaultValuesQuiz: createQuizFormValues = {
     users: [],
     visibility: [{ label: "Public", value: "public" }],
     timeLimit: 0,
+    startDate: '',
+    endDate: '',
     passingScore: '',
     question: [
         {
@@ -65,6 +67,8 @@ export const CreateQuizValidation = z.object({
         .min(1, { message: "Please pick at least 1 category for your quiz" }),
     users: selectSchema
         .array().optional(),
+    startDate: z.date().refine(date => date >= new Date(new Date().setHours(0,0,0,0)), { message: "Date cannot be in the past" }),
+    endDate: z.date().refine(date => date >= new Date(), { message: "Date must be in the future" }),
     question: z.array(
         z.object({
             questionTitle: z.string().min(10, { message: 'Min length should be 10 symbols' }),
