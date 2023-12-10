@@ -25,6 +25,7 @@ import { getAllQuizzes, getQuizzesByAuthor } from '../../services/quiz.services.
 import { filterQuizzesByResults, getFailedQuizResultsLastWeek, getOpenQuizzes, getPassedQuizResultsLastWeek, getPercentageScore, getTeacherFailedQuizzesLastWeek, getTeacherOpenQuizzes, getTeacherPassedQuizzesLastWeek } from './dashboardStats.helper.ts';
 import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import QuizList from '../QuizList/QuizList.tsx';
+import ResultsTableStats from '../ResultsTableStats/ResultsTableStats.tsx';
 
 interface StatData {
     id: number;
@@ -127,14 +128,18 @@ const DashboardsStats = () => {
         percentage: '',
         quizzes: []
     });
+    const [userResults, setUserResults] = useState<QuizResult[]>([]);
+    const [quizzesData, setQuizzesData] = useState<Quiz[]>([]);
 
     useEffect(() => {
         userData && (async () => {
             const quizResultsLastWeek = await getQuizResultsLastWeek() as QuizResult[];
             const allQuizzes = await getAllQuizzes() as Quiz[];
+            setQuizzesData(allQuizzes);
             const allResults = await getAllResults() as QuizResult[];
 
             if (userData.role === 'admin') {
+                setUserResults(allResults);
                 const adminOpenQuizzes = getOpenQuizzes(allQuizzes);
                 const adminPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(allQuizzes, quizResultsLastWeek);
                 const adminFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(allQuizzes, quizResultsLastWeek);
@@ -159,6 +164,7 @@ const DashboardsStats = () => {
                 }))
             } else if (userData.role === 'teacher') {
                 const teacherQuizzes = await getQuizzesByAuthor(userData.username) as Quiz[];
+                setUserResults(allResults.filter(r => !!teacherQuizzes.find(q => q.quizId === r.quizId)));
                 const teacherOpenQuizzes = getOpenQuizzes(teacherQuizzes);
                 const teacherPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(teacherQuizzes, quizResultsLastWeek);
                 const teacherFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(teacherQuizzes, quizResultsLastWeek);
@@ -182,6 +188,7 @@ const DashboardsStats = () => {
                 }))
             } else if (userData.role === 'student') {
                 const studentQuizzes = allQuizzes?.filter(quiz => quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username)));
+                setUserResults(allResults.filter(r => !!studentQuizzes.find(q => q.quizId === r.quizId)));
                 const studentOpenQuizzes = getOpenQuizzes(studentQuizzes);
                 const studentPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
                 const studentFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
@@ -241,6 +248,7 @@ const DashboardsStats = () => {
                     ))}
                 </SimpleGrid>
             </Container>
+            <ResultsTableStats results={userResults} allQuizzes={quizzesData} />
         </>
     );
 };

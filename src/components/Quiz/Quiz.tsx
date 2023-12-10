@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { getQuizById } from '../../services/quiz.services.ts';
 import { useCounter } from './quiz.helper.ts';
 import Question from '../Question/Question.tsx';
 import QuestionCorrection from '../Question/QuestionCorrection.tsx';
 import Results from '../Results/Results.tsx';
 import './Quiz.scss';
-import { saveQuizResult } from '../../services/quizResult.services.ts';
+import { getQuizResultId, saveQuizResult } from '../../services/quizResult.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { Quiz as QuizInterface, QuizQuestion } from '../../common/interfaces.ts';
 import CountDownTimer from '../CountDownTimer/CountDownTimer.tsx';
@@ -15,6 +15,9 @@ function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const { id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const review = queryParams.get("review");
   const [quiz, setQuiz] = useState<QuizInterface>({} as QuizInterface);
   const quizRef = useRef<HTMLDivElement | null>(null);
   const questions = useRef<QuizQuestion[]>([]);
@@ -32,7 +35,7 @@ function Quiz() {
   const emptyCounter = useCounter(0);
 
   useEffect(() => {
-
+    window.scrollTo(0, 0);
     const fetchQuiz = async () => {
       try {
         if (id) {
@@ -41,6 +44,12 @@ function Quiz() {
           questions.current = [...data.questions];
 
           setRemainingQ(data.questions.length);
+        }
+        if (review) {
+          setQuizStarted(true);
+          setQuizFinished(true);
+          const selected = await getQuizResultId(review);
+          selectedArr.current = selected;
         }
       } catch (error) {
         console.log(error);
@@ -58,7 +67,7 @@ function Quiz() {
   }, [quizStarted]);
 
   useEffect(() => {
-    if (quizFinished && userData && quiz.title !== "Sample quiz") {
+    if (quizFinished && userData && quiz.title !== "Sample quiz" && !review) {
       (async () => {
 
         if (quizFinished && quizRef.current) {
@@ -98,10 +107,6 @@ function Quiz() {
         setQuizFinished(true);
       }
     }
-  };
-
-  const resetSelection = () => {
-    selectedArr.current = [];
   };
 
   const indicatorBg = (index: number) => {

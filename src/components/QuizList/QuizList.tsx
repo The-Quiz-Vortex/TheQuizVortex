@@ -2,11 +2,9 @@ import {
   Heading,
   Box,
   Image,
-  Flex,
   Text,
   Stack,
   Button,
-  useColorModeValue,
   SimpleGrid,
   Badge,
 } from '@chakra-ui/react';
@@ -14,7 +12,7 @@ import { Link } from 'react-router-dom';
 import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
-import React, { useContext, useEffect, useState } from 'react'; // Import useState
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FiLock } from 'react-icons/fi';
 import { getQuizResultsByUsername } from '../../services/quizResult.services.ts';
