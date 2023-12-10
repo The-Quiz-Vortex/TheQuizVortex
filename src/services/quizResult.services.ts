@@ -75,32 +75,19 @@ export const getQuizResultId = async (id: string): Promise<DataSnapshot> => {
   }
 };
 
-export const getQuizResultsByUsername = async (
-  username: string,
-  setResults: React.Dispatch<React.SetStateAction<QuizResult[]>>
-) => {
+export const getQuizResultsByUsername = async (username: string) => {
   try {
-    const quizResultsQuery = query(
+    const snapshot = await get(query(
       ref(db, "quizResults"),
-      orderByChild("selection/username"),
+      orderByChild("username"),
       equalTo(username)
-    );
+    ));
 
-    onValue(quizResultsQuery, (snapshot) => {
-      const results: QuizResult[] = [];
+    if (!snapshot.exists()) {
+      return [];
+    }
 
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          const result = {
-            quizResultId: childSnapshot.key,
-            ...childSnapshot.val(),
-          };
-          results.push(result);
-        });
-      }
-
-      setResults(results);
-    });
+    return fromQuizResultDocument(snapshot);
   } catch (error) {
     console.error("Error fetching quiz results:", error);
     throw error; // Propagate the error
@@ -122,22 +109,22 @@ export const getAllResults = async () => {
 
 export const getQuizResultsLastWeek = async () => {
   try {
-   // Get the current date
-const now = new Date();
+    // Get the current date
+    const now = new Date();
 
-// Get the date one week ago
-const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    // Get the date one week ago
+    const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
 
-// Convert the dates to timestamps
-const nowTimestamp = now.getTime();
-const oneWeekAgoTimestamp = oneWeekAgo.getTime();
+    // Convert the dates to timestamps
+    const nowTimestamp = now.getTime();
+    const oneWeekAgoTimestamp = oneWeekAgo.getTime();
 
-const snapshot = await get(query(ref(db, 'quizResults'), orderByChild('completedAt'), startAt(oneWeekAgoTimestamp), endAt(nowTimestamp)));
+    const snapshot = await get(query(ref(db, 'quizResults'), orderByChild('completedAt'), startAt(oneWeekAgoTimestamp), endAt(nowTimestamp)));
 
     if (!snapshot.exists()) {
       return [];
     }
-
+    
     return fromQuizResultDocument(snapshot);
   } catch (error) {
     console.error(error);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 import {
     HStack,
     VStack,
@@ -9,7 +9,8 @@ import {
     Icon,
     SimpleGrid,
     Container,
-    Stack
+    Stack,
+    Box
 } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
 // Here we have used framer-motion package for animations
@@ -19,8 +20,11 @@ import { HiOutlineMail } from 'react-icons/hi';
 import { BsArrowUpShort, BsArrowDownShort } from 'react-icons/bs';
 import { AiOutlineLike, AiOutlineEye } from 'react-icons/ai';
 import { AuthContext } from '../../context/AuthContext.tsx';
-import { getQuizResultsLastWeek } from '../../services/quizResult.services.ts';
+import { getAllResults, getQuizResultsLastWeek } from '../../services/quizResult.services.ts';
 import { getAllQuizzes, getQuizzesByAuthor } from '../../services/quiz.services.ts';
+import { filterQuizzesByResults, getFailedQuizResultsLastWeek, getOpenQuizzes, getPassedQuizResultsLastWeek, getPercentageScore, getTeacherFailedQuizzesLastWeek, getTeacherOpenQuizzes, getTeacherPassedQuizzesLastWeek } from './dashboardStats.helper.ts';
+import { Quiz, QuizResult } from '../../common/interfaces.ts';
+import QuizList from '../QuizList/QuizList.tsx';
 
 interface StatData {
     id: number;
@@ -28,9 +32,11 @@ interface StatData {
     count: number;
     icon: any;
     percentage: string;
+    quizzes: Quiz[];
 }
 
-const Card = ({ data }: { data: StatData }) => {
+const Card = ({ data, setViewAll }: { data: StatData, setViewAll: Dispatch<SetStateAction<string>> }) => {
+
     return (
         <motion.div whileHover={{ translateY: -5 }}>
             <Stack
@@ -85,7 +91,7 @@ const Card = ({ data }: { data: StatData }) => {
                     </VStack>
                 </HStack>
                 <Flex py={3} px={5} d="none" _groupHover={{ d: 'flex' }}>
-                    <Link fontSize="md">View All</Link>
+                    <Link fontSize="md" onClick={() => setViewAll(data.label)} >View All</Link>
                 </Flex>
             </Stack>
         </motion.div>
@@ -94,53 +100,144 @@ const Card = ({ data }: { data: StatData }) => {
 
 const DashboardsStats = () => {
     const { userData } = useContext(AuthContext);
-    const statData = useRef<StatData[]>([
+    const [viewAll, setViewAll] = useState('');
+    const [statDataOpenQ, setStatDataOpenQ] = useState<StatData>(
         {
             id: 1,
             label: 'Open quizzes',
             count: 0,
             icon: AiOutlineEye,
-            percentage: ''
-        },
-        {
-            id: 2,
-            label: 'Passed quizzes last week',
-            count: 0,
-            icon: AiOutlineLike,
-            percentage: ''
-        },
-        {
-            id: 3,
-            label: 'Failed quizzes last week',
-            count: 0,
-            icon: HiOutlineMail,
-            percentage: ''
+            percentage: '',
+            quizzes: []
         }
-    ]);
+    );
+    const [statDataPassedQ, setStatDataPassedQ] = useState<StatData>({
+        id: 2,
+        label: 'Passed quizzes last week',
+        count: 0,
+        icon: AiOutlineLike,
+        percentage: '',
+        quizzes: []
+    });
+    const [statDataFailedQ, setStatDataFailedQ] = useState<StatData>({
+        id: 3,
+        label: 'Failed quizzes last week',
+        count: 0,
+        icon: HiOutlineMail,
+        percentage: '',
+        quizzes: []
+    });
 
     useEffect(() => {
         userData && (async () => {
-            const quizzesLastWeek = await getQuizResultsLastWeek();
-            const allQuizzes = await getAllQuizzes();
+            const quizResultsLastWeek = await getQuizResultsLastWeek() as QuizResult[];
+            const allQuizzes = await getAllQuizzes() as Quiz[];
+            const allResults = await getAllResults() as QuizResult[];
+
             if (userData.role === 'admin') {
-                statData.current[0].count = allQuizzes?.filter(quiz => quiz.finishDate >= Date.now()).length;
-                statData.current[1].count = quizzesLastWeek?.length;
+                const adminOpenQuizzes = getOpenQuizzes(allQuizzes);
+                const adminPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(allQuizzes, quizResultsLastWeek);
+                const adminFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(allQuizzes, quizResultsLastWeek);
+
+                setStatDataOpenQ(prev => ({
+                    ...prev,
+                    quizzes: adminOpenQuizzes,
+                    count: adminOpenQuizzes.length || 0,
+                    percentage: getPercentageScore(adminOpenQuizzes, allResults),
+                }))
+                setStatDataPassedQ(prev => ({
+                    ...prev,
+                    count: adminPassedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(adminPassedQuizzesLastWeek, allResults),
+                    quizzes: filterQuizzesByResults(allQuizzes, adminPassedQuizzesLastWeek),
+                }))
+                setStatDataFailedQ(prev => ({
+                    ...prev,
+                    count: adminFailedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(adminFailedQuizzesLastWeek, allResults),
+                    quizzes: filterQuizzesByResults(allQuizzes, adminFailedQuizzesLastWeek),
+                }))
             } else if (userData.role === 'teacher') {
-                const teacherQuizzes = await getQuizzesByAuthor(userData.username);
-                statData.current[0].count = teacherQuizzes?.filter(quiz => quiz.finishDate >= Date.now()).length;
+                const teacherQuizzes = await getQuizzesByAuthor(userData.username) as Quiz[];
+                const teacherOpenQuizzes = getOpenQuizzes(teacherQuizzes);
+                const teacherPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(teacherQuizzes, quizResultsLastWeek);
+                const teacherFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(teacherQuizzes, quizResultsLastWeek);
+                setStatDataOpenQ(prev => ({
+                    ...prev,
+                    count: teacherOpenQuizzes.length || 0,
+                    percentage: getPercentageScore(teacherOpenQuizzes, quizResultsLastWeek),
+                    quizzes: teacherQuizzes
+                }))
+                setStatDataPassedQ(prev => ({
+                    ...prev,
+                    count: teacherPassedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(teacherPassedQuizzesLastWeek, quizResultsLastWeek),
+                    quizzes: filterQuizzesByResults(allQuizzes, teacherPassedQuizzesLastWeek),
+                }))
+                setStatDataFailedQ(prev => ({
+                    ...prev,
+                    count: teacherFailedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(teacherFailedQuizzesLastWeek, quizResultsLastWeek),
+                    quizzes: filterQuizzesByResults(allQuizzes, teacherFailedQuizzesLastWeek),
+                }))
             } else if (userData.role === 'student') {
-                statData.current[0].count = allQuizzes?.filter(quiz => quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username))).length;
+                const studentQuizzes = allQuizzes?.filter(quiz => quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username)));
+                const studentOpenQuizzes = getOpenQuizzes(studentQuizzes);
+                const studentPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
+                const studentFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
+                setStatDataOpenQ(prev => ({
+                    ...prev,
+                    count: studentOpenQuizzes.length || 0,
+                    percentage: getPercentageScore(studentOpenQuizzes, quizResultsLastWeek),
+                    quizzes: studentOpenQuizzes
+                }))
+                setStatDataPassedQ(prev => ({
+                    ...prev,
+                    count: studentPassedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(studentPassedQuizzesLastWeek, quizResultsLastWeek),
+                    quizzes: filterQuizzesByResults(allQuizzes, studentPassedQuizzesLastWeek),
+                }))
+                setStatDataFailedQ(prev => ({
+                    ...prev,
+                    count: studentFailedQuizzesLastWeek.length || 0,
+                    percentage: getPercentageScore(studentFailedQuizzesLastWeek, quizResultsLastWeek),
+                    quizzes: filterQuizzesByResults(allQuizzes, studentFailedQuizzesLastWeek),
+                }))
             }
         })();
     }, [userData])
+
+    if (viewAll !== '') {
+        return (
+            <>
+                <Dashboard />
+                <Box ml={{ base: 0, md: 40 }} bg={useColorModeValue('gray.50', 'gray.800')}>
+                    <Flex
+                        minH={'calc(100vh - 80px)'}
+                        align={'center'}
+                        justify={'center'}
+                        pt="10"
+                        pb="20"
+                    >
+                        <QuizList quizzes={viewAll === 'Open quizzes' ?
+                            statDataOpenQ.quizzes :
+                            viewAll === 'Passed quizzes last week' ?
+                                statDataPassedQ.quizzes :
+                                statDataFailedQ.quizzes
+                        } />
+                    </Flex>
+                </Box>
+            </>
+        )
+    }
 
     return (
         <>
             <Dashboard />
             <Container maxW="7xl" p={{ base: 5, md: 20 }}>
                 <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5} mt={6} mb={4}>
-                    {statData.current.map((data, index) => (
-                        <Card key={index} data={data} />
+                    {[{ ...statDataOpenQ }, { ...statDataPassedQ }, { ...statDataFailedQ }].map((data, index) => (
+                        <Card key={index} data={data} setViewAll={setViewAll} />
                     ))}
                 </SimpleGrid>
             </Container>

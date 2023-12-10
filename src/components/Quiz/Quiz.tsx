@@ -104,16 +104,6 @@ function Quiz() {
     selectedArr.current = [];
   };
 
-  const handleRestartClick = () => {
-    setQuizFinished(false);
-    setQuizStarted(false);
-    resetSelection();
-    questionCounter.reset();
-    correctCounter.reset();
-    wrongCounter.reset();
-    emptyCounter.reset();
-  };
-
   const indicatorBg = (index: number) => {
     if (questionCounter.value > index) {
       return '#fff';
@@ -189,12 +179,6 @@ function Quiz() {
               correct={correctCounter.value}
               empty={emptyCounter.value}
             />
-            <button
-              className="restart-button"
-              onClick={() => handleRestartClick()}
-            >
-              Restart Quiz
-            </button>
           </div>
         </div>
         <div className="game-area">

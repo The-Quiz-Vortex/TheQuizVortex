@@ -11,23 +11,31 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { Quiz } from '../../common/interfaces.ts';
+import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
-import React, { useContext, useState } from 'react'; // Import useState
+import React, { useContext, useEffect, useState } from 'react'; // Import useState
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FiLock } from 'react-icons/fi';
+import { getQuizResultsByUsername } from '../../services/quizResult.services.ts';
 
 export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
   const { appState } = useUserContext();
-  const {user} = useContext(AuthContext);
-  const [quizzesState, setQuizzes] = useState<Quiz[]>(quizzes);
+  const { user, userData } = useContext(AuthContext);
+  const [results, setResults] = useState<QuizResult[]>([]);
+
+  useEffect(() => {
+    userData && (async () => {
+      const userResults = await getQuizResultsByUsername(userData.username) as QuizResult[];
+      setResults(userResults);
+    })();
+  }, [userData]);
 
   const canEditOrDelete = (quizAuthor: string) => {
     return appState.isAdmin || appState.userData?.username === quizAuthor;
   };
 
-   const handleEdit = async (quizId: string, quizAuthor: string) => {
+  const handleEdit = async (quizId: string, quizAuthor: string) => {
     if (canEditOrDelete(quizAuthor)) {
       try {
         // Call the updateQuiz function from the service
@@ -49,10 +57,10 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
         try {
           // Call the deleteQuizById function from the service
           await deleteQuizById(quizId);
-  
+
           // Update the state to remove the deleted quiz from the UI
           setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.quizId !== quizId));
-  
+
           console.log(`Deleting quiz with ID ${quizId}`);
           // Add any additional logic or navigation here
         } catch (error) {
@@ -67,7 +75,12 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
   return (
     <>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8} mx={{ base: 4, md: 8 }}>
-        {quizzes.map((quiz, index) => (
+        {quizzes.map((quiz, index) => {
+          console.log(quiz.categories);
+          console.log(quiz);
+          
+          const isCompleted = results.filter(r => r.quizId === quiz.quizId).length !== 0;
+          return (
           <Box
             key={index}
             maxW={'270px'}
@@ -120,6 +133,7 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
 
               <Link to={!user ? '#' : `/quiz/${quiz.quizId}`}>
                 <Button
+                  isDisabled={isCompleted}
                   w={'full'}
                   mt={8}
                   rounded={'md'}
@@ -175,7 +189,7 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
               )}
             </Box>
           </Box>
-        ))}
+        )})}
       </SimpleGrid>
     </>
   );
