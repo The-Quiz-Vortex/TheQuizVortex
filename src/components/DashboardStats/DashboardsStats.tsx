@@ -10,13 +10,14 @@ import {
     SimpleGrid,
     Container,
     Stack,
-    Box
+    Box,
+    Heading
 } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
 // Here we have used framer-motion package for animations
 import { motion } from 'framer-motion';
 // Here we have used react-icons package for the icons
-import { HiOutlineMail } from 'react-icons/hi';
+import { HiBan, HiOutlineMail } from 'react-icons/hi';
 import { BsArrowUpShort, BsArrowDownShort } from 'react-icons/bs';
 import { AiOutlineLike, AiOutlineEye } from 'react-icons/ai';
 import { AuthContext } from '../../context/AuthContext.tsx';
@@ -60,7 +61,7 @@ const Card = ({ data, setViewAll }: { data: StatData, setViewAll: Dispatch<SetSt
                         alignItems="center"
                         rounded="lg"
                         p={2}
-                        bg="green.400"
+                        bg="#EE8C64"
                         position="relative"
                         w={12}
                         h={12}
@@ -124,7 +125,7 @@ const DashboardsStats = () => {
         id: 3,
         label: 'Failed quizzes last week',
         count: 0,
-        icon: HiOutlineMail,
+        icon: HiBan,
         percentage: '',
         quizzes: []
     });
@@ -242,6 +243,11 @@ const DashboardsStats = () => {
         <>
             <Dashboard />
             <Container maxW="7xl" p={{ base: 5, md: 20 }}>
+                <Heading as="h1" size="lg" fontWeight="bold" textAlign='left' mb={10}>
+                    Here you can review your quizzes and so much more. 
+                    <br />
+                    Start exploring now!
+                </Heading>
                 <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={5} mt={6} mb={4}>
                     {[{ ...statDataOpenQ }, { ...statDataPassedQ }, { ...statDataFailedQ }].map((data, index) => (
                         <Card key={index} data={data} setViewAll={setViewAll} />

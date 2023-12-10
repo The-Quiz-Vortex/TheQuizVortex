@@ -28,7 +28,7 @@ const ResultsTableStats = ({ results, allQuizzes }: { results: QuizResult[], all
     return (
         <Box ml={{ base: 0, md: 60 }}>
             <Flex
-                minH={'calc(100vh - 80px)'}
+                
                 align={'center'}
                 justify={'center'}
                 bg={useColorModeValue('gray.50', 'gray.800')}
