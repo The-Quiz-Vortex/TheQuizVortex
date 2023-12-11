@@ -14,7 +14,6 @@ import { fetchCategories } from '../../services/openTrivia.services.ts';
 import { AddOptions } from './AddOptions.tsx';
 import { getAllUsers } from '../../services/users.services.ts';
 import { Link } from 'react-router-dom';
-import { getQuizQuestion } from '../../config/openAI-config.ts';
 
 export interface QuizFormData {
     userId: string[];
@@ -33,12 +32,6 @@ export const CreateQuiz = () => {
     const [userOptions, setUserOptions] = useState<SelectType[]>([]);
 
     useEffect(() => {
-        // (async () => {
-        //     const test = await getQuizQuestion();
-        //     console.log(test);
-            
-        //   } )();
-
         (async () => {
             const result = await fetchCategories()
             setCategoryOptions(result);
