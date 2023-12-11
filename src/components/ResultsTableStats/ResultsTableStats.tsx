@@ -19,7 +19,7 @@ const ResultsTableStats = ({ results, allQuizzes }: { results: QuizResult[], all
             }
         };
         getAllUsersData();
-    }, [users]);
+    }, []);
 
     const handleViewAnswers = (result: QuizResult) => {
         navigate({ pathname: `/quiz/${result.quizId}`, search: `?${createSearchParams({ review: result.quizResultId })}` });
@@ -58,7 +58,7 @@ const ResultsTableStats = ({ results, allQuizzes }: { results: QuizResult[], all
                             const userData = users.find(user => user.username === result.username);
                             const quizData = allQuizzes.find(quiz => quiz.quizId === result.quizId);
                             return (
-                                <Tr key={result.username}>
+                                <Tr key={result.quizResultId}>
                                     <Td>
                                         <Box display="flex" justifyContent="flex-start" alignItems="center" gap="20px">
                                             <Avatar size={'md'} src={userData?.profilePictureURL} />

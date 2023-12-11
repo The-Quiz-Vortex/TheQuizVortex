@@ -44,7 +44,7 @@ export default function Footer() {
 
                 <Stack direction="row" spacing={5} pt={{ base: 4, md: 0 }} alignItems="center">
                     {accounts.map((sc, index) => (
-                        <Link to={sc.url}>
+                        <Link to={sc.url} key={index}>
                         <IconButton
                             key={index}
                             aria-label={sc.label}

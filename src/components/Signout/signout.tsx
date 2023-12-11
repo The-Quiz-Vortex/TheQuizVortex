@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, useToast } from '@chakra-ui/react';
 import { useUserContext } from '../../helpers/useUserContext';
 import { logoutUser } from '../../services/auth.services';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signout = () => {
   const { user } = useUserContext();
@@ -29,7 +29,9 @@ const Signout = () => {
   };
 
   return (
-    <React.Fragment>{user && <Button onClick={handleSignOut}>Sign Out</Button>}</React.Fragment>
+    <>
+      {user && <Link onClick={handleSignOut}>Sign Out</Link>}
+    </>
   );
 };
 
