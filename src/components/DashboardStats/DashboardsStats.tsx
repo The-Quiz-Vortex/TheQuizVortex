@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import {
     HStack,
     VStack,
@@ -11,13 +11,14 @@ import {
     Container,
     Stack,
     Box,
-    Heading
+    Heading,
+    Button
 } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
 // Here we have used framer-motion package for animations
 import { motion } from 'framer-motion';
 // Here we have used react-icons package for the icons
-import { HiBan, HiOutlineMail } from 'react-icons/hi';
+import { HiBan } from 'react-icons/hi';
 import { BsArrowUpShort, BsArrowDownShort } from 'react-icons/bs';
 import { AiOutlineLike, AiOutlineEye } from 'react-icons/ai';
 import { AuthContext } from '../../context/AuthContext.tsx';
@@ -27,6 +28,7 @@ import { filterQuizzesByResults, getFailedQuizResultsLastWeek, getOpenQuizzes, g
 import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import QuizList from '../QuizList/QuizList.tsx';
 import ResultsTableStats from '../ResultsTableStats/ResultsTableStats.tsx';
+import { ArrowLeftIcon } from '@chakra-ui/icons';
 
 interface StatData {
     id: number;
@@ -135,6 +137,8 @@ const DashboardsStats = () => {
     useEffect(() => {
         userData && (async () => {
             const quizResultsLastWeek = await getQuizResultsLastWeek() as QuizResult[];
+            console.log(quizResultsLastWeek);
+            
             const allQuizzes = await getAllQuizzes() as Quiz[];
             setQuizzesData(allQuizzes);
             const allResults = await getAllResults() as QuizResult[];
@@ -187,8 +191,8 @@ const DashboardsStats = () => {
                     percentage: getPercentageScore(teacherFailedQuizzesLastWeek, quizResultsLastWeek),
                     quizzes: filterQuizzesByResults(allQuizzes, teacherFailedQuizzesLastWeek),
                 }))
-            } else if (userData.role === 'student') {
-                const studentQuizzes = allQuizzes?.filter(quiz => quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username)));
+            } else if (userData.role === 'student' || userData.role === 'user') {
+                const studentQuizzes = allQuizzes?.filter(quiz => quiz.author === userData.username || quiz.visibility === 'public' || quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username)));
                 setUserResults(allResults.filter(r => !!studentQuizzes.find(q => q.quizId === r.quizId)));
                 const studentOpenQuizzes = getOpenQuizzes(studentQuizzes);
                 const studentPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
@@ -227,6 +231,10 @@ const DashboardsStats = () => {
                         pt="10"
                         pb="20"
                     >
+                        {viewAll !== '' && <Link href="/dashboard">
+                            <Button variant="ghost" colorScheme="teal" leftIcon={<ArrowLeftIcon />}>
+                                Back to Dashboard</Button>
+                        </Link>}
                         <QuizList quizzes={viewAll === 'Open quizzes' ?
                             statDataOpenQ.quizzes :
                             viewAll === 'Passed quizzes last week' ?
@@ -244,7 +252,7 @@ const DashboardsStats = () => {
             <Dashboard />
             <Container maxW="7xl" p={{ base: 5, md: 20 }}>
                 <Heading as="h1" size="lg" fontWeight="bold" textAlign='left' mb={10}>
-                    Here you can review your quizzes and so much more. 
+                    Here you can review your quizzes and so much more.
                     <br />
                     Start exploring now!
                 </Heading>

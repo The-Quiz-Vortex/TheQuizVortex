@@ -2,8 +2,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
-  User,
   UserCredential,
 } from 'firebase/auth';
 import { auth } from '../config/firebase-config.ts';

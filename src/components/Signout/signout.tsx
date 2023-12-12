@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { useUserContext } from '../../helpers/useUserContext';
 import { logoutUser } from '../../services/auth.services';
 import { Link, useNavigate } from 'react-router-dom';

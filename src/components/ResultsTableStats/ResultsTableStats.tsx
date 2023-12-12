@@ -1,5 +1,5 @@
 import { Avatar, Badge, Box, Button, Flex, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AppUser, Quiz, QuizResult } from '../../common/interfaces.ts'
 import { getAllUsers } from '../../services/users.services.ts'
 import moment from 'moment'
@@ -56,7 +56,7 @@ const ResultsTableStats = ({ results, allQuizzes }: { results: QuizResult[], all
                     <Tbody>
                         {results.map((result) => {
                             const userData = users.find(user => user.username === result.username);
-                            const quizData = allQuizzes.find(quiz => quiz.quizId === result.quizId);
+                            const quizData = allQuizzes.find(quiz => quiz.quizId === result.quizId) as Quiz;
                             return (
                                 <Tr key={result.quizResultId}>
                                     <Td>

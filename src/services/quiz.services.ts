@@ -1,6 +1,5 @@
 import {
   get,
-  set,
   ref,
   remove,
   query,

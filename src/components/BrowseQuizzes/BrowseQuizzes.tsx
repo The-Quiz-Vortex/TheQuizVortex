@@ -3,9 +3,8 @@ import QuizList from '../QuizList/QuizList.tsx';
 import SearchBar from '../SearchBar/SearchBar.tsx';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { getAllQuizzes } from '../../services/quiz.services.ts';
-import { Box, Flex, Input, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
-import { set } from 'lodash';
 import { Quiz } from '../../common/interfaces.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 
@@ -13,17 +12,18 @@ export default function BrowseQuizzes() {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<Quiz[]>([]);
-    const initialQuizzes = useRef([]);
+    const initialQuizzes = useRef<Quiz[]>([]);
     const {userData} = useContext(AuthContext);
 
     useEffect(() => {
         (async function () {
             try {
                 const data = await getAllQuizzes();
-                setSearchResults(data?.filter((quiz) => quiz.visibility === 'public' || 
+                const filtered = data?.filter((quiz) => quiz.visibility === 'public' || 
                 quiz.author === userData?.username || 
-                (quiz.visibility === 'private' && quiz.users?.includes(userData?.username))) || []);
-                initialQuizzes.current = data;
+                (quiz.visibility === 'private' && quiz.users?.includes(userData?.username))) || []
+                setSearchResults(filtered);
+                initialQuizzes.current = filtered;
             } catch (error) {
                 console.log(error);
             }

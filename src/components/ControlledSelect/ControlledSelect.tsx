@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useController,
   FieldValues,
@@ -47,7 +46,7 @@ function ControlledSelect<
     shouldUnregister,
   });
 
-  const handleChange = (newValue: OnChangeValue<Option, IsMulti>, actionMeta: ActionMeta<Option>) => {
+  const handleChange = (newValue: OnChangeValue<Option, IsMulti>) => {
 
     const value = Array.isArray(newValue) ? newValue : [newValue];
     onChange(value);

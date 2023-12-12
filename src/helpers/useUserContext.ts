@@ -1,7 +1,7 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../config/firebase-config.ts';
 import { useEffect, useState } from 'react';
-import { getUserByEmail, getUserByUID } from '../services/users.services.ts';
+import { getUserByUID } from '../services/users.services.ts';
 import { onValue, ref } from 'firebase/database';
 import { AppUser } from '../common/interfaces.ts';
 import { User, UserCredential } from 'firebase/auth';

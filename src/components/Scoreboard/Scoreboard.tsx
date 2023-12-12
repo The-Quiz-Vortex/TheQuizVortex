@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getAllResults } from '../../services/quizResult.services';
-import { AppUser, QuizResult } from '../../common/interfaces';
+import { AppUser } from '../../common/interfaces';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { Avatar, Box, Flex, Heading, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
@@ -22,7 +22,6 @@ const Scoreboard: React.FC = () => {
 
   const findScores = (quizId?: SelectType | undefined) => {
     const data = quizId && quizId?.value !== 'general' ? allResultsData.current.filter(result => result.quizId === quizId.value) : allResultsData.current;
-    console.log(data);
 
     const groupedResults = _.groupBy(data, 'username');
     const scoreboard = _(groupedResults)
