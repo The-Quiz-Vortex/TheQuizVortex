@@ -7,12 +7,10 @@ import {
   orderByChild,
   equalTo,
   DataSnapshot,
-  onValue,
   startAt,
   endAt,
 } from "firebase/database";
 import { db } from "../config/firebase-config.ts";
-import { QuizResult } from "../common/interfaces";
 
 const fromQuizResultDocument = async (snapshot: DataSnapshot) => {
   try {

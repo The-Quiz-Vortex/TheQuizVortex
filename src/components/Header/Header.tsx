@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
-import { FiBell, FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown } from 'react-icons/fi';
 
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';

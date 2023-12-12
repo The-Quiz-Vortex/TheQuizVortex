@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Heading,
@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import { useUserContext } from '../../helpers/useUserContext.ts';
-import { updateQuiz, deleteQuizById, getAllQuizzes } from '../../services/quiz.services.ts';
+import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FiLock } from 'react-icons/fi';
 import { getQuizResultsByUsername } from '../../services/quizResult.services.ts';

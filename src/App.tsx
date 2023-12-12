@@ -4,7 +4,6 @@ import Home from './views/Home/Home.tsx';
 import Signin from './components/Signin/Signin.tsx';
 import Signup from './components/Signup/Signup.tsx';
 import Header from './components/Header/Header.tsx';
-import Dashboard from './components/Dashboard/Dashboard.tsx';
 import { AuthContext } from './context/AuthContext.tsx';
 import { useUserContext } from './helpers/useUserContext.ts';
 import { ChakraProvider } from '@chakra-ui/react';

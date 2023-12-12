@@ -2,7 +2,13 @@ import ExpiredNotice from '../ExpiredNotice/ExpiredNotice.tsx';
 import ShowCounter from '../ShowCounter/ShowCounter.tsx';
 import { useCountdown } from './countDownTimer.helper.ts';
 
-const CountDownTimer = ({ targetDate, setQuizFinished, quizFinished }) => {
+interface CountDownTimerProps {
+    targetDate: number;
+    setQuizFinished: React.Dispatch<React.SetStateAction<boolean>>;
+    quizFinished: boolean;
+}
+
+const CountDownTimer = ({ targetDate, setQuizFinished, quizFinished }: CountDownTimerProps) => {
 
     const [days, hours, minutes, seconds] = useCountdown(targetDate);
 

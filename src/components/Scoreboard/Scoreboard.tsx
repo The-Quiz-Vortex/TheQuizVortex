@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getAllResults } from '../../services/quizResult.services';
-import { AppUser, QuizResult } from '../../common/interfaces';
+import { AppUser } from '../../common/interfaces';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { Avatar, Box, Flex, Heading, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 import Dashboard from '../Dashboard/Dashboard.tsx';
