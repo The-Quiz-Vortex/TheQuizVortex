@@ -1,3 +1,5 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Heading,
   Box,
@@ -8,25 +10,39 @@ import {
   SimpleGrid,
   Badge,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
 import { Quiz, QuizResult } from '../../common/interfaces.ts';
 import { useUserContext } from '../../helpers/useUserContext.ts';
-import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
-import React, { useContext, useEffect, useState } from 'react';
+import { updateQuiz, deleteQuizById, getAllQuizzes } from '../../services/quiz.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FiLock } from 'react-icons/fi';
 import { getQuizResultsByUsername } from '../../services/quizResult.services.ts';
 
-export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
+export default function QuizList() {
   const { appState } = useUserContext();
   const { user, userData } = useContext(AuthContext);
   const [results, setResults] = useState<QuizResult[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
   useEffect(() => {
-    userData && (async () => {
-      const userResults = await getQuizResultsByUsername(userData.username) as QuizResult[];
-      setResults(userResults);
-    })();
+    const fetchData = async () => {
+      try {
+        // Fetch quizzes using getAllQuizzes
+        const fetchedQuizzes = await getAllQuizzes();
+        setQuizzes(fetchedQuizzes);
+      } catch (error) {
+        console.error('Error fetching quizzes:', error);
+      }
+    };
+
+    fetchData();
+
+    userData &&
+      (async () => {
+        const userResults = (await getQuizResultsByUsername(
+          userData.username
+        )) as QuizResult[];
+        setResults(userResults);
+      })();
   }, [userData]);
 
   const canEditOrDelete = (quizAuthor: string) => {
@@ -57,7 +73,9 @@ export default function QuizList({ quizzes }: { quizzes: Quiz[] }) {
           await deleteQuizById(quizId);
 
           // Update the state to remove the deleted quiz from the UI
-          setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.quizId !== quizId));
+          setQuizzes((prevQuizzes) =>
+            prevQuizzes.filter((quiz) => quiz.quizId !== quizId)
+          );
 
           console.log(`Deleting quiz with ID ${quizId}`);
           // Add any additional logic or navigation here
