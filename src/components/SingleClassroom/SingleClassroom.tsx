@@ -188,7 +188,7 @@ export default function SingleClassroom() {
                   .filter(
                     (quiz) =>
                       quiz.author === appState.userData?.username ||
-                      students?.username === userData?.username
+                      students.find(student => student.username === userData?.username)
                   )
                   .map((quiz, index) => {
                     console.log(quiz.categories);
