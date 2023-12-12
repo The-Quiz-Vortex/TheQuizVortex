@@ -26,8 +26,6 @@ function Question({
   const parseValue = (value: string | null) => (value ? parseInt(value.split('-')[1]) : null);
   const questionRef = useRef<HTMLDivElement | null>(null);
 
-  console.log(markSelection);
-
   useEffect(() => {
     setAnswer(null);
   }, [data]);

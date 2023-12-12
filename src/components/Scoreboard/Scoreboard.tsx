@@ -22,7 +22,6 @@ const Scoreboard: React.FC = () => {
 
   const findScores = (quizId?: SelectType | undefined) => {
     const data = quizId && quizId?.value !== 'general' ? allResultsData.current.filter(result => result.quizId === quizId.value) : allResultsData.current;
-    console.log(data);
 
     const groupedResults = _.groupBy(data, 'username');
     const scoreboard = _(groupedResults)
