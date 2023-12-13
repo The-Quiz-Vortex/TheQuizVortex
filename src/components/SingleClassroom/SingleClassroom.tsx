@@ -191,9 +191,6 @@ export default function SingleClassroom() {
                       students.find(student => student.username === userData?.username)
                   )
                   .map((quiz, index) => {
-                    console.log(quiz.categories);
-                    console.log(quiz);
-
                     return (
                       <Box
                         key={index}

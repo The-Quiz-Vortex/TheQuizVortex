@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import DateTimeDisplay from "../DateTimeDisplay/DateTimeDisplay.tsx";
 
 const ShowCounter = ({ days, hours, minutes, seconds }) => {
@@ -9,13 +10,15 @@ const ShowCounter = ({ days, hours, minutes, seconds }) => {
                 rel="noopener noreferrer"
                 className="countdown-link"
             >
-                <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
-                <p>:</p>
-                <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
-                <p>:</p>
-                <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
-                <p>:</p>
-                <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
+                <Flex justifyContent={'space-evenly'}>
+                    <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
+                    <p>:</p>
+                    <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
+                    <p>:</p>
+                    <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
+                    <p>:</p>
+                    <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
+                </Flex>
             </a>
         </div>
     );

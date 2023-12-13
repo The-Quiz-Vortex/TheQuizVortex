@@ -37,7 +37,7 @@ export const saveQuizResult = async (
     const result = await push(ref(db, "quizResults"), {
       selection,
       quizId,
-      username, // Store the username directly under the quiz result
+      username,
       scorePoints,
       scorePercent,
       completedAt: Date.now(),
@@ -66,7 +66,7 @@ export const getQuizResultId = async (id: string): Promise<DataSnapshot> => {
       throw new Error(`Quiz result with id ${id} does not exist!`);
     }
 
-    return result;
+    return result.val();
   } catch (error) {
     console.error(error);
     throw error; // Propagate the error

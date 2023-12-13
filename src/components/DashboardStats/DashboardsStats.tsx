@@ -137,7 +137,6 @@ const DashboardsStats = () => {
     useEffect(() => {
         userData && (async () => {
             const quizResultsLastWeek = await getQuizResultsLastWeek() as QuizResult[];
-            console.log(quizResultsLastWeek);
             
             const allQuizzes = await getAllQuizzes() as Quiz[];
             setQuizzesData(allQuizzes);
@@ -224,6 +223,10 @@ const DashboardsStats = () => {
             <>
                 <Dashboard />
                 <Box ml={{ base: 0, md: 40 }} bg={useColorModeValue('gray.50', 'gray.800')}>
+                        {viewAll !== '' && <Link href="/dashboard">
+                            <Button variant="ghost" mt={10} colorScheme="teal" leftIcon={<ArrowLeftIcon />}>
+                                Back to Dashboard</Button>
+                        </Link>}
                     <Flex
                         minH={'calc(100vh - 80px)'}
                         align={'center'}
@@ -231,10 +234,6 @@ const DashboardsStats = () => {
                         pt="10"
                         pb="20"
                     >
-                        {viewAll !== '' && <Link href="/dashboard">
-                            <Button variant="ghost" colorScheme="teal" leftIcon={<ArrowLeftIcon />}>
-                                Back to Dashboard</Button>
-                        </Link>}
                         <QuizList quizzes={viewAll === 'Open quizzes' ?
                             statDataOpenQ.quizzes :
                             viewAll === 'Passed quizzes last week' ?

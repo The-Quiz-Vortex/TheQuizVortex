@@ -1,5 +1,5 @@
 // Question.jsx
-import { useState, useEffect, useRef,} from 'react';
+import { useState, useEffect, useRef, } from 'react';
 import gsap from 'gsap';
 import { QuizQuestion } from '../../common/interfaces.ts';
 
@@ -23,7 +23,13 @@ function Question({
   markSelection = null,
 }: QuestionProps) {
   const [answer, setAnswer] = useState<string | null>(null);
-  const parseValue = (value: string | null) => (value ? parseInt(value.split('-')[1]) : null);
+  const parseValue = (value: string | null) => {
+    if (value) {
+      const values = value.split('-');
+      return +values[values.length - 1];
+    }
+    return null
+  };
   const questionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -59,6 +65,8 @@ function Question({
       );
     }
   }, [data, selections]);
+
+  console.log(answer);
 
   return (
     <div className="question" ref={questionRef}>
