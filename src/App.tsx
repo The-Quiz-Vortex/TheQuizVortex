@@ -20,9 +20,12 @@ import SingleClassroom from './components/SingleClassroom/SingleClassroom.tsx';
 import Footer from './views/Footer/Footer.tsx';
 import DashboardsStats from './components/DashboardStats/DashboardsStats.tsx';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop.tsx';
+import EditQuiz from './components/EditQuiz/EditQuiz.tsx';
+import React, { useState } from "react";
 
 function App() {
   const { loading, user, appState, setAppState } = useUserContext();
+  const [editMode, setEditMode] = useState<string | null>(null);
 
   return (
     <ChakraProvider>
@@ -48,6 +51,7 @@ function App() {
                 <Route path="/quiz/:id" element={<Quiz />} />
                 <Route path="/browse-quizzes" element={<BrowseQuizzes />} />
                 <Route path="/scoreboard" element={<Scoreboard />} />
+                <Route path="/edit-quiz/:quizId" element={<EditQuiz setEditMode={setEditMode} />} />
               </Routes>
             </div>
           </AuthContext.Provider>
