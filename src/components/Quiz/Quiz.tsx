@@ -26,6 +26,7 @@ function Quiz() {
   const { userData } = useContext(AuthContext);
   const [timer, setTimer] = useState(0);
   const [remainingQ, setRemainingQ] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const totalQuestion = questions.current.length - 1;
 
@@ -33,6 +34,8 @@ function Quiz() {
   const correctCounter = useCounter(0);
   const wrongCounter = useCounter(0);
   const emptyCounter = useCounter(0);
+
+  console.log(quiz);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,12 +47,28 @@ function Quiz() {
           questions.current = [...data.questions];
 
           setRemainingQ(data.questions.length);
-        }
-        if (review) {
-          setQuizStarted(true);
-          setQuizFinished(true);
-          const selected = await getQuizResultId(review);
-          selectedArr.current = selected;
+          if (review) {
+
+            setQuizStarted(true);
+            setQuizFinished(true);
+            const selected = await getQuizResultId(review);
+            selectedArr.current.length === 0 && selected.selection.forEach((answer, index) => {
+              if (answer === null) {
+                emptyCounter.add();
+              } else {
+                if (answer === data.questions[index].correctAnswer) {
+                  correctCounter.add();
+                } else {
+                  wrongCounter.add();
+                }
+              }
+            });
+            
+            selectedArr.current = selected.selection;
+            score.current = selected.scorePoints;
+            setIsCompleted(true);
+
+          }
         }
       } catch (error) {
         console.log(error);
@@ -67,7 +86,8 @@ function Quiz() {
   }, [quizStarted]);
 
   useEffect(() => {
-    if (quizFinished && userData && quiz.title !== "Sample quiz" && !review) {
+    if (quizFinished && userData && quiz.quizId !== "-NlYeBjFsgGD1ri34R0u" && !review) {
+
       (async () => {
 
         if (quizFinished && quizRef.current) {
@@ -77,6 +97,7 @@ function Quiz() {
         selectedArr.current = selectedArr.current.concat(Array(remainingQ).fill(null));
         emptyCounter.set(emptyCounter.value + remainingQ);
         questionCounter.set(totalQuestion);
+
         await saveQuizResult(
           selectedArr.current,
           quiz.quizId,
@@ -84,12 +105,13 @@ function Quiz() {
           score.current,
           parseFloat(((score.current / quiz.totalPoints) * 100).toFixed(2)));
       })();
+      setIsCompleted(true);
     }
   }, [quizFinished])
 
   const handleNewQuestionClick = async (selectedValue: number | null, currQuestion: QuizQuestion) => {
 
-    if (totalQuestion >= questionCounter.value) {
+    if (totalQuestion >= questionCounter.value && !isCompleted) {
       if (selectedValue === currQuestion.correctAnswer) {
         selectedArr.current.push(selectedValue);
         correctCounter.add();
@@ -126,6 +148,10 @@ function Quiz() {
       document.body.classList.remove('quiz-started');
     }
   }, [quizStarted]);
+  console.log(score.current / quiz.totalPoints);
+  console.log(quiz.totalPoints);
+
+
 
   return (
     <div className='quizPage'>
@@ -148,7 +174,7 @@ function Quiz() {
                 <p className="intro-desc">
                   {`The quiz contains ${questions.current.length} questions 
                 and there is ${quiz.timeLimit > 0 ? `${quiz.timeLimit} minutes` : 'no'} time limit. `}
-                  {quiz.title === "Sample quiz" && `This is a sample quiz and your answers will not be saved.`}
+                  {quiz.quizId === "-NlYeBjFsgGD1ri34R0u" && `This is a sample quiz and your answers will not be saved.`}
                 </p>
 
                 <button
@@ -175,7 +201,7 @@ function Quiz() {
             )}
             {quizFinished && (
               <h4 style={{ marginTop: '50px' }}>
-                {`You ${(score.current / quiz.totalPoints) > quiz.passingScore ? '' : 'did not'} 
+                {`You ${((score.current / quiz.totalPoints) * 100) >= quiz.passingScore ? '' : 'did not'} 
                 pass with score of ${((score.current / quiz.totalPoints) * 100).toFixed(2)}%`}
               </h4>
             )}

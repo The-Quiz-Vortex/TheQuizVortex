@@ -33,6 +33,10 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
 
   useEffect(() => {
     setQuizzes(quizData);
+    fetchCategories().then((categories) => setCategories(categories.reduce((acc, category) => {
+      acc[category.value] = category.label;
+      return acc;
+    }, {})));
   }, [quizData]);
 
   useEffect(() => {

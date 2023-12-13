@@ -207,7 +207,7 @@ const DesktopNav = () => {
           )
       )}
 
-      {!loading && user && (
+      {!loading && (userData?.role === 'teacher' || userData?.role === 'admin') && (
         <Button
           as={Link}
           to={'/create-quiz'}
