@@ -30,6 +30,7 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     setQuizzes(quizData);
@@ -138,7 +139,7 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
                 <Box p={6}>
                   {quiz.categories.map((category, index) => (
                     <Badge key={index} px={2} py={1} m={1} fontWeight={"400"}>
-                      #{category}
+                        #{categories[category]}
                     </Badge>
                   ))}
                   <Stack
@@ -188,7 +189,7 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
                     <>
                       <Link to={!user ? "#" : `/quiz/${quiz.quizId}`}>
                         <Button
-                          isDisabled={isCompleted}
+                          isDisabled={isCompleted || userData?.blockedStatus}
                           w={"full"}
                           mt={8}
                           rounded={"md"}
@@ -202,7 +203,7 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
                           }}
                         >
                           Take Quiz
-                          {!user && (
+                          {(!user || userData?.blockedStatus) && (
                             <FiLock
                               style={{
                                 marginLeft: "10px",
