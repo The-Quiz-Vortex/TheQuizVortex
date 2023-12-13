@@ -82,13 +82,13 @@ const Card = ({ data, setViewAll }: { data: StatData, setViewAll: Dispatch<SetSt
                                 {data.count}
                             </Text>
                             <Flex>
-                                {Number(data.count) > 100 ? (
+                                {Number(data.percentage.slice(0, -1)) > 50 ? (
                                     <Icon as={BsArrowUpShort} w={6} h={6} color="green.400" />
                                 ) : (
                                     <Icon as={BsArrowDownShort} w={6} h={6} color="red.400" />
                                 )}
                                 <Text as="h2" fontSize="md">
-                                    {data.percentage}
+                                    {(+data.percentage.slice(0, -1)).toFixed(2)}%
                                 </Text>
                             </Flex>
                         </HStack>
@@ -192,10 +192,13 @@ const DashboardsStats = () => {
                 }))
             } else if (userData.role === 'student' || userData.role === 'user') {
                 const studentQuizzes = allQuizzes?.filter(quiz => quiz.author === userData.username || quiz.visibility === 'public' || quiz.finishDate >= Date.now() && (quiz.visibility === 'private' && quiz.users?.includes(userData.username)));
-                setUserResults(allResults.filter(r => !!studentQuizzes.find(q => q.quizId === r.quizId)));
+                const userRes = allResults.filter(r => !!studentQuizzes.find(q => q.quizId === r.quizId) && r.username === userData.username);
+                setUserResults(userRes);
                 const studentOpenQuizzes = getOpenQuizzes(studentQuizzes);
-                const studentPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
-                const studentFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(studentQuizzes, quizResultsLastWeek);
+                let filteredStudentQuizzes = studentQuizzes.filter(quiz => userRes.find(res => res.quizId === quiz.quizId));
+                console.log(filteredStudentQuizzes)
+                const studentPassedQuizzesLastWeek = getPassedQuizResultsLastWeek(filteredStudentQuizzes, quizResultsLastWeek).filter(res => res.username === userData.username);
+                const studentFailedQuizzesLastWeek = getFailedQuizResultsLastWeek(filteredStudentQuizzes, quizResultsLastWeek).filter(res => res.username === userData.username);
                 setStatDataOpenQ(prev => ({
                     ...prev,
                     count: studentOpenQuizzes.length || 0,

@@ -16,15 +16,21 @@ import { updateQuiz, deleteQuizById } from '../../services/quiz.services.ts';
 import { AuthContext } from '../../context/AuthContext.tsx';
 import { FiLock } from 'react-icons/fi';
 import { getQuizResultsByUsername } from '../../services/quizResult.services.ts';
+import { fetchCategories } from '../../services/openTrivia.services.ts';
 
 export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
   const { appState } = useUserContext();
   const { user, userData } = useContext(AuthContext);
   const [results, setResults] = useState<QuizResult[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     setQuizzes(quizData);
+    fetchCategories().then((categories) => setCategories(categories.reduce((acc, category) => {
+      acc[category.value] = category.label;
+      return acc;
+    }, {})));
   }, [quizData]);
 
   useEffect(() => {
@@ -111,7 +117,7 @@ export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
                 <Box p={6}>
                   {quiz.categories.map((category, index) => (
                     <Badge key={index} px={2} py={1} m={1} fontWeight={'400'}>
-                      #{category}
+                      #{categories[category]}
                     </Badge>
                   ))}
                   <Stack spacing={0} align={'center'} mb={5} minHeight={'100px'}>
