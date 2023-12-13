@@ -18,8 +18,15 @@ import {
   HStack,
   Image,
   Divider,
+  Grid,
 } from '@chakra-ui/react';
-import { FaChalkboardTeacher, FaChartLine, FaDollarSign, FaCarSide, FaGithub } from "react-icons/fa";
+import {
+  FaChalkboardTeacher,
+  FaChartLine,
+  FaDollarSign,
+  FaCarSide,
+  FaGithub,
+} from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import Signout from '../../components/Signout/signout.tsx';
@@ -49,7 +56,6 @@ const Blur = (props: IconProps) => {
 };
 
 export default function Home() {
-
   const features = [
     {
       title: 'Affordable Subscription 💰',
@@ -77,11 +83,12 @@ export default function Home() {
             1.305.45 2.272.45a5.846 5.846 0 002.547-.576L19.25 9.367l-2.547 5.807z`}
           ></path>
         </svg>
-      )
+      ),
     },
     {
       title: 'Track Progress 📈',
-      detail: 'With our platform, you can easily monitor how your students perform on the quizzes and provide valuable feedback.',
+      detail:
+        'With our platform, you can easily monitor how your students perform on the quizzes and provide valuable feedback.',
       icon: (
         <svg
           aria-hidden="true"
@@ -103,7 +110,7 @@ export default function Home() {
           0 11-1.021-1.1l2.639-2.45-2.64-2.45z`}
           ></path>
         </svg>
-      )
+      ),
     },
     {
       title: 'Try Before You Buy 🆓',
@@ -131,29 +138,35 @@ export default function Home() {
             21.982a.75.75 0 01.864-.615 9.56 9.56 0 003.186 0 .75.75 0 01.25 1.48 11.066 11.066 0 01-3.686 0 .75.75 0 01-.614-.865z`}
           ></path>
         </svg>
-      )
-    }
+      ),
+    },
   ];
 
   const overviewList = [
-    { id: 1, label: 'Create Your Account', subLabel: 'Our onboarding team will get you up to speed in just a few hours.' },
+    {
+      id: 1,
+      label: 'Create Your Account',
+      subLabel: 'Our onboarding team will get you up to speed in just a few hours.',
+    },
     {
       id: 2,
       label: 'Create Classrooms',
-      subLabel: 'Create a dedicated space for each of your classes. Only students who are invited can access it.'
+      subLabel:
+        'Create a dedicated space for each of your classes. Only students who are invited can access it.',
     },
     {
       id: 3,
       label: 'Create Quizzes',
-      subLabel: 'Design your quizzes, either public or private, and share them with your students. You can update or delete them as needed.'
+      subLabel:
+        'Design your quizzes, either public or private, and share them with your students. You can update or delete them as needed.',
     },
     {
       id: 4,
       label: 'Review Your Students',
-      subLabel: 'Once your students have completed their quizzes, you can review their answers and provide feedback.'
-    }
+      subLabel:
+        'Once your students have completed their quizzes, you can review their answers and provide feedback.',
+    },
   ];
-
 
   return (
     <>
@@ -165,9 +178,15 @@ export default function Home() {
           spacing={{ base: 10, lg: 32 }}
           py={{ base: 10, sm: 20, lg: 32 }}
           alignItems={'center'}
-          mb={120}
+          height={'calc(100vh - 80px)'}
         >
-          <Stack spacing={{ base: 10, md: 20 }} zIndex={'1'} justifyContent={'center'} alignItems={'center'}>
+          <Stack
+            spacing={{ base: 10, md: 20 }}
+            zIndex={'1'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            gap={10}
+          >
             <Heading lineHeight={1.1} fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}>
               Welcome to{' '}
               <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
@@ -178,118 +197,193 @@ export default function Home() {
             <Text
               fontSize="lg"
               textAlign="center"
-              fontWeight="400"
-              w="800px"
+              fontWeight="300"
+              w={{ base: '100%', lg: '800px' }}
               mx={'auto'}
             >
-              Our platform offers a comprehensive solution for teachers
-              to create engaging quizzes for their students. Create classrooms,
-              design private or public quizzes, and review your students’ responses all in one place.
+              Empower your teaching experience with our platform, providing a holistic solution for
+              educators to craft compelling quizzes tailored to their students' needs. Seamlessly
+              create classrooms, design quizzes with the flexibility of privacy settings, and
+              effortlessly review your students' responses—all within a unified and user-friendly
+              environment.
             </Text>
-            <Button as={Link}
+            <Button
+              as={Link}
               h={12}
               w={'fit-content'}
               px={6}
-              bgGradient="linear(to-br, #EA83A3, #E495BC)"
+              bg={'pink.300'}
               color="white"
-              _hover={{ bgGradient: 'linear(to-br, #EC849B, #EE8C64)' }}
+              _hover={{ bg: 'blue.300' }}
               variant="solid"
               size="lg"
               rounded="md"
-              fontWeight="bold"
               mx={'auto'}
-              mb={{ base: 2, sm: 0 }}>
+              mb={{ base: 2, sm: 0 }}
+            >
               <Link to="/quiz/-NlYeBjFsgGD1ri34R0u">Get started with our sample quiz</Link>
             </Button>
           </Stack>
         </Container>
 
-        <Stack
-          direction={{ base: 'column', md: 'row' }}
-          spacing={{ base: 5, md: 10 }}
-          flexWrap="wrap"
-          mx={'auto'}
-          justifyContent={'center'}
-          w={'100%'}
-          bg={useColorModeValue('pink.50', 'pink.800')}
-          bgBlendMode={'lighten'}
-          pt={150}
-          pb={150}
-        >
-          {features.map((feature, index) => (
-            <Stack key={index} direction={{ base: 'row', md: 'column' }} spacing={2} alignItems="center">
-              <Flex
-                p={3}
-                maxH="100px"
-                w="max-content"
-                color="white"
-                bgGradient="linear(to-br, #EC849B, #EE8C64)"
-                rounded="md"
-                alignItems="center"
-                justifyContent="center"
+        <Box>
+          <Stack
+            direction={'column'}
+            spacing={{ base: 5, md: 10 }}
+            mx={'auto'}
+            justifyContent={'center'}
+            w={'100%'}
+            bg={'gray.50'}
+            bgBlendMode={'lighten'}
+            overflow={'hidden'}
+            pt={150}
+            pb={150}
+            position={'relative'}
+            zIndex={1}
+            height={'calc(100vh - 80px)'}
+          >
+            <Stack
+              bgImage={'src/assets/background-01.jpg'}
+              bgSize={'cover'}
+              bgRepeat={'no-repeat'}
+              bgPos={'center'}
+              opacity={'0.05'}
+              height={'100%'}
+              position={'absolute'}
+              left={'0'}
+              top={'0'}
+              right={'0'}
+            />
+            <Flex justifyContent={'center'} flexDirection={{ base: 'column', md: 'row' }}>
+              <Heading
+                lineHeight={1.1}
+                mb={10}
+                fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}
               >
-                {feature.icon}
-              </Flex>
-              <Stack direction="column" spacing={2}>
-                <Text fontSize="lg" fontWeight="500">
-                  {feature.title}
-                </Text>
-                <Text fontSize="md" color="gray.400" maxW={{ base: '100%', md: '400px' }}>
-                  {feature.detail}
-                </Text>
-              </Stack>
-            </Stack>
-          ))}
-        </Stack>
+                Discover what{' '}
+                <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
+                  Sets us
+                </Text>{' '}
+                apart
+              </Heading>
+            </Flex>
+            <Flex
+              gap={10}
+              p={5}
+              justifyContent={'center'}
+              flexDirection={{ base: 'column', md: 'row' }}
+              textAlign={{ base: 'left', md: 'center' }}
+            >
+              {features.map((feature, index) => (
+                <Stack
+                  key={index}
+                  direction={{ base: 'row', md: 'column' }}
+                  spacing={5}
+                  alignItems={' center'}
+                >
+                  <Flex
+                    p={3}
+                    w="max-content"
+                    color="white"
+                    bgGradient="linear(to-r, red.400,pink.400)"
+                    rounded="lg"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    {feature.icon}
+                  </Flex>
+                  <Stack direction="column" spacing={3}>
+                    <Heading fontSize="xl" fontWeight="700">
+                      {feature.title}
+                    </Heading>
+                    <Text fontSize="md" color="gray.500" maxW={{ base: '100%', md: '330px' }}>
+                      {feature.detail}
+                    </Text>
+                  </Stack>
+                </Stack>
+              ))}
+            </Flex>
+          </Stack>
+        </Box>
 
         <Blur position={'absolute'} top={-10} left={-10} style={{ filter: 'blur(70px)' }} />
       </Box>
 
       <Container maxW="6xl" py={10} mt={100} mb={100}>
-        <chakra.h2 fontSize="4xl" fontWeight="bold" textAlign="center" mb={10}>
-          How it works?
-        </chakra.h2>
-        <Stack
-          direction={{ base: 'column', md: 'row' }}
-          spacing={{ base: 0, md: 3 }}
-          justifyContent="center"
-          alignItems="center"
+        <Heading
+          lineHeight={1.1}
+          mb={12}
+          fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}
         >
-          <VStack spacing={4} alignItems="flex-start" mb={{ base: 5, md: 0 }} maxW="md">
+          How it{' '}
+          <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
+            works
+          </Text>
+          ?
+        </Heading>
+        <Grid
+          templateColumns={{ base: 'repeat(1,1fr)', lg: 'repeat(2, 1fr)' }}
+          alignItems="center"
+          gap={12}
+        >
+          <VStack>
+            <Image
+              boxSize={{ base: 'auto', md: 'lg' }}
+              objectFit="contain"
+              src="../public/stock-photo-woman-typing-on-laptop-1.jpg"
+              rounded="lg"
+              alt="home-img"
+            />
+          </VStack>
+          <VStack spacing={5} alignItems="flex-start" mb={{ base: 5, md: 0 }} maxW="md">
             {overviewList.map((data) => (
               <Box key={data.id}>
-                <HStack spacing={2}>
+                <HStack spacing={7} alignItems="flex-start" mb={2}>
                   <Flex
                     fontWeight="bold"
+                    fontSize="lg"
                     boxShadow="md"
                     color="white"
-                    bg="#EA83A3"
+                    bgGradient={'linear(to-r, red.400,pink.400)'}
                     rounded="full"
                     justifyContent="center"
                     alignItems="center"
-                    w={10}
-                    h={10}
+                    w={12}
+                    h={12}
+                    minW={12}
+                    minH={12}
                   >
                     {data.id}
                   </Flex>
-                  <Text fontSize="xl">{data.label}</Text>
+                  <Box textAlign={'left'}>
+                    <Heading fontSize="xl" mb={2}>
+                      {data.label}
+                    </Heading>
+                    <Text color="gray.500" fontWeight={300}>
+                      {data.subLabel}
+                    </Text>
+                  </Box>
                 </HStack>
-                <Text fontSize="md" color="gray.500" ml={12} textAlign={'left'}>
-                  {data.subLabel}
-                </Text>
               </Box>
             ))}
           </VStack>
-          <Image
-            boxSize={{ base: 'auto', md: 'lg' }}
-            objectFit="contain"
-            src="../public/stock-photo-woman-typing-on-laptop.jpg"
-            rounded="lg"
-          />
-        </Stack>
+        </Grid>
       </Container>
-      <Divider  />
-      <SingleTierPricing />
+      <Divider />
+      <Container maxW="6xl" my={100}>
+        <Heading
+          lineHeight={1.1}
+          mb={12}
+          fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '6xl' }}
+        >
+          Explore our{' '}
+          <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
+            premium{' '}
+          </Text>
+          features
+        </Heading>
+        <SingleTierPricing />
+      </Container>
     </>
   );
 }

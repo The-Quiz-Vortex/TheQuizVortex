@@ -52,7 +52,7 @@ export default function WithSubnavigation() {
         position={'relative'}
       >
         <Flex
-          flex={{ base: 1, md: 'auto' }}
+          flex={{ base: 0, md: 'auto' }}
           ml={{ base: -2 }}
           display={{ base: 'flex', md: 'none' }}
         >
@@ -65,7 +65,7 @@ export default function WithSubnavigation() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <Image src="/quiz-logo.png" boxSize="40px" />
+            <Image src="/quiz-logo.png" maxW={65} />
           </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -127,13 +127,13 @@ export default function WithSubnavigation() {
 
         {!loading && !user ? (
           <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-            <Button as={Link} fontSize={'sm'} fontWeight={400} variant={'link'} to={'/sign-in'}>
+            <Button as={Link} fontSize={'md'} fontWeight={400} variant={'link'} to={'/sign-in'}>
               Sign In
             </Button>
             <Button
               as={Link}
               display={{ base: 'inline-flex' }}
-              fontSize={'sm'}
+              fontSize={'md'}
               fontWeight={600}
               color={'white'}
               bg={'pink.400'}
@@ -157,7 +157,7 @@ export default function WithSubnavigation() {
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
-  const linkHoverColor = useColorModeValue('gray.800', 'white');
+  const linkHoverColor = useColorModeValue('gray.900', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
   const { user, loading, appState } = useUserContext();
   const { userData } = useContext(AuthContext);
@@ -166,14 +166,14 @@ const DesktopNav = () => {
     <Stack direction={'row'} alignItems={'center'} spacing={4}>
       {NAV_ITEMS.map(
         (navItem) =>
-          !navItem.shouldHide?.(user) && ( // Conditionally render based on shouldHide function
+          !navItem.shouldHide?.(user) && (
             <Box key={navItem.label}>
               <Popover trigger={'hover'} placement={'bottom-start'}>
                 <PopoverTrigger>
                   <Box
                     as={Link}
                     to={navItem.href ?? '#'}
-                    fontSize={'sm'}
+                    fontSize={'md'}
                     fontWeight={500}
                     color={linkColor}
                     p={2}
@@ -211,7 +211,7 @@ const DesktopNav = () => {
         <Button
           as={Link}
           to={'/create-quiz'}
-          fontSize={'sm'}
+          fontSize={'md'}
           fontWeight={600}
           color={'white'}
           bg={'pink.300'}
@@ -228,7 +228,7 @@ const DesktopNav = () => {
         <Button
           as={Link}
           to={'/create-room'}
-          fontSize={'sm'}
+          fontSize={'md'}
           fontWeight={600}
           color={'white'}
           bg={'blue.300'}
@@ -280,7 +280,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 
 const MobileNav = () => {
   return (
-    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
+    <Stack bg={useColorModeValue('white', 'gray.800')} p={10} display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
@@ -294,7 +294,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Link
-        py={2}
+        py={10}
         as="a"
         to={href ?? '#'}
         justifyContent="space-between"
@@ -303,7 +303,12 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           textDecoration: 'none',
         }}
       >
-        <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
+        <Text
+          fontWeight={600}
+          py={2}
+          fontSize={'20px'}
+          color={useColorModeValue('gray.600', 'gray.200')}
+        >
           {label}
         </Text>
         {children && (
@@ -343,7 +348,7 @@ interface NavItem {
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
-  shouldHide?: (user: User | null | undefined) => boolean; // Update the parameter type
+  shouldHide?: (user: User | null | undefined) => boolean;
 }
 
 const NAV_ITEMS: Array<NavItem> = [

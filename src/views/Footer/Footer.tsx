@@ -61,6 +61,7 @@ export default function Footer() {
             as={Stack}
             maxW={'6xl'}
             minH={'100px'}
+            ml={'15rem'}
             py={4}
             direction={{ base: 'column', md: 'row' }}
             spacing={4}
@@ -83,6 +84,7 @@ export default function Footer() {
               maxW={'6xl'}
               as={Stack}
               py={4}
+              ml={'15rem'}
               direction={{ base: 'column', md: 'row' }}
               spacing={4}
               justify={{ base: 'center', md: 'space-between' }}
