@@ -28,10 +28,13 @@ import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
 import Signout from '../../components/Signout/signout.tsx';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext.tsx';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
   const { loading, user, appState } = useUserContext();
+  const { userData } = useContext(AuthContext);
 
   return (
     <Box position="sticky" top={0} zIndex={10}>
@@ -77,7 +80,7 @@ export default function WithSubnavigation() {
                 <Menu>
                   <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
                     <HStack>
-                      <Avatar size={'sm'} src={appState.userData?.profilePictureURL} />
+                      <Avatar size={'sm'} src={userData?.profilePictureURL} />
                       <VStack
                         display={{ base: 'none', md: 'flex' }}
                         alignItems="flex-start"
@@ -87,9 +90,9 @@ export default function WithSubnavigation() {
                         <Text
                           fontSize="sm"
                           fontWeight="bold"
-                        >{`${appState.userData?.firstName} ${appState.userData?.lastName}`}</Text>
+                        >{`${userData?.firstName} ${userData?.lastName}`}</Text>
                         <Text fontSize="xs" color="gray.600" textTransform="capitalize">
-                          {appState.userData?.role}
+                          {userData?.role}
                         </Text>
                       </VStack>
                       <Box display={{ base: 'none', md: 'flex' }}>
@@ -107,7 +110,7 @@ export default function WithSubnavigation() {
                       My Profile
                     </MenuItem>
 
-                    {!loading && appState.userData?.role === 'admin' ? (
+                    {!loading && userData?.role === 'admin' ? (
                       <MenuItem as={Link} to="/admin-settings">
                         Admin Settings
                       </MenuItem>
@@ -157,6 +160,7 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
   const { user, loading, appState } = useUserContext();
+  const { userData } = useContext(AuthContext);
 
   return (
     <Stack direction={'row'} alignItems={'center'} spacing={4}>
@@ -220,7 +224,7 @@ const DesktopNav = () => {
         </Button>
       )}
 
-      {!loading && (appState.userData?.role === 'teacher' || appState.userData?.role === 'admin') && (
+      {!loading && (userData?.role === 'teacher' || userData?.role === 'admin') && (
         <Button
           as={Link}
           to={'/create-room'}

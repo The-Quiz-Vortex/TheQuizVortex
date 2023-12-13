@@ -56,7 +56,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'My classrooms', icon: FiTrello, path: '/my-classrooms' },
   { name: 'Explore', icon: FiCompass, path: '/browse-quizzes' },
   { name: 'Scoreboard', icon: FiBarChart2, path: '/scoreboard' },
-  { name: 'Sample quiz', icon: FiCheckCircle, path: '/quiz/-NlEYL1_BWkrz20uy9uW' },
+  { name: 'Sample quiz', icon: FiCheckCircle, path: '/quiz/-NlYeBjFsgGD1ri34R0u' },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {

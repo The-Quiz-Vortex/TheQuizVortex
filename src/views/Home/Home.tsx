@@ -199,7 +199,7 @@ export default function Home() {
               fontWeight="bold"
               mx={'auto'}
               mb={{ base: 2, sm: 0 }}>
-              <Link to="/quiz/-NlEYL1_BWkrz20uy9uW">Get started with our sample quiz</Link>
+              <Link to="/quiz/-NlYeBjFsgGD1ri34R0u">Get started with our sample quiz</Link>
             </Button>
           </Stack>
         </Container>
