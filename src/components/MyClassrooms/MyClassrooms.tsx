@@ -14,9 +14,11 @@ import { useState, useEffect } from 'react';
 import { getAllClassrooms } from '../../services/rooms.services.ts';
 import { Link } from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard.tsx';
+import { useUserContext } from '../../helpers/useUserContext';
 
 export default function ClassroomList() {
   const [classrooms, setClassrooms] = useState([]);
+  const { appState } = useUserContext();
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -53,73 +55,85 @@ export default function ClassroomList() {
               width={'100%'}
               mx={{ base: 4, md: 8, lg: 20 }}
             >
-              {classrooms.map((classroom, index) => (
-                <Box
-                  key={index}
-                  maxW={'270px'}
-                  w={'full'}
-                  boxShadow={'2xl'}
-                  rounded={'md'}
-                  overflow={'hidden'}
-                >
-                  <Image
-                    h={'140px'}
+              {classrooms
+                .filter(
+                  (classroom) =>
+                    classroom.teacher.username === appState.userData?.username ||
+                    Object.values(classroom.students)
+                      .map((student) => student.username)
+                      .includes(appState.userData?.username)
+                )
+                .map((classroom, index) => (
+                  <Box
+                    key={index}
+                    maxW={'270px'}
                     w={'full'}
-                    src={'src/assets/classroom-placeholder.jpg'}
-                    objectFit="cover"
-                    alt="#"
-                  />
+                    boxShadow={'2xl'}
+                    rounded={'md'}
+                    overflow={'hidden'}
+                  >
+                    <Image
+                      h={'140px'}
+                      w={'full'}
+                      src={'src/assets/classroom-placeholder.jpg'}
+                      objectFit="cover"
+                      alt="#"
+                    />
 
-                  <Box p={6}>
-                    <Stack spacing={0} align={'center'} mb={5} minHeight={'70px'}>
-                      <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                        {classroom.classRoomName}
-                      </Heading>
-                    </Stack>
-
-                    <Stack direction={'row'} justify={'center'} spacing={6}>
-                      <Stack spacing={0} align={'center'}>
-                        <Text fontWeight={600}>{Object.keys(classroom.quizzes || {}).length}</Text>
-                        <Text fontSize={'sm'} color={'gray.500'}>
-                          Quizzes
-                        </Text>
+                    <Box p={6}>
+                      <Stack spacing={0} align={'center'} mb={5} minHeight={'70px'}>
+                        <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+                          {classroom.classRoomName}
+                        </Heading>
                       </Stack>
-                      <Stack spacing={0} align={'center'}>
-                        <Text fontWeight={600}>{Object.keys(classroom.students || {}).length}</Text>
-                        <Text fontSize={'sm'} color={'gray.500'}>
-                          Students
-                        </Text>
-                      </Stack>
-                    </Stack>
-                    <Divider orientation="horizontal" mt={'4'} />
-                    <Text color={'gray.500'} pt="3">
-                      Teacher: {classroom.teacher && classroom.teacher.username}
-                    </Text>
 
-                    <Link
-                      to={`/classroom/${classroom.classRoomName
-                        .toLowerCase()
-                        .replaceAll(' ', '-')}`}
-                    >
-                      <Button
-                        w={'full'}
-                        mt={8}
-                        rounded={'md'}
-                        fontWeight={600}
-                        color={'white'}
-                        bg={'pink.400'}
-                        _hover={{
-                          transform: 'translateY(-2px)',
-                          bg: 'pink.300',
-                          boxShadow: 'lg',
-                        }}
+                      <Stack direction={'row'} justify={'center'} spacing={6}>
+                        <Stack spacing={0} align={'center'}>
+                          <Text fontWeight={600}>
+                            {Object.keys(classroom.quizzes || {}).length}
+                          </Text>
+                          <Text fontSize={'sm'} color={'gray.500'}>
+                            Quizzes
+                          </Text>
+                        </Stack>
+                        <Stack spacing={0} align={'center'}>
+                          <Text fontWeight={600}>
+                            {Object.keys(classroom.students || {}).length}
+                          </Text>
+                          <Text fontSize={'sm'} color={'gray.500'}>
+                            Students
+                          </Text>
+                        </Stack>
+                      </Stack>
+                      <Divider orientation="horizontal" mt={'4'} />
+                      <Text color={'gray.500'} pt="3">
+                        Teacher: {classroom.teacher && classroom.teacher.username}
+                      </Text>
+
+                      <Link
+                        to={`/classroom/${classroom.classRoomName
+                          .toLowerCase()
+                          .replaceAll(' ', '-')}`}
                       >
-                        Enter Classroom
-                      </Button>
-                    </Link>
+                        <Button
+                          w={'full'}
+                          mt={8}
+                          rounded={'md'}
+                          fontWeight={600}
+                          color={'white'}
+                          bg={'pink.400'}
+                          _hover={{
+                            transform: 'translateY(-2px)',
+                            bg: 'pink.300',
+                            boxShadow: 'lg',
+                          }}
+                        >
+                          Enter Classroom
+                        </Button>
+                      </Link>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                ))}
             </SimpleGrid>
           </Flex>
         </Stack>

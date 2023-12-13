@@ -185,10 +185,10 @@ export default function SingleClassroom() {
               </Heading>
               <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8} mx={0}>
                 {quizzes
-                  .filter(
-                    (quiz) =>
-                      quiz.author === appState.userData?.username ||
-                      students.find(student => student.username === userData?.username)
+                  .filter((quiz) =>
+                    Object.values(classroom.quizzes)
+                      .map((quiz) => quiz.quizId)
+                      .includes(quiz.quizId)
                   )
                   .map((quiz, index) => {
                     return (
