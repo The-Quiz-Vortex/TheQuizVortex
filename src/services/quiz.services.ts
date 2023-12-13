@@ -11,6 +11,7 @@ import {
 import { db } from '../config/firebase-config.ts';
 import { DataSnapshot } from 'firebase/database';
 import { QuizFormData } from '../components/CreateQuiz/CreateQuiz.tsx';
+import { Quiz } from '../common/interfaces.ts';
 
 const fromQuizDocument = async (snapshot: DataSnapshot) => {
   try {
@@ -48,10 +49,11 @@ export const addQuiz = async (content: QuizFormData, username: string) => {
   }
 };
 
-export const updateQuiz = async (id: string) => {
+export const updateQuiz = async (id: string, updatedQuiz: Partial<Quiz>) => {
   try {
     const quizRef = ref(db, `quizzes/${id}`);
     await update(quizRef, {
+      ...updatedQuiz,
       updatedOn: Date.now(),
     });
     const result = await getQuizById(id);
@@ -78,7 +80,6 @@ export const getAllQuizzes = async () => {
 export const getQuizById = async (id: string) => {
   try {
     const result = await get(ref(db, `quizzes/${id}`));
-
     if (!result.exists()) {
       throw new Error(`Quiz with id ${id} does not exist!`);
     }
