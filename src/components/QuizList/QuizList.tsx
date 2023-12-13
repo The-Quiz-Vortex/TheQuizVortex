@@ -21,7 +21,7 @@ import { AuthContext } from "../../context/AuthContext.tsx";
 import { FiLock } from "react-icons/fi";
 import { getQuizResultsByUsername } from "../../services/quizResult.services.ts";
 import EditQuiz from "../EditQuiz/EditQuiz.tsx";
-
+import { fetchCategories } from "../../services/openTrivia.services.ts";
 
 export default function QuizList({ quizzes: quizData }: { quizzes: Quiz[] }) {
   const { appState } = useUserContext();
