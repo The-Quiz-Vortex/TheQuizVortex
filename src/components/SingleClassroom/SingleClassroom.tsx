@@ -139,7 +139,7 @@ export default function SingleClassroom() {
             rounded={'xl'}
             boxShadow={'lg'}
             p={10}
-            my={6}
+            my={16}
           >
             <Stack spacing={4}>
               <Heading fontSize={'4xl'} textAlign={'left'} my={'2'}>

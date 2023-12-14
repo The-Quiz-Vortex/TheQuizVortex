@@ -148,8 +148,10 @@ const CreateRoom = () => {
               Classroom
             </Text>
           </Heading>
-          <Text fontSize={'lg'} color={'gray.600'} mt={'2'}>
-            to enjoy all of our cool features ✌️
+          <Text fontSize={'lg'} color={'gray.500'} my={'2'} width={{ base: '100%', md: '1050px' }}>
+            Build a dynamic learning environment tailored to your needs. Invite your students and
+            manage resources effortlessly. Empower yourself to shape the future of education, one
+            virtual classroom at a time! ✌️
           </Text>
           <Stack
             spacing={4}

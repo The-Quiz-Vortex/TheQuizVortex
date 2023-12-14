@@ -12,6 +12,7 @@ import {
   BoxProps,
   FlexProps,
   Image,
+  Divider,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -30,7 +31,6 @@ import { useUserContext } from '../../helpers/useUserContext.ts';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
-
 
 interface LinkItemProps {
   name: string;
@@ -74,19 +74,47 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Image align='center' src="/quiz-logo.png" alt='quiztime' h="80px" m="5" />
-      {appState.userData?.username && <Flex h="20" mt="5" mb="5" alignItems="center" mx="8" justifyContent="space-between" textAlign="left">
-         <p>
-          Welcome,
-          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" textAlign="left">
-            @{appState.userData?.username}
-          </Text>
-        </p>
-      </Flex>}
+      {/* <Image align='center' src="/quiz-logo.png" alt='quiztime' h="80px" m="5" /> */}
+      {appState.userData?.username && (
+        <Flex
+          h="20"
+          mt="5"
+          mb="5"
+          alignItems="center"
+          mx="8"
+          justifyContent="space-between"
+          textAlign="left"
+        >
+          <p>
+            Welcome,
+            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold" textAlign="left">
+              @{appState.userData?.username}
+            </Text>
+          </p>
+        </Flex>
+      )}
+      <Divider mb={5} />
       {(!user ? LinkItems : LinkItems.slice(0, -1)).map((link) => (
-        <NavItem as={Link} key={link.name} icon={link.icon} to={!user && link.name !== 'Explore' && link.name !== 'Sample quiz' && link.name !== 'Scoreboard' ? '#' : link.path}>
+        <NavItem
+          as={Link}
+          key={link.name}
+          icon={link.icon}
+          to={
+            !user &&
+            link.name !== 'Explore' &&
+            link.name !== 'Sample quiz' &&
+            link.name !== 'Scoreboard'
+              ? '#'
+              : link.path
+          }
+        >
           {link.name}
-          {!user && link.name !== 'Explore' && link.name !== 'Scoreboard' && link.name !== 'Sample quiz' && <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />}
+          {!user &&
+            link.name !== 'Explore' &&
+            link.name !== 'Scoreboard' &&
+            link.name !== 'Sample quiz' && (
+              <FiLock style={{ marginLeft: '10px', fontSize: '12px' }} />
+            )}
         </NavItem>
       ))}
     </Box>

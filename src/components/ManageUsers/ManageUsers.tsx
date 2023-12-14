@@ -12,6 +12,8 @@ import {
   useColorModeValue,
   Avatar,
   Select,
+  Text,
+  Heading,
 } from '@chakra-ui/react';
 import {
   getAllUsers,
@@ -56,21 +58,27 @@ const ManageUsers: React.FC = () => {
       case 'admin':
         makeAdminUser(username).then(() => {
           setUsers((prevUsers) =>
-            prevUsers.map((user) => (user.username === username ? { ...user, role: 'admin' } : user))
+            prevUsers.map((user) =>
+              user.username === username ? { ...user, role: 'admin' } : user
+            )
           );
         });
         break;
       case 'teacher':
         makeTeacherUser(username).then(() => {
           setUsers((prevUsers) =>
-            prevUsers.map((user) => (user.username === username ? { ...user, role: 'teacher' } : user))
+            prevUsers.map((user) =>
+              user.username === username ? { ...user, role: 'teacher' } : user
+            )
           );
         });
         break;
       case 'student':
         makeStudentUser(username).then(() => {
           setUsers((prevUsers) =>
-            prevUsers.map((user) => (user.username === username ? { ...user, role: 'student' } : user))
+            prevUsers.map((user) =>
+              user.username === username ? { ...user, role: 'student' } : user
+            )
           );
         });
         break;
@@ -88,7 +96,26 @@ const ManageUsers: React.FC = () => {
   return (
     <>
       <Dashboard />
-      <Box ml={{ base: 0, md: 60 }}>
+      <Box ml={{ base: 0, md: 60 }} pt={16} bg={'gray.50'}>
+        <Flex direction={'column'} alignItems={'center'}>
+          <Heading fontSize={'4xl'} textAlign={'center'} my={'2'}>
+            <Text as={'span'} bgGradient="linear(to-r, red.400,pink.400)" bgClip="text">
+              Admin{' '}
+            </Text>
+            Control Panel
+          </Heading>
+          <Text
+            fontSize={'lg'}
+            color={'gray.500'}
+            mt={'2'}
+            mb={'10'}
+            mx={'0 auto'}
+            width={{ base: '100%', md: '800px' }}
+          >
+            Seamlessly manage user roles and wield the power to block or unblock users. Take charge
+            of your platform effortlessly and ensure a secure and tailored user experience. ✌️
+          </Text>
+        </Flex>
         <Flex
           minH={'calc(100vh - 80px)'}
           align={'center'}
@@ -101,7 +128,7 @@ const ManageUsers: React.FC = () => {
             border={'1px'}
             borderColor={'gray.100'}
             maxWidth={'90%'}
-            mt={'20'}
+            mt={'10'}
             mb={'20'}
           >
             <Thead>
@@ -139,9 +166,10 @@ const ManageUsers: React.FC = () => {
                     </Select>
                     <Button
                       colorScheme={user.blockedStatus ? 'green' : 'orange'}
-                      size="sm"
-                      m="1"
-                      minWidth={'130px'}
+                      size="md"
+                      my={2}
+                      minWidth={'100px'}
+                      w={'100%'}
                       onClick={() => handleToggleBlock(user.username, user.blockedStatus)}
                     >
                       {user.blockedStatus ? 'Unblock User' : 'Block User'}

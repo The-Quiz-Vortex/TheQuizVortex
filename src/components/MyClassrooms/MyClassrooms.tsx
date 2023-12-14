@@ -37,7 +37,9 @@ export default function ClassroomList() {
           minH={'calc(100vh - 80px)'}
           bg={useColorModeValue('gray.50', 'gray.800')}
           pt="20"
-          pb="20"
+          pb="40"
+          display={'flex'}
+          alignItems={'center'}
         >
           <Heading fontSize={'4xl'} textAlign={'center'} my={'2'}>
             My{' '}
@@ -45,8 +47,17 @@ export default function ClassroomList() {
               Classrooms
             </Text>
           </Heading>
-          <Text fontSize={'lg'} color={'gray.600'} mt={'0'} mb={'8'}>
-            to enjoy all of our cool features ✌️
+          <Text
+            fontSize={'lg'}
+            color={'gray.500'}
+            mt={'0'}
+            mb={'10'}
+            mx={'0 auto'}
+            width={{ base: '100%', md: '900px' }}
+          >
+            Your personalized hub for seamless teaching and learning experiences awaits!{<br />}
+            Effortlessly manage, organize, track your educational spaces and monitor your students
+            progress. ✌️
           </Text>
           <Flex align={'center'} justify={'center'}>
             <SimpleGrid

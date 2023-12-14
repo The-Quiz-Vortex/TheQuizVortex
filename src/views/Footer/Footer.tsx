@@ -4,45 +4,13 @@ import {
   Text,
   Stack,
   VisuallyHidden,
-  chakra,
   Button,
   Image,
   HStack,
 } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { useState, useEffect, ReactNode } from 'react';
-
-const SocialButton = ({
-  children,
-  label,
-  href,
-}: {
-  children: ReactNode;
-  label: string;
-  href: string;
-}) => {
-  return (
-    <Button
-      bg={'white'}
-      color={'blackAlpha.800'}
-      rounded={'full'}
-      w={8}
-      h={8}
-      cursor={'pointer'}
-      as={'a'}
-      href={href}
-      display={'inline-flex'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      transition={'background 0.3s ease'}
-      _hover={{ bg: 'pink.100' }}
-    >
-      <VisuallyHidden>{label}</VisuallyHidden>
-      {children}
-    </Button>
-  );
-};
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
   const [contentLoaded, setContentLoaded] = useState(false);
@@ -59,9 +27,7 @@ export default function Footer() {
         <Box bg={'gray.100'} color={'gray.700'}>
           <Container
             as={Stack}
-            maxW={'6xl'}
-            minH={'100px'}
-            ml={'15rem'}
+            maxW={'full'}
             py={4}
             direction={{ base: 'column', md: 'row' }}
             spacing={4}
@@ -81,18 +47,17 @@ export default function Footer() {
 
           <Box bg={'gray.800'} color={'white'}>
             <Container
-              maxW={'6xl'}
+              maxW={'full'}
               as={Stack}
               py={4}
-              ml={'15rem'}
               direction={{ base: 'column', md: 'row' }}
               spacing={4}
               justify={{ base: 'center', md: 'space-between' }}
               align={{ base: 'center', md: 'center' }}
             >
               <Text>© 2023 QuizVortex. All rights reserved</Text>
-              <Stack direction={'row'} spacing={6} alignItems={'center'}>
-                <Text>Get in touch:</Text>
+              <Stack direction={'row'} spacing={4} alignItems={'center'}>
+                <Text>Get in touch with us:</Text>
                 <Button
                   bg={'white'}
                   color={'blackAlpha.800'}
@@ -109,7 +74,8 @@ export default function Footer() {
                   justifyContent={'center'}
                   transition={'background 0.3s ease'}
                   _hover={{
-                    bg: 'pink.100',
+                    bg: 'pink.400',
+                    color: 'white',
                   }}
                 >
                   <VisuallyHidden>{'GitHub'}</VisuallyHidden>
