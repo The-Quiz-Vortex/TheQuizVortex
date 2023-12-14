@@ -24,7 +24,7 @@ export default function Footer() {
   return (
     <>
       {contentLoaded && (
-        <Box bg={'gray.100'} color={'gray.700'}>
+        <Box position={'relative'} zIndex={'1'} bg={'gray.100'} color={'gray.700'}>
           <Container
             as={Stack}
             maxW={'full'}
@@ -37,7 +37,12 @@ export default function Footer() {
             <Stack direction={'row'} spacing={6}>
               <Image src="../../public/quiz-logo.png" alt="footer-logo" maxWidth={'100px'} />
             </Stack>
-            <HStack spacing={8} alignItems="center" d={{ base: 'none', md: 'flex' }}>
+            <HStack
+              spacing={{ base: '2', md: '8' }}
+              alignItems="center"
+              flexDirection={{ base: 'column', md: 'row' }}
+              d={{ base: 'none', md: 'flex' }}
+            >
               <Link to={'/sign-up'}>Sign up</Link>
               <Link to={'/browse-quizzes'}>Browse quizzes</Link>
               <Link to={'/scoreboard'}>Scoreboard</Link>

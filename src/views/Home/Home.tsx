@@ -246,8 +246,8 @@ export default function Home() {
               bgImage={'src/assets/background-01.jpg'}
               bgSize={'cover'}
               bgRepeat={'no-repeat'}
-              bgPos={'center'}
-              opacity={'0.05'}
+              bgPos={'right bottom'}
+              opacity={'0.025'}
               height={'100%'}
               position={'absolute'}
               left={'0'}
@@ -324,14 +324,13 @@ export default function Home() {
         <Grid
           templateColumns={{ base: 'repeat(1,1fr)', lg: 'repeat(2, 1fr)' }}
           alignItems="center"
-          gap={12}
+          gap={{ base: '16', md: '0' }}
         >
           <VStack>
             <Image
               boxSize={{ base: 'auto', md: 'lg' }}
               objectFit="contain"
-              src="../public/stock-photo-woman-typing-on-laptop-1.jpg"
-              rounded="lg"
+              src="../public/stock-photo-woman-typing-on-laptop.png"
               alt="home-img"
             />
           </VStack>

@@ -23,13 +23,12 @@ import {
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
 import { FiChevronDown } from 'react-icons/fi';
-
 import { useUserContext } from '../../helpers/useUserContext.ts';
 import { User } from 'firebase/auth';
-import Signout from '../../components/Signout/signout.tsx';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext.tsx';
+import Signout from '../../components/Signout/signout.tsx';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
@@ -163,7 +162,7 @@ const DesktopNav = () => {
   const { userData } = useContext(AuthContext);
 
   return (
-    <Stack direction={'row'} alignItems={'center'} spacing={4}>
+    <Stack direction={'row'} alignItems={'center'} spacing={2}>
       {NAV_ITEMS.map(
         (navItem) =>
           !navItem.shouldHide?.(user) && (
