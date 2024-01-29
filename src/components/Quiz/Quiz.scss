@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap");
+@import "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap";
+@use 'vars/**/*.scss';
+@import 'utils/**/*.scss';
+@import 'objects/**/*.scss';
 
 $font: "Be Vietnam Pro", sans-serif;
 $color: #1f8197;
@@ -19,16 +22,16 @@ button {
     background-color: #1c1d20;
     background: rgb(149, 233, 227);
     background: linear-gradient(62deg,
-            rgba(149, 233, 227, 1) 30%,
-            rgba(31, 190, 210, 1) 41%,
-            rgba(11, 38, 50, 1) 85%);
+            rgba(149, 233, 227, 100%) 30%,
+            rgba(31, 190, 210, 100%) 41%,
+            rgba(11, 38, 50, 100%) 85%);
     font-family: $font;
     width: 100%;
     height: 100vh;
     overflow: hidden;
     display: flex;
 
-    &:after {
+    &::after {
         content: "";
         background-image: url('../../assets/quiztime.jpg');
         position: absolute;
@@ -68,6 +71,64 @@ button {
     }
 }
 
+.game-area {
+    background-color: #fff;
+    overflow: auto;
+    padding: 40px;
+
+    @media (max-width: 980px),
+    (max-height: 580px) {
+        padding: 0;
+    }
+}
+
+.intro {
+    background-size: cover;
+    height: auto;
+    width: 100%;
+    flex-shrink: 0;
+    color: #fff;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(251deg,
+            #00b8ff52 -53%,
+            rgba(255, 255, 255, 0) 65%);
+    justify-content: center;
+    backdrop-filter: blur(30px);
+
+    &-inner {
+        text-align: center;
+        padding: 30px 60px;
+        width: 100%;
+    }
+
+    &-title {
+        margin: 0;
+        font-size: 42px;
+        text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    &-desc {
+        opacity: 0.8;
+        font-weight: 300;
+    }
+
+    &-button {
+        background-color: $color;
+        border: 0;
+        padding: 12px 26px;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 18px;
+        transform: translateY(20px);
+        cursor: pointer;
+        font-weight: 500;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
 .game {
     position: relative;
     max-width: 600px;
@@ -75,7 +136,7 @@ button {
     height: fit-content;
     min-height: 350px;
     margin: 32vh auto;
-    box-shadow: 0 0 80px rgba(0, 0, 0, 1), 0 0 0 16px rgba(152, 236, 255, 0.1);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 100%), 0 0 0 16px rgba(152, 236, 255, 10%);
     border-radius: 12px;
     overflow: hidden;
     scroll-behavior: smooth;
@@ -139,64 +200,6 @@ button {
                 padding: 20px;
             }
         }
-    }
-}
-
-.game-area {
-    background-color: #fff;
-    overflow: auto;
-    padding: 40px;
-
-    @media (max-width: 980px),
-    (max-height: 580px) {
-        padding: 0;
-    }
-}
-
-.intro {
-    background-size: cover;
-    height: auto;
-    width: 100%;
-    flex-shrink: 0;
-    color: #fff;
-    background-position: center;
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: linear-gradient(251deg,
-            #00b8ff52 -53%,
-            rgba(255, 255, 255, 0) 65%);
-    justify-content: center;
-    backdrop-filter: blur(30px);
-
-    &-inner {
-        text-align: center;
-        padding: 30px 60px;
-        width: 100%;
-    }
-
-    &-title {
-        margin: 0;
-        font-size: 42px;
-        text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.35);
-    }
-
-    &-desc {
-        opacity: 0.8;
-        font-weight: 300;
-    }
-
-    &-button {
-        background-color: $color;
-        border: 0;
-        padding: 12px 26px;
-        color: #fff;
-        border-radius: 4px;
-        font-size: 18px;
-        transform: translateY(20px);
-        cursor: pointer;
-        font-weight: 500;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 }
 
@@ -286,7 +289,7 @@ button {
     }
 
     100% {
-        transform: translatey(10px);
+        transform: translateY(10px);
     }
 }
 
@@ -354,7 +357,7 @@ button {
             position: absolute;
             right: -16px;
             top: 50%;
-            transform: translatey(-50%);
+            transform: translateY(-50%);
             width: 16px;
         }
     }
@@ -379,7 +382,7 @@ button {
     &:before {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' stroke='%231f8197' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round' class='css-i6dzq1'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
         opacity: 1;
-        transform: translatex(-24px) translatey(-50%);
+        transform: translateX(-24px) translateY(-50%);
     }
 }
 
@@ -394,7 +397,7 @@ button {
     &:before {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' stroke='%230ca50c' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round' class='css-i6dzq1'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
         opacity: 1;
-        transform: translatex(-24px) translatey(-50%);
+        transform: translateX(-24px) translateY(-50%);
     }
 }
 
@@ -466,7 +469,7 @@ button {
 
 
 .result-item.is-empty {
-    color: #ffffff;
+    color: #fff;
 }
 
 [data-game-finished] {
@@ -512,7 +515,7 @@ button {
 @keyframes result-item {
     0% {
         opacity: 0;
-        transform: translateY(10ox);
+        transform: translateY(10px);
     }
 }
 
