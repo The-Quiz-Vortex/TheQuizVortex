@@ -86,7 +86,7 @@ export default function ClassroomList() {
                     <Image
                       h={'140px'}
                       w={'full'}
-                      src={'src/assets/classroom-placeholder.jpg'}
+                      src={'/classroom-placeholder.jpg'}
                       objectFit="cover"
                       alt="#"
                     />

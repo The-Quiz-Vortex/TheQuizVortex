@@ -35,7 +35,7 @@ export default function Footer() {
             align={{ base: 'center', md: 'center' }}
           >
             <Stack direction={'row'} spacing={6}>
-              <Image src="/src/assets/quiz-logo.png" alt="footer-logo" maxWidth={'100px'} />
+              <Image src="/quiz-logo.png" alt="footer-logo" maxWidth={'100px'} />
             </Stack>
             <HStack
               spacing={{ base: '2', md: '8' }}
