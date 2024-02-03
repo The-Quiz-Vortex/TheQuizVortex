@@ -4,14 +4,14 @@ import sassGlobImports from 'vite-plugin-sass-glob-import';
 
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd())
-// https://vitejs.dev/config/
-return defineConfig({
-  plugins: [
-    sassGlobImports(),
-    react(),
-  ],
-  define: {
-    'process.env': env
-  }
-})
+  // https://vitejs.dev/config/
+  return defineConfig({
+    plugins: [
+      sassGlobImports(),
+      react(),
+    ],
+    define: {
+      'process.env': env
+    }
+  })
 }
