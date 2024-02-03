@@ -64,7 +64,7 @@ export default function WithSubnavigation() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <Image src="/quiz-logo.png" maxW={65} />
+            <Image src="/src/assets/quiz-logo.png" maxW={65} />
           </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>

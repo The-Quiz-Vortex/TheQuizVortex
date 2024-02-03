@@ -330,7 +330,7 @@ export default function Home() {
             <Image
               boxSize={{ base: 'auto', md: 'lg' }}
               objectFit="contain"
-              src="../public/stock-photo-woman-typing-on-laptop.png"
+              src="/src/assets/stock-photo-woman-typing-on-laptop.png"
               alt="home-img"
             />
           </VStack>
